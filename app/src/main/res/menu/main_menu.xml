@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/home1"
+            android:icon="@drawable/vector_home"
+            android:title="Home"/>
+        <item android:id="@+id/checker1"
+            android:icon="@drawable/vector_checker"
+            android:title="Checker"/>
+        <item android:id="@+id/reminder1"
+            android:icon="@drawable/vector_alarm"
+            android:title="Reminder"/>
+    </group>
+
+    <item android:title="">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item android:id="@+id/About1"
+                    android:icon="@drawable/vector_setting"
+                    android:title="Setting"/>
+                <item android:id="@+id/login1"
+                    android:icon="@drawable/vector_logout"
+                    android:title="Log Out"/>
+
+
+
+
+            </group>
+
+        </menu>
+
+    </item>
+
+
+</menu>
