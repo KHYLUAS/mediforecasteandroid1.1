@@ -1,27 +1,45 @@
 {
   "project_info": {
-    "project_number": "1078505229071",
-    "firebase_url": "https://mediforcast-default-rtdb.firebaseio.com",
-    "project_id": "mediforcast",
-    "storage_bucket": "mediforcast.appspot.com"
+    "project_number": "21849469834",
+    "firebase_url": "https://mediforecast-default-rtdb.firebaseio.com",
+    "project_id": "mediforecast",
+    "storage_bucket": "mediforecast.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1078505229071:android:bdfab1ddf6fb505adc8c7a",
+        "mobilesdk_app_id": "1:21849469834:android:8c1c63263885c0ad828e73",
         "android_client_info": {
           "package_name": "com.example.mediforecast"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "21849469834-fqtbvj2pti62s7rssb740svbvo7311o3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mediforecast",
+            "certificate_hash": "cf6e997300d8102e160454881e9269f91c26cf93"
+          }
+        },
+        {
+          "client_id": "21849469834-uqhdkuo55oprtujf2hg12e96gqdqat3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCPHpX7LipmI954JY2hXOn75YeO709MPk8"
+          "current_key": "AIzaSyACpfqhSDQhsoFW92CvdIFwhj3NN0Gv-QY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21849469834-tglta7iimo80ihr4vo67p52b6utve82l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

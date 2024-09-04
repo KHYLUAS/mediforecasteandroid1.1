@@ -203,7 +203,7 @@ public class OTPVerification extends AppCompatActivity {
 
 
         // Save the data to Firestore
-        firestore.collection("users").document(userId).set(userData).addOnCompleteListener(task -> {
+        firestore.collection("MobileUsers").document(userId).set(userData).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Data saved successfully
                 Toast.makeText(OTPVerification.this, "Registration successful!", Toast.LENGTH_SHORT).show();

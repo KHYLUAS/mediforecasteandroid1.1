@@ -153,10 +153,32 @@ private void loginUser() {
         if (task.isSuccessful()) {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
-                Toast.makeText(login_form.this, "Login successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(login_form.this, Menubar.class);
-                startActivity(intent);
-                finish();
+                // Fetch user data from Firestore
+                firestore.collection("MobileUsers").document(user.getUid())
+                        .get()
+                        .addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful() && task1.getResult() != null) {
+                                // Get user data and set it in GlobalUserData
+                                GlobalUserData.setName(task1.getResult().getString("fname") + " " +
+                                        task1.getResult().getString("lname"));
+                                GlobalUserData.setEmail(task1.getResult().getString("email"));
+                                GlobalUserData.setContact(task1.getResult().getString("number"));
+                                GlobalUserData.setLocation(task1.getResult().getString("location"));
+                                GlobalUserData.setUsername(task1.getResult().getString("username"));
+                                GlobalUserData.setBirthday(task1.getResult().getString("birthday"));
+                                GlobalUserData.setGender(task1.getResult().getString("gender"));
+
+                                // Proceed to the next activity
+                                Toast.makeText(login_form.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(login_form.this, Menubar.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(login_form.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
             }
         } else {
             // Check the reason for failure
@@ -214,7 +236,7 @@ private void loginUser() {
     private void checkEmailExists(String email) {
         loading1.show();
 
-        firestore.collection("users")
+        firestore.collection("MobileUsers")
                 .whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener(task -> {

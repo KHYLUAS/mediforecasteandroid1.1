@@ -401,7 +401,7 @@ public class signin extends AppCompatActivity {
     private void checkUsernameAndEmailExists(String username, String email) {
         loading1.show();
 
-        firestore.collection("users")
+        firestore.collection("MobileUsers")
                 .whereEqualTo("username", username)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -410,7 +410,7 @@ public class signin extends AppCompatActivity {
                         signupUsername.setError("Username already exists");
                         signupUsername.requestFocus();
                     } else {
-                        firestore.collection("users")
+                        firestore.collection("MobileUsers")
                                 .whereEqualTo("email", email)
                                 .get()
                                 .addOnCompleteListener(emailTask -> {

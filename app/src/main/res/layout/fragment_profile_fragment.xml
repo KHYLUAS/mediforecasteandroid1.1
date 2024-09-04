@@ -53,7 +53,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="190dp">
+                    android:layout_height="250dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/profile_image"
@@ -83,7 +83,7 @@
                         android:id="@+id/name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="John Raile Flores"
+                        android:text="Example"
                         android:textAlignment="center"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -91,6 +91,21 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+                    <TextView
+                        android:id="@+id/username_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="example"
+                        android:textAlignment="center"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.498"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/name_text_view"
+                        app:layout_constraintVertical_bias="0.333" />
 
                     <ImageView
                         android:id="@+id/imageView5"
@@ -104,9 +119,10 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="235dp"
+                android:layout_height="330dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white">
 
@@ -135,9 +151,9 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="26dp"
 
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
                         android:src="@drawable/email_profile"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -146,76 +162,118 @@
                         android:id="@+id/gmailprofile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="60dp"
                         android:paddingTop="2dp"
-                        android:text="raileflores@gmail.com"
+                        android:text="example@gmail.com"
                         android:textAlignment="center"
                         android:textSize="14dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.035"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/profileemail"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.283" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/profilenumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:src="@drawable/phone_profile"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.041"
+                        android:id="@+id/birthday"
+                        android:layout_width="25dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/birthday"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profileemail"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toBottomOf="@+id/profileemail" />
 
                     <TextView
-                        android:id="@+id/contactprofile"
+                        android:id="@+id/birthdayprofile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="25dp"
                         android:paddingTop="2dp"
-                        android:text="0912346789"
+                        android:text="October 14 2002"
                         android:textAlignment="center"
                         android:textSize="14dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.035"
-                        app:layout_constraintStart_toEndOf="@+id/profilenumber"
-                        app:layout_constraintTop_toBottomOf="@+id/gmailprofile"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintHorizontal_bias="0.027"
+                        app:layout_constraintStart_toEndOf="@+id/birthday"
+                        app:layout_constraintTop_toBottomOf="@+id/gmailprofile" />
 
                     <ImageView
-                        android:id="@+id/profilelocation"
+                        android:id="@+id/contactnumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:src="@drawable/locationpin"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.041"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/phone_profile"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profilenumber"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toBottomOf="@+id/birthday" />
 
                     <TextView
-                        android:id="@+id/Locationprofile"
+                        android:id="@+id/numberprofile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:paddingTop="2dp"
-                        android:text="Tabuyuc"
+                        android:text="092713380"
                         android:textAlignment="center"
                         android:textSize="14dp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.025"
-                        app:layout_constraintStart_toEndOf="@+id/profilelocation"
-                        app:layout_constraintTop_toBottomOf="@+id/contactprofile" />
+                        app:layout_constraintStart_toEndOf="@+id/contactnumber"
+                        app:layout_constraintTop_toBottomOf="@+id/birthdayprofile" />
+
+                    <ImageView
+                        android:id="@+id/gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/genders"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.041"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/contactnumber" />
+
+                    <TextView
+                        android:id="@+id/genderprofile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:paddingTop="2dp"
+                        android:text="Male"
+                        android:textAlignment="center"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.025"
+                        app:layout_constraintStart_toEndOf="@+id/gender"
+                        app:layout_constraintTop_toBottomOf="@+id/numberprofile" />
+
+                    <ImageView
+                        android:id="@+id/location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="12dp"
+                        android:src="@drawable/locationpin"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/gender" />
+
+                    <TextView
+                        android:id="@+id/locationprofile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:paddingTop="2dp"
+                        android:text="apalit"
+                        android:textAlignment="center"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.023"
+                        app:layout_constraintStart_toEndOf="@+id/location"
+                        app:layout_constraintTop_toBottomOf="@+id/genderprofile" />
 
                     <TextView
                         android:id="@+id/txtdetails"
@@ -229,15 +287,79 @@
                         android:textColor="@color/black"
                         android:textSize="15dp"
                         android:textStyle="bold"
+
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/Locationprofile"
-                        app:layout_constraintVertical_bias="0.609"
+                        app:layout_constraintTop_toBottomOf="@+id/locationprofile"
                         tools:visibility="visible" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginStart="5dp">
+
+                    <ImageView
+                        android:id="@+id/change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/circular"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/changepassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="247dp"
+                        android:paddingTop="2dp"
+                        android:text="Update Password"
+                        android:textAlignment="center"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/change"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/logoutprofile"
+                        android:layout_width="346dp"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/details_profile"
+                        android:hint="Log Out"
+                        android:maxLines="1"
+                        android:paddingTop="7dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"
+                        android:textColorHint="@color/black"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/changepassword"
+                        tools:visibility="visible" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
 
 
 

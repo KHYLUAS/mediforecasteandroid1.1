@@ -88,7 +88,7 @@ public class edit_password extends AppCompatActivity {
                 Toast.makeText(edit_password.this, "Password does not meet the criteria", Toast.LENGTH_SHORT).show();
             } else {
 //                updatePassword(newPassword);
-                firestore.collection("users")
+                firestore.collection("MobileUsers")
                         .whereEqualTo("email", email)
                         .get()
                         .addOnSuccessListener(querySnapshot -> {
@@ -105,7 +105,7 @@ public class edit_password extends AppCompatActivity {
                                     Log.d(TAG, "Name: " + name);
 
                                     // Update the document
-                                    firestore.collection("users")
+                                    firestore.collection("MobileUsers")
                                             .document(documentId)
                                             .update("password", newPassword)  // Update the "password" field with a new value
                                             .addOnSuccessListener(aVoid -> {

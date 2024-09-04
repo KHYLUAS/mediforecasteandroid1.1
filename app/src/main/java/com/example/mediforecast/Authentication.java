@@ -84,7 +84,7 @@ public class Authentication extends AppCompatActivity {
         user.put("location", location);
 
         // Store user details in Firestore under the UID of the authenticated user
-        firestore.collection("users").document(userId)
+        firestore.collection("MobileUsers").document(userId)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(Authentication.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
