@@ -13,6 +13,7 @@ public class GlobalUserData {
     private static String username;
     private static String birthday;
     private static String gender;
+    private static String profileImage;
 
 
     // Getter and Setter for name
@@ -22,6 +23,13 @@ public class GlobalUserData {
 
     public static void setName(String name) {
         GlobalUserData.name = name;
+    }
+    public static String getProfileImage() {
+        return profileImage;
+    }
+
+    public static void setProfileImage(String profileImage) {
+        GlobalUserData.profileImage = profileImage;
     }
     public static String getGender() {
         return gender;

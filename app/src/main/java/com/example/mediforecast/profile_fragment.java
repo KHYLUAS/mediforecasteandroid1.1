@@ -23,12 +23,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+
+import com.bumptech.glide.Glide;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Objects;
 
@@ -36,11 +43,15 @@ public class profile_fragment extends Fragment {
 
     private FirebaseFirestore firestore;
     private FirebaseUser currentUser;
-    private TextView nameTextView, emailTextView, contactTextView, locationTextView, usernameTextView, birthdayTextView, genderTextView, logoutTextView,editprofileTextView;
-//    private ShapeableImageView profileImageView;
+    private TextView nameTextView, emailTextView, contactTextView, locationTextView, usernameTextView, birthdayTextView, genderTextView, logoutTextView, editprofileTextView;
+    //    private ShapeableImageView profileImageView;
     private FirebaseAuth auth;
-    private ImageView profileImageView,cameraTextView;
+    private ImageView profileImageView, cameraTextView;
     private ActivityResultLauncher<Intent> activityResultLauncher;
+    private FirebaseStorage storage;
+    private ImageView imageView;
+    private loading1 loading1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +65,11 @@ public class profile_fragment extends Fragment {
         // Initialize FirebaseAuth
         auth = FirebaseAuth.getInstance();
 
+        //Initialize FirebaseStorage
+        storage = FirebaseStorage.getInstance();
 
-
-
+        // Initialize loading dialog
+        loading1 = new loading1(requireActivity());
 
     }
 
@@ -74,7 +87,7 @@ public class profile_fragment extends Fragment {
         profileImageView = view.findViewById(R.id.profile_image);
         usernameTextView = view.findViewById(R.id.username_text_view);
         birthdayTextView = view.findViewById(R.id.birthdayprofile);
-        genderTextView  = view.findViewById(R.id.genderprofile);
+        genderTextView = view.findViewById(R.id.genderprofile);
         logoutTextView = view.findViewById(R.id.logoutprofile);
         editprofileTextView = view.findViewById(R.id.editprofile);
         cameraTextView = view.findViewById(R.id.imageView5);
@@ -88,16 +101,34 @@ public class profile_fragment extends Fragment {
         birthdayTextView.setText(GlobalUserData.getBirthday());
         genderTextView.setText(GlobalUserData.getGender());
 
+
+        // Set up Firestore listener for real-time updates
+        if (currentUser != null) {
+            firestore.collection("MobileUsers").document(currentUser.getUid())
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Toast.makeText(getActivity(), "Failed to load profile data.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if (snapshot != null && snapshot.exists()) {
+                                String profileImageUrl = snapshot.getString("profileImage");
+                                if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                    Glide.with(profile_fragment.this)
+                                            .load(profileImageUrl)
+                                            .into(profileImageView);
+                                }
+                            }
+                        }
+                    });
+        }
+
         logoutTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLogoutConfirmationDialog();
-//                auth.signOut();
-//                Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(getActivity(), login_form.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//                getActivity().finish();
+
             }
         });
 
@@ -109,33 +140,78 @@ public class profile_fragment extends Fragment {
 
         // Initialize the activityResultLauncher
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                Intent data = result.getData();
-                if (data != null) {
-                    Uri uri = data.getData();
-                    profileImageView.setImageURI(uri);
+            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                Uri uri = result.getData().getData();
+                if (uri != null) {
+//                    profileImageView.setImageURI(uri); //display image
+                    uploadImageToFirebase(uri); //Upload image to Firebase
+
                 }
             }
         });
 
         // Handle camera icon click to open Image Picker
+//        cameraTextView.setOnClickListener(v -> {
+//            ImagePicker.with(requireActivity())  // Use requireActivity() to get the hosting Activity's context
+//                    .crop()                      // Crop image (Optional)
+//                    .compress(1024)              // Final image size will be less than 1 MB (Optional)
+//                    .maxResultSize(1080, 1080)   // Final image resolution will be less than 1080 x 1080 (Optional)
+//                    .start();
+//        });
+
         cameraTextView.setOnClickListener(v -> {
-            ImagePicker.with(requireActivity())  // Use requireActivity() to get the hosting Activity's context
-                    .crop()                      // Crop image (Optional)
-                    .compress(1024)              // Final image size will be less than 1 MB (Optional)
-                    .maxResultSize(1080, 1080)   // Final image resolution will be less than 1080 x 1080 (Optional)
-                    .start();
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            activityResultLauncher.launch(intent);  // Launch the image picker intent with the result launcher
         });
-        // Fetch and display user data
-//        if (currentUser != null) {
-//            fetchUserData(currentUser.getUid());
-//        } else {
-//            Toast.makeText(getActivity(), "No user is logged in", Toast.LENGTH_SHORT).show();
-//        }
-//
         return view;
     }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//
+//        loadUserProfile();
+//    }
+//    private void loadUserProfile() {
+//        Glide.with(this)
+//                .load(GlobalUserData.getProfileImage())
+//                .into(profileImageView);
+//    }
 
+
+    private void uploadImageToFirebase(Uri uri) {
+        if (currentUser != null) {
+            // Creating Storage reference
+            loading1.show();
+            StorageReference storageReference = storage.getReference()
+                    .child("MobileUsersProfile/" + currentUser.getUid() + ".jpg");
+
+            // Upload to Firebase Storage
+            storageReference.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                // Get the download URL
+                storageReference.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                    // Update Firestore with the profile image URL
+                    firestore.collection("MobileUsers").document(currentUser.getUid())
+                            .update("profileImage", downloadUri.toString())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Profile image updated", Toast.LENGTH_SHORT).show();
+                                loading1.dismiss();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getActivity(), "Failed to update profile image", Toast.LENGTH_SHORT).show();
+                                loading1.dismiss();
+                            });
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(getActivity(), "Failed to get image URL", Toast.LENGTH_SHORT).show();
+                    loading1.dismiss();
+                });
+            }).addOnFailureListener(e -> {
+                Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+                loading1.dismiss();
+            });
+        } else {
+            Toast.makeText(getActivity(), "No user logged in", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
 
@@ -179,7 +255,7 @@ public class profile_fragment extends Fragment {
     }
 
 
-
+}
 
 
 //    private void fetchUserData(String uid) {
@@ -215,4 +291,4 @@ public class profile_fragment extends Fragment {
 //                })
 //                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 //    }
-}
+

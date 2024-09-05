@@ -121,6 +121,7 @@
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintStart_toStartOf="parent"
                    app:srcCompat="@drawable/rural1" />
+
            </androidx.constraintlayout.widget.ConstraintLayout>
            <androidx.constraintlayout.widget.ConstraintLayout
                android:layout_width="match_parent"

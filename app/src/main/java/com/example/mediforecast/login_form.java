@@ -20,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 
 public class login_form extends AppCompatActivity {
     private EditText logEmail, logPassword;
@@ -155,7 +156,7 @@ private void loginUser() {
             if (user != null) {
                 // Fetch user data from Firestore
                 firestore.collection("MobileUsers").document(user.getUid())
-                        .get()
+                        .get(Source.CACHE)
                         .addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful() && task1.getResult() != null) {
                                 // Get user data and set it in GlobalUserData
@@ -167,6 +168,7 @@ private void loginUser() {
                                 GlobalUserData.setUsername(task1.getResult().getString("username"));
                                 GlobalUserData.setBirthday(task1.getResult().getString("birthday"));
                                 GlobalUserData.setGender(task1.getResult().getString("gender"));
+                                GlobalUserData.setProfileImage(task1.getResult().getString("profileImage"));
 
                                 // Proceed to the next activity
                                 Toast.makeText(login_form.this, "Login successful", Toast.LENGTH_SHORT).show();
