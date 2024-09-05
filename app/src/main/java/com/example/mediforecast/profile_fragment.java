@@ -1,33 +1,46 @@
 package com.example.mediforecast;
 
+import static com.google.android.material.color.MaterialColors.getColor;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 public class profile_fragment extends Fragment {
 
     private FirebaseFirestore firestore;
     private FirebaseUser currentUser;
-    private TextView nameTextView, emailTextView, contactTextView, locationTextView, usernameTextView, birthdayTextView, genderTextView, logoutTextView;
-    private ShapeableImageView profileImageView;
+    private TextView nameTextView, emailTextView, contactTextView, locationTextView, usernameTextView, birthdayTextView, genderTextView, logoutTextView,editprofileTextView;
+//    private ShapeableImageView profileImageView;
     private FirebaseAuth auth;
-
+    private ImageView profileImageView,cameraTextView;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +53,11 @@ public class profile_fragment extends Fragment {
 
         // Initialize FirebaseAuth
         auth = FirebaseAuth.getInstance();
+
+
+
+
+
     }
 
     @Nullable
@@ -58,6 +76,9 @@ public class profile_fragment extends Fragment {
         birthdayTextView = view.findViewById(R.id.birthdayprofile);
         genderTextView  = view.findViewById(R.id.genderprofile);
         logoutTextView = view.findViewById(R.id.logoutprofile);
+        editprofileTextView = view.findViewById(R.id.editprofile);
+        cameraTextView = view.findViewById(R.id.imageView5);
+
 
         nameTextView.setText(GlobalUserData.getName());
         emailTextView.setText(GlobalUserData.getEmail());
@@ -80,9 +101,31 @@ public class profile_fragment extends Fragment {
             }
         });
 
+        if (requireActivity().getActionBar() != null) {
+            Objects.requireNonNull(requireActivity().getActionBar()).setBackgroundDrawable(
+                    new ColorDrawable(requireContext().getColor(R.color.primaryColor))
+            );
+        }
 
+        // Initialize the activityResultLauncher
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    Uri uri = data.getData();
+                    profileImageView.setImageURI(uri);
+                }
+            }
+        });
 
-
+        // Handle camera icon click to open Image Picker
+        cameraTextView.setOnClickListener(v -> {
+            ImagePicker.with(requireActivity())  // Use requireActivity() to get the hosting Activity's context
+                    .crop()                      // Crop image (Optional)
+                    .compress(1024)              // Final image size will be less than 1 MB (Optional)
+                    .maxResultSize(1080, 1080)   // Final image resolution will be less than 1080 x 1080 (Optional)
+                    .start();
+        });
         // Fetch and display user data
 //        if (currentUser != null) {
 //            fetchUserData(currentUser.getUid());
@@ -92,6 +135,10 @@ public class profile_fragment extends Fragment {
 //
         return view;
     }
+
+
+
+
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

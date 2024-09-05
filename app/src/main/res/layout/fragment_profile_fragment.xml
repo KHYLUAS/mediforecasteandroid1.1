@@ -57,14 +57,17 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/profile_image"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
+                        android:layout_width="115dp"
+                        android:layout_height="115dp"
                         android:layout_marginTop="16dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/holder_profile"
+                        android:src="@drawable/round_person_24"
+                        android:background="@color/gray"
+                        app:shapeAppearanceOverlay="@style/Circular"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/camera"
@@ -73,11 +76,10 @@
                         android:src="@drawable/holder_camera"
                         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.654"
+                        app:layout_constraintHorizontal_bias="0.665"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/profile_image"
-                        app:layout_constraintVertical_bias="0.701" />
-
+                        app:layout_constraintVertical_bias="0.694" />
 
                     <TextView
                         android:id="@+id/name_text_view"
@@ -276,7 +278,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/genderprofile" />
 
                     <TextView
-                        android:id="@+id/txtdetails"
+                        android:id="@+id/editprofile"
                         android:layout_width="346dp"
                         android:layout_height="34dp"
                         android:background="@drawable/details_profile"

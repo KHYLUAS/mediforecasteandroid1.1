@@ -52,7 +52,10 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.1.0")
 
     implementation ("com.google.firebase:firebase-database:20.0.5")
+    implementation ("com.github.dhaval2404:imagepicker:2.1")//imagepicker api
 
+    implementation ("androidx.activity:activity-ktx:1.2.3")//imagepicker api
+    implementation ("androidx.fragment:fragment-ktx:1.3.3")//imagepicker api
 
     implementation(libs.appcompat)
     implementation(libs.material)
