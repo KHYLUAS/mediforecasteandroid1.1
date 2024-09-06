@@ -111,7 +111,8 @@ public class update_password extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         String email = document.getString("email");
-                        String password = document.getString("password");
+                        String currentPassword = document.getString("password");
+
                         // Verify the old password using FirebaseAuth's reauthentication method
                         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
                         mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(reauthTask -> {
@@ -122,18 +123,27 @@ public class update_password extends AppCompatActivity {
                                         Log.d(TAG, "Password updated successfully in FirebaseAuth!");
                                         Toast.makeText(update_password.this, "Password updated successfully", Toast.LENGTH_SHORT).show();
 
-                                        // Optionally update non-sensitive user data in Firestore here
-                                        firestore.collection("MobileUsers").document(userId).update("lastPasswordChange", System.currentTimeMillis())
+                                        // Update password field in Firestore document
+                                        firestore.collection("MobileUsers").document(userId).update("password", newPassword)
                                                 .addOnCompleteListener(firestoreUpdateTask -> {
                                                     if (firestoreUpdateTask.isSuccessful()) {
-                                                        Log.d(TAG, "Firestore updated with last password change timestamp");
+                                                        Log.d(TAG, "Password updated successfully in Firestore!");
+                                                        // Optionally update non-sensitive user data in Firestore here
+//                                                        firestore.collection("MobileUsers").document(userId).update("lastPasswordChange", System.currentTimeMillis())
+//                                                                .addOnCompleteListener(firestoreUpdateTask1 -> {
+//                                                                    if (firestoreUpdateTask1.isSuccessful()) {
+//                                                                        Log.d(TAG, "Firestore updated with last password change timestamp");
+//                                                                    } else {
+//                                                                        Log.w(TAG, "Error updating Firestore", firestoreUpdateTask1.getException());
+//                                                                    }
+//                                                                });
+                                                        startActivity(new Intent(update_password.this, splashscreen_reset.class));
+                                                        finish();
                                                     } else {
-                                                        Log.w(TAG, "Error updating Firestore", firestoreUpdateTask.getException());
+                                                        Log.w(TAG, "Error updating password in Firestore", firestoreUpdateTask.getException());
+                                                        Toast.makeText(update_password.this, "Error updating password", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-
-                                        startActivity(new Intent(update_password.this, splashscreen_reset.class));
-                                        finish();
                                     } else {
                                         Log.w(TAG, "Error updating password in FirebaseAuth", passwordUpdateTask.getException());
                                         Toast.makeText(update_password.this, "Error updating password", Toast.LENGTH_SHORT).show();
@@ -154,6 +164,7 @@ public class update_password extends AppCompatActivity {
             });
         }
     }
+
 
     private boolean isValidPassword(String password) {
         return password.length() >= 7 &&
