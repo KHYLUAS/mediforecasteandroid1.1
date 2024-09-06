@@ -1,7 +1,5 @@
 package com.example.mediforecast;
 
-import static com.google.android.material.color.MaterialColors.getColor;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -23,10 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-
 import com.bumptech.glide.Glide;
-import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,7 +29,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.UploadTask;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Objects;
@@ -43,7 +37,7 @@ public class profile_fragment extends Fragment {
 
     private FirebaseFirestore firestore;
     private FirebaseUser currentUser;
-    private TextView nameTextView, emailTextView, contactTextView, locationTextView, usernameTextView, birthdayTextView, genderTextView, logoutTextView, editprofileTextView;
+    private TextView nameTextView, emailTextView, contactTextView, locationTextView, usernameTextView, birthdayTextView, genderTextView, logoutTextView, editprofileTextView,updateTextView;
     //    private ShapeableImageView profileImageView;
     private FirebaseAuth auth;
     private ImageView profileImageView, cameraTextView;
@@ -91,6 +85,8 @@ public class profile_fragment extends Fragment {
         logoutTextView = view.findViewById(R.id.logoutprofile);
         editprofileTextView = view.findViewById(R.id.editprofile);
         cameraTextView = view.findViewById(R.id.imageView5);
+        updateTextView = view.findViewById(R.id.updatepass);
+
 
 
         nameTextView.setText(GlobalUserData.getName());
@@ -163,6 +159,14 @@ public class profile_fragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             activityResultLauncher.launch(intent);  // Launch the image picker intent with the result launcher
         });
+
+
+        updateTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), update_password.class);
+            startActivity(intent);
+        });
+
+
         return view;
     }
 //    @Override
@@ -176,6 +180,8 @@ public class profile_fragment extends Fragment {
 //                .load(GlobalUserData.getProfileImage())
 //                .into(profileImageView);
 //    }
+
+
 
 
     private void uploadImageToFirebase(Uri uri) {
