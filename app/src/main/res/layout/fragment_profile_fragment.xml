@@ -326,7 +326,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="20dp"
-                        android:layout_marginEnd="247dp"
+                        android:layout_marginEnd="230dp"
                         android:paddingTop="2dp"
                         android:text="Update Password"
                         android:textAlignment="center"
@@ -352,7 +352,7 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/changepassword"
+                        app:layout_constraintTop_toBottomOf="@+id/updatepass"
                         tools:visibility="visible" />
 
 

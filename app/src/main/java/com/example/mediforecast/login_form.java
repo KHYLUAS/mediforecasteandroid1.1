@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
 
@@ -138,66 +139,84 @@ public class login_form extends AppCompatActivity {
         return true;
     }
 
-//
-private void loginUser() {
-    String email = logEmail.getText().toString().trim();
-    String password = logPassword.getText().toString().trim();
+    //
+    private void loginUser() {
+        String email = logEmail.getText().toString().trim();
+        String password = logPassword.getText().toString().trim();
 
-    // Show loading dialog
-    loading1.show();
+        // Show loading dialog
+        loading1.show();
 
-    // Sign in with Firebase Authentication
-    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-        // Hide loading dialog
-        loading1.cancel();
+        // Sign in with Firebase Authentication
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+            // Hide loading dialog
+            loading1.cancel();
 
-        if (task.isSuccessful()) {
-            FirebaseUser user = mAuth.getCurrentUser();
-            if (user != null) {
-                // Fetch user data from Firestore
-                firestore.collection("MobileUsers").document(user.getUid())
-                        .get(Source.CACHE)
-                        .addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful() && task1.getResult() != null) {
-                                // Get user data and set it in GlobalUserData
-                                GlobalUserData.setName(task1.getResult().getString("fname") + " " +
-                                        task1.getResult().getString("lname"));
-                                GlobalUserData.setEmail(task1.getResult().getString("email"));
-                                GlobalUserData.setContact(task1.getResult().getString("number"));
-                                GlobalUserData.setLocation(task1.getResult().getString("location"));
-                                GlobalUserData.setUsername(task1.getResult().getString("username"));
-                                GlobalUserData.setBirthday(task1.getResult().getString("birthday"));
-                                GlobalUserData.setGender(task1.getResult().getString("gender"));
-                                GlobalUserData.setProfileImage(task1.getResult().getString("profileImage"));
-
-                                // Proceed to the next activity
-                                Toast.makeText(login_form.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(login_form.this, Menubar.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(login_form.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(e -> {
-                            Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-            }
-        } else {
-            // Check the reason for failure
-            Exception exception = task.getException();
-            if (exception != null) {
-                String message = exception.getMessage();
-                if (message != null && message.contains("There is no user record corresponding to this identifier")) {
-                    Toast.makeText(login_form.this, "Email does not exist", Toast.LENGTH_SHORT).show();
-                } else if (message != null && message.contains("The password is invalid")) {
-                    Toast.makeText(login_form.this, "The password is incorrect", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(login_form.this, "Login failed: " + message, Toast.LENGTH_SHORT).show();
+            if (task.isSuccessful()) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    // First, try fetching user data from the cache
+                    firestore.collection("MobileUsers").document(user.getUid())
+                            .get(Source.CACHE)
+                            .addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful() && task1.getResult() != null) {
+                                    // Successfully retrieved from cache
+                                    setUserGlobalData(task1.getResult());
+                                } else {
+                                    // Fallback: try fetching from the server if the cache fails
+                                    firestore.collection("MobileUsers").document(user.getUid())
+                                            .get(Source.SERVER) // Fetch from server if cache fails
+                                            .addOnCompleteListener(task2 -> {
+                                                if (task2.isSuccessful() && task2.getResult() != null) {
+                                                    setUserGlobalData(task2.getResult());
+                                                }
+//                                                else {
+//                                                    Toast.makeText(login_form.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+//                                                }
+                                            }).addOnFailureListener(e -> {
+                                                Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            }).addOnFailureListener(e -> {
+                                Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                 }
+            } else {
+                // Handle login failure
+                handleLoginFailure(task.getException());
+            }
+        });
+    }
+
+    private void setUserGlobalData(DocumentSnapshot document) {
+        GlobalUserData.setName(document.getString("fname") + " " + document.getString("lname"));
+        GlobalUserData.setEmail(document.getString("email"));
+        GlobalUserData.setContact(document.getString("number"));
+        GlobalUserData.setLocation(document.getString("location"));
+        GlobalUserData.setUsername(document.getString("username"));
+        GlobalUserData.setBirthday(document.getString("birthday"));
+        GlobalUserData.setGender(document.getString("gender"));
+        GlobalUserData.setProfileImage(document.getString("profileImage"));
+
+        Toast.makeText(login_form.this, "Login successful", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(login_form.this, Menubar.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void handleLoginFailure(Exception exception) {
+        if (exception != null) {
+            String message = exception.getMessage();
+            if (message != null && message.contains("There is no user record corresponding to this identifier")) {
+                Toast.makeText(login_form.this, "Email does not exist", Toast.LENGTH_SHORT).show();
+            } else if (message != null && message.contains("The password is invalid")) {
+                Toast.makeText(login_form.this, "The password is incorrect", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(login_form.this, "Login failed: " + message, Toast.LENGTH_SHORT).show();
             }
         }
-    });
-}
+    }
+
 
 
     private boolean inputEmail() {

@@ -1,6 +1,8 @@
 package com.example.mediforecast;
 
+import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,10 +19,18 @@ public class Menubar extends AppCompatActivity {
         binding = ActivityMenubarBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Intent intent = getIntent();
+        String fragmentToDisplay = intent.getStringExtra("EXTRA_FRAGMENT");
+
         // Replace fragment on start
-        if (savedInstanceState == null) {
-            replaceFragment(new home1_fragment());
+        if (savedInstanceState == null){
+            if("PROFILE".equals(fragmentToDisplay)){
+                replaceFragment(new profile_fragment());
+            } else {
+                replaceFragment(new home1_fragment());
+            }
         }
+
 
         // Set up navigation listener
         binding.buttonNav.setOnItemSelectedListener(item -> {

@@ -127,7 +127,10 @@ public class update_password extends AppCompatActivity {
                                         firestore.collection("MobileUsers").document(userId).update("password", newPassword)
                                                 .addOnCompleteListener(firestoreUpdateTask -> {
                                                     if (firestoreUpdateTask.isSuccessful()) {
-                                                        Log.d(TAG, "Password updated successfully in Firestore!");
+
+                                                        startActivity(new Intent(update_password.this, updatesplashscreen.class));
+                                                        finish();
+//                                                        Log.d(TAG, "Password updated successfully in Firestore!");
                                                         // Optionally update non-sensitive user data in Firestore here
 //                                                        firestore.collection("MobileUsers").document(userId).update("lastPasswordChange", System.currentTimeMillis())
 //                                                                .addOnCompleteListener(firestoreUpdateTask1 -> {
@@ -137,8 +140,7 @@ public class update_password extends AppCompatActivity {
 //                                                                        Log.w(TAG, "Error updating Firestore", firestoreUpdateTask1.getException());
 //                                                                    }
 //                                                                });
-                                                        startActivity(new Intent(update_password.this, splashscreen_reset.class));
-                                                        finish();
+
                                                     } else {
                                                         Log.w(TAG, "Error updating password in Firestore", firestoreUpdateTask.getException());
                                                         Toast.makeText(update_password.this, "Error updating password", Toast.LENGTH_SHORT).show();

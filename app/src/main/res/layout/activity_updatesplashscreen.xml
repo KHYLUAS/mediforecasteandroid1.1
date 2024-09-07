@@ -5,16 +5,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".splashscreen_reset"
+    tools:context=".updatesplashscreen"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:id="@+id/fragment_container">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie"
+            android:id="@+id/lottie5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:lottie_autoPlay="true"
@@ -22,10 +23,10 @@
             app:lottie_rawRes="@raw/succesfullregister" />
 
         <TextView
-            android:id="@+id/appname"
+            android:id="@+id/resetname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/lottie"
+            android:layout_below="@id/lottie5"
             android:layout_centerHorizontal="true"
             android:text="Thank you!"
             android:textStyle="bold"
@@ -34,10 +35,10 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/account"
+            android:id="@+id/resetpass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/appname"
+            android:layout_below="@+id/resetname"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="34dp"

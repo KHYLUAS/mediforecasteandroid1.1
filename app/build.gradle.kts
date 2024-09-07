@@ -55,6 +55,8 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     implementation ("com.google.firebase:firebase-database:20.0.5")
     implementation ("com.github.dhaval2404:imagepicker:2.1")//imagepicker api
+//    implementation ("com.jakewharton:butterknife:10.2.3")//Butterknife for binding the ids
+//    annotationProcessor ("com.jakewharton:butterknife-compiler:10.2.3")
 
     implementation ("androidx.activity:activity-ktx:1.2.3")//imagepicker api
     implementation ("androidx.fragment:fragment-ktx:1.3.3")//imagepicker api
