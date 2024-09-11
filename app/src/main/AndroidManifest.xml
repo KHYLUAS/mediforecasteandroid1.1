@@ -24,6 +24,9 @@
         android:theme="@style/Theme.MEDIFORECAST"
         tools:targetApi="31">
         <activity
+            android:name=".splashscreenaddalarm"
+            android:exported="false" />
+        <activity
             android:name=".medicine_reminder"
             android:exported="false" />
         <activity

@@ -128,16 +128,17 @@
             android:text="Start Date"
             tools:ignore="MissingPrefix" />
 
-        <EditText
+        <TextView
             android:id="@+id/medicinestartdate"
-
             android:layout_width="match_parent"
             android:layout_height="51dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/border_hover"
-            android:padding="10dp"
+            android:padding="12dp"
             android:singleLine="true"
-            android:textSize="14sp"
+            android:hint="01/01/2001"
+            android:textAlignment="center"
+            android:textSize="19sp"
             tools:ignore="MissingPrefix" />
 
         <TextView

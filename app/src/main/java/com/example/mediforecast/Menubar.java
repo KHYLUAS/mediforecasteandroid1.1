@@ -21,11 +21,14 @@ public class Menubar extends AppCompatActivity {
 
         Intent intent = getIntent();
         String fragmentToDisplay = intent.getStringExtra("EXTRA_FRAGMENT");
+        String fragmentReminder = intent.getStringExtra("EXTRA_FRAGMENT_REMINDER");
 
         // Replace fragment on start
         if (savedInstanceState == null){
             if("PROFILE".equals(fragmentToDisplay)){
                 replaceFragment(new profile_fragment());
+            } else if ("REMINDER".equals(fragmentReminder)) {
+                replaceFragment(new reminder_fragment());
             } else {
                 replaceFragment(new home1_fragment());
             }
