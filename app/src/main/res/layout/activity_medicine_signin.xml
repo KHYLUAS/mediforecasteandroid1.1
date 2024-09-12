@@ -146,20 +146,183 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Interval"
+            android:text="End Date"
             tools:ignore="MissingPrefix" />
 
-        <EditText
-            android:id="@+id/medicinetime"
-
+        <TextView
+            android:id="@+id/medicineenddate"
             android:layout_width="match_parent"
             android:layout_height="51dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/border_hover"
-            android:padding="10dp"
+            android:hint="01/01/2001"
+            android:padding="12dp"
             android:singleLine="true"
-            android:textSize="14sp"
+            android:textAlignment="center"
+            android:textSize="19sp"
             tools:ignore="MissingPrefix" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="16dp"
+            android:backgroundTint="#0D174188">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- The "Every day" button with "Medicine Days" label -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medicine Days"
+                        android:textColor="@color/primaryColor"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/every_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Every day"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+
+                <!-- TextViews for individual days -->
+                <LinearLayout
+                    android:id="@+id/button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="7">
+
+                    <TextView
+                        android:id="@+id/dv_sunday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:text="S"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/dv_monday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+
+                        android:textSize="20sp"
+                        android:text="M"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/dv_tuesday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:text="T"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/dv_wednesday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:text="W"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/dv_thursday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:text="T"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/dv_friday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:text="F"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/dv_saturday"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:text="S"
+                        android:gravity="center"
+                        android:textColor="@color/primaryColor"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="8dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+
 
         <TextView
             android:layout_marginLeft="3dp"
