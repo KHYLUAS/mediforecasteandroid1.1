@@ -95,26 +95,7 @@
                     android:paddingEnd="20dp" />
 
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
 
-
-
-                <EditText
-                    android:id="@+id/signupUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:background="@drawable/roundback"
-                    android:hint="Username"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp" />
-
-            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -136,105 +117,6 @@
 
             </RelativeLayout>
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout2"
-                style="@style/CustomTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/select1"
-                android:layout_marginTop="20dp">
-
-                <AutoCompleteTextView
-                    android:id="@+id/signupGender"
-                    style="@style/CustomTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.9"
-                    android:inputType="none"
-                    android:textAlignment="center"
-                    android:textSize="17dp"
-                    android:maxLines="1"
-                    android:background="@drawable/roundback"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/txtview4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:alpha="0.7"
-                    android:text="Select your Birthday"
-                    android:textSize="17dp"
-                    android:textStyle="bold"/>
-
-
-                <TextView
-                    android:id="@+id/txtview7"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:alpha="0.9"
-                    android:maxLines="1"
-                    android:textAlignment="center"
-                    android:background="@drawable/roundback"
-                    android:hint="10/14/2002"
-                    android:textColor="@color/black"
-                    android:textSize="19dp"
-                    tools:visibility="visible"
-                    android:paddingTop="7dp"/>
-
-
-
-            </LinearLayout>
-
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_marginTop="20dp"
-                android:id="@+id/textInputLayout3"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/select">
-
-                <AutoCompleteTextView
-                    android:id="@+id/signupLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.9"
-                    android:inputType="none"
-                    android:textAlignment="center"
-                    android:textSize="17dp"
-                    android:textStyle="bold"
-                    android:background="@drawable/roundback"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
-
-
-
-                <EditText
-                    android:id="@+id/signupNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:background="@drawable/roundback"
-                    android:hint="Contact Number"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp" />
-
-            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -301,6 +183,109 @@
                     android:src="@drawable/removeeye" />
 
             </RelativeLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/CustomTextInputLayout"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/select1"
+                android:layout_marginTop="20dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/signupGender"
+                    style="@style/CustomTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:alpha="0.9"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:maxLines="1"
+                    android:background="@drawable/roundback"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/txtview4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:alpha="0.7"
+                    android:text="Select your Birthday"
+                    android:textSize="17dp"
+                    android:textStyle="bold"/>
+
+
+                <TextView
+                    android:id="@+id/txtview7"
+                    android:layout_width="170dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha="0.9"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    android:background="@drawable/roundback"
+                    android:hint="10/14/2002"
+                    android:textColor="@color/black"
+                    android:textSize="19dp"
+                    tools:visibility="visible"
+                    android:paddingTop="7dp"/>
+
+
+
+            </LinearLayout>
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/textInputLayout3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/select"
+
+                >
+
+                <AutoCompleteTextView
+                    android:id="@+id/signupLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:alpha="0.9"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:maxLines="1"
+                    android:background="@drawable/roundback"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+
+
+
+                <EditText
+                    android:id="@+id/signupNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/roundback"
+                    android:hint="Contact Number"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp" />
+
+            </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

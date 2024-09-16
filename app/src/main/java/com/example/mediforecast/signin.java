@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.HideReturnsTransformationMethod;
@@ -13,7 +12,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.text.style.StyleSpan;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -24,22 +22,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class signin extends AppCompatActivity {
 
     //    private ImageView img1;
-    private EditText signupFname, signupMname, signupLname, signupUsername, signupEmail, signupNumber, signupPassword, signupRPassword;
+    private EditText signupFname, signupMname, signupLname, signupEmail, signupNumber, signupPassword, signupRPassword;
     private AutoCompleteTextView signupGender, signupLocation;
     private Button Register;
     private FirebaseAuth mAuth;
@@ -74,7 +68,7 @@ public class signin extends AppCompatActivity {
         signupFname = findViewById(R.id.signupFname);
         signupMname = findViewById(R.id.signupMname);
         signupLname = findViewById(R.id.signupLname);
-        signupUsername = findViewById(R.id.signupUsername);
+//        signupUsername = findViewById(R.id.signupUsername);
         signupEmail = findViewById(R.id.signupEmail);
         txtview7 = findViewById(R.id.txtview7);
         signupNumber = findViewById(R.id.signupNumber);
@@ -201,7 +195,7 @@ public class signin extends AppCompatActivity {
         signupLocation.setAdapter(locationAdapter);
         signupLocation.setOnItemClickListener((adapterView, view, position, id) -> {
             String selectedLocation = adapterView.getItemAtPosition(position).toString();
-            Toast.makeText(signin.this, "Barangay: " + selectedLocation, Toast.LENGTH_SHORT).show();
+            Toast.makeText(signin.this, "Barangay: " + selectedLocation + ", Apalit, Pampanga", Toast.LENGTH_SHORT).show();
         });
 
         // Setup for Gender dropdown
@@ -223,14 +217,14 @@ public class signin extends AppCompatActivity {
             // Perform input validation
             if (validateInput()) {
                 String email = signupEmail.getText().toString().trim();
-                String username = signupUsername.getText().toString().trim();
+//                String username = signupUsername.getText().toString().trim();
 
 
                 // Get the email from the input field
 
-                checkUsernameAndEmailExists(username, email);
+//                checkUsernameAndEmailExists(username, email);
                 // Start the OTPVerification activity
-
+                checkEmailExists(email);
 
                 // Dismiss the loading dialog
                 loading1.cancel();
@@ -253,7 +247,7 @@ public class signin extends AppCompatActivity {
         String fname = signupFname.getText().toString().trim();
         String mname = signupMname.getText().toString().trim();
         String lname = signupLname.getText().toString().trim();
-        String username = signupUsername.getText().toString().trim();
+//        String username = signupUsername.getText().toString().trim();
         String gender = signupGender.getText().toString().trim();
         String number = signupNumber.getText().toString().trim();
         String location = signupLocation.getText().toString().trim();
@@ -262,7 +256,7 @@ public class signin extends AppCompatActivity {
 
         // Validation for empty field
         if (email.isEmpty() && password.isEmpty() && fname.isEmpty() && mname.isEmpty() &&
-                lname.isEmpty() && username.isEmpty() && gender.isEmpty() && number.isEmpty() &&
+                lname.isEmpty()  && gender.isEmpty() && number.isEmpty() &&
                 location.isEmpty() && rpassword.isEmpty() && birthday.isEmpty()) {
 
             Toast.makeText(this, "All fields are empty, please fill up the form", Toast.LENGTH_LONG).show();
@@ -300,16 +294,16 @@ public class signin extends AppCompatActivity {
             signupLname.requestFocus();
             isValid = false;
         }
-        else if (username.isEmpty()) {
-            signupUsername.setError("Field cannot be empty");
-            signupUsername.requestFocus();
-            isValid = false;
-        }
-        else if (username.length() < 4) {
-            signupUsername.setError("Username must be at least 3 characters");
-            signupUsername.requestFocus();
-            isValid = false;
-        }
+//        else if (username.isEmpty()) {
+//            signupUsername.setError("Field cannot be empty");
+//            signupUsername.requestFocus();
+//            isValid = false;
+//        }
+//        else if (username.length() < 4) {
+//            signupUsername.setError("Username must be at least 3 characters");
+//            signupUsername.requestFocus();
+//            isValid = false;
+//        }
         else if (email.isEmpty()) {
             signupEmail.setError("Field cannot be empty");
             signupEmail.requestFocus();
@@ -348,11 +342,17 @@ public class signin extends AppCompatActivity {
             signupNumber.requestFocus();
             isValid = false;
         }
-        else if (!number.matches("^09[0-9]{9}$")) {
-            signupNumber.setError("Number must be a 09123456789");
+        else if (!number.matches("^09[0-9]{9}$")) {  // Checks for numbers starting with '09' and followed by 9 digits
+            signupNumber.setError("Number must be in the format 09123456789");
             signupNumber.requestFocus();
             isValid = false;
         }
+        else if (!number.matches("\\d+")) {  // Ensures the input contains only digits
+            signupNumber.setError("Only numeric characters are allowed");
+            signupNumber.requestFocus();
+            isValid = false;
+        }
+
         else if (password.isEmpty()) {
             signupPassword.setError("Field cannot be empty");
             signupPassword.requestFocus();
@@ -398,37 +398,58 @@ public class signin extends AppCompatActivity {
 
     ////username exist or not
 
-    private void checkUsernameAndEmailExists(String username, String email) {
-        loading1.show();
+//    private void checkUsernameAndEmailExists(String username, String email) {
+//        loading1.show();
+//
+//        firestore.collection("MobileUsers")
+//                .whereEqualTo("username", username)
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+//                        loading1.cancel();
+//                        signupUsername.setError("Username already exists");
+//                        signupUsername.requestFocus();
+//                    } else {
+//                        firestore.collection("MobileUsers")
+//                                .whereEqualTo("email", email)
+//                                .get()
+//                                .addOnCompleteListener(emailTask -> {
+//                                    if (emailTask.isSuccessful() && !emailTask.getResult().isEmpty()) {
+//                                        loading1.cancel();
+//                                        signupEmail.setError("Email already exists");
+//                                        signupEmail.requestFocus();
+//                                    }else {
+//                                        registerUser();
+//                                    }
+//                                });
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    loading1.cancel();
+//                    Toast.makeText(signin.this, "Error checking username/email: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                });
+//    }
+private void checkEmailExists(String email) {
+    loading1.show();
 
-        firestore.collection("MobileUsers")
-                .whereEqualTo("username", username)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        loading1.cancel();
-                        signupUsername.setError("Username already exists");
-                        signupUsername.requestFocus();
-                    } else {
-                        firestore.collection("MobileUsers")
-                                .whereEqualTo("email", email)
-                                .get()
-                                .addOnCompleteListener(emailTask -> {
-                                    if (emailTask.isSuccessful() && !emailTask.getResult().isEmpty()) {
-                                        loading1.cancel();
-                                        signupEmail.setError("Email already exists");
-                                        signupEmail.requestFocus();
-                                    }else {
-                                        registerUser();
-                                    }
-                                });
-                    }
-                })
-                .addOnFailureListener(e -> {
+    firestore.collection("MobileUsers")
+            .whereEqualTo("email", email)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && !task.getResult().isEmpty()) {
                     loading1.cancel();
-                    Toast.makeText(signin.this, "Error checking username/email: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
+                    signupEmail.setError("Email already exists");
+                    signupEmail.requestFocus();
+                } else {
+                    registerUser();
+                }
+            })
+            .addOnFailureListener(e -> {
+                loading1.cancel();
+                Toast.makeText(signin.this, "Error checking email: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+}
+
 
     ///////eye off and onn
     private void toggleForgetPassVisibility() {
@@ -501,7 +522,7 @@ public class signin extends AppCompatActivity {
         String fname = signupFname.getText().toString().trim();
         String mname = signupMname.getText().toString().trim();
         String lname = signupLname.getText().toString().trim();
-        String username = signupUsername.getText().toString().trim();
+//        String username = signupUsername.getText().toString().trim();
         String gender = signupGender.getText().toString().trim();
         String number = signupNumber.getText().toString().trim();
         String location = signupLocation.getText().toString().trim();
@@ -515,7 +536,7 @@ public class signin extends AppCompatActivity {
         intent.putExtra("fname", fname);
         intent.putExtra("mname", mname);
         intent.putExtra("lname", lname);
-        intent.putExtra("username", username);
+//        intent.putExtra("username", username);
         intent.putExtra("gender", gender);
         intent.putExtra("number", number);
         intent.putExtra("location", location);
@@ -526,60 +547,5 @@ public class signin extends AppCompatActivity {
         loading1.cancel();
     }
 
-//    private void registerUser() {
-//        String email = signupEmail.getText().toString().trim();
-//        String password = signupPassword.getText().toString().trim();
-//
-//        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                // User registered successfully
-//                FirebaseUser user = mAuth.getCurrentUser();
-//                if (user != null) {
-//                    saveUserDataToFirestore(user.getUid());
-//                }
-//            } else {
-//                // Registration failed
-//                Toast.makeText(signin.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
-//
-//    private void saveUserDataToFirestore(String userId) {
-//        String fname = signupFname.getText().toString().trim();
-//        String mname = signupMname.getText().toString().trim();
-//        String lname = signupLname.getText().toString().trim();
-//        String username = signupUsername.getText().toString().trim();
-//        String gender = signupGender.getText().toString().trim();
-//        String number = signupNumber.getText().toString().trim();
-//        String location = signupLocation.getText().toString().trim();
-//        String birthday = txtview7.getText().toString().trim();
-////        String email = signupEmail.getText().toString().trim();
-//
-//        // Create a map to store user data
-//        Map<String, Object> userData = new HashMap<>();
-//        userData.put("fname", fname);
-//        userData.put("mname", mname);
-//        userData.put("lname", lname);
-//        userData.put("username", username);
-//        userData.put("gender", gender);
-//        userData.put("number", number);
-//        userData.put("location", location);
-//        userData.put("birthday", birthday);
-////        userData.put("email", email);
-//
-//
-//        // Save the data to Firestore
-//        firestore.collection("users").document(userId).set(userData).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                // Data saved successfully
-//                Toast.makeText(signin.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-//                // Optionally navigate to another activity
-//                startActivity(new Intent(signin.this, login_form.class));
-//                finish();
-//            } else {
-//                // Data saving failed
-//                Toast.makeText(signin.this, "Failed to save user data: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
+
 }

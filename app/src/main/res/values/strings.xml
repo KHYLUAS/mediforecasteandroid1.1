@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MEDIFORECAST</string>
-    <string name="select">Choose Location</string>
-    <string name="select1">Choose Gender</string>
+    <string name="select">Barangay</string>
+    <string name="select1">Gender</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
