@@ -166,6 +166,10 @@ public class profile_fragment extends Fragment {
             startActivity(intent);
         });
 
+        editprofileTextView.setOnClickListener(v-> {
+            Intent intent = new Intent(getActivity(), editprofile.class);
+            startActivity(intent);
+        });
 
         return view;
     }
@@ -259,6 +263,7 @@ public class profile_fragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 
 }

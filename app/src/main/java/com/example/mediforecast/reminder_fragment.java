@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class reminder_fragment extends Fragment {
 
@@ -33,6 +38,8 @@ public class reminder_fragment extends Fragment {
     private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
     private ImageView noDataImage;
+    private SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/yyyy", Locale.US);
+    private SimpleDateFormat outputDateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +79,7 @@ public class reminder_fragment extends Fragment {
                     .whereEqualTo("email", email)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
-                        public void onEvent(@javax.annotation.Nullable QuerySnapshot snapshots, @javax.annotation.Nullable FirebaseFirestoreException error) {
+                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
                             if (error != null) {
                                 Log.e(TAG, "Error fetching data", error);
                                 Toast.makeText(getContext(), "Error fetching data", Toast.LENGTH_SHORT).show();
@@ -85,8 +92,18 @@ public class reminder_fragment extends Fragment {
                                     String medicineName = document.getString("medicineName");
                                     String medicineDosage = document.getString("medicineDosage");
                                     String startDate = document.getString("startDate");
-                                    Reminder reminder = new Reminder(medicineName, medicineDosage, startDate);
-                                    reminderList.add(reminder);
+
+                                    Log.d(TAG, "Fetched startDate: " + startDate);  // Add this to check startDate
+
+                                    if (medicineName != null && medicineDosage != null && startDate != null) {
+                                        String formattedDate = formatStartDate(startDate);
+                                        Log.d(TAG, "Formatted startDate: " + formattedDate);  // Check the formatted date
+
+                                        Reminder reminder = new Reminder(medicineName, medicineDosage, formattedDate);
+                                        reminderList.add(reminder);
+                                    } else {
+                                        Log.w(TAG, "One or more fields are null for document: " + document.getId());
+                                    }
                                 }
                                 adapter.notifyDataSetChanged();
                                 if (reminderList.isEmpty()) {
@@ -105,5 +122,21 @@ public class reminder_fragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String formatStartDate(String startDate) {
+        if (startDate == null || startDate.isEmpty()) {
+            return "";
+        }
+
+        try {
+            Date date = inputDateFormat.parse(startDate);
+            if (date != null) {
+                return outputDateFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
