@@ -1,6 +1,7 @@
 package com.example.mediforecast;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         Reminder reminder = reminderList.get(position);
 
         holder.medicineName.setText(reminder.getMedicineName());
-        holder.medicineDosage.setText(reminder.getMedicineDosage());
+        String dosageWithType = reminder.getMedicineDosage() + " " + reminder.getMedicineType() + "(s)";
+        holder.medicineDosage.setText(dosageWithType);
+        holder.twice.setText(reminder.getAlarmTime());
+        holder.status.setText(reminder.isStatus() ? "COMPLETED" : "UPCOMING");
 
         String startDate = reminder.getStartDate();
         Log.d("ReminderAdapter", "Setting reminder startDate: " + startDate);
@@ -78,6 +82,12 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
                                 }
                             });
                     return true;
+                } else if (id == R.id.menuView) {
+                    // Handle view action, e.g., navigate to detail activity
+                    Intent intent = new Intent(context, view_medicine_reminder.class);
+                    intent.putExtra("medicineName", reminder.getMedicineName());
+                    context.startActivity(intent);
+                    return true;
                 } else if (id == R.id.menuUpdate) {
                     // Handle update action
                     return true;
@@ -87,6 +97,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
             popupMenu.show();
         });
+
     }
 
 
@@ -97,7 +108,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView medicineName, medicineDosage, day, date, month;
+        private TextView medicineName, medicineDosage, day, date, month, twice, status;
         private ImageView optionMenu;
 
         public ViewHolder(@NonNull View itemView) {
@@ -108,6 +119,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             date = itemView.findViewById(R.id.date);
             month = itemView.findViewById(R.id.month);
             optionMenu = itemView.findViewById(R.id.optionMenu);
+            twice = itemView.findViewById(R.id.twice);
+            status = itemView.findViewById(R.id.status);
         }
     }
 }

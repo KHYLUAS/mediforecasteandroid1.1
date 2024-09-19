@@ -27,7 +27,7 @@ public class login_form extends AppCompatActivity {
     private EditText logEmail, logPassword;
     private FirebaseFirestore firestore;
     private MaterialButton loginButton;
-    private TextView signUpLink, forgetPasswordLink;
+    private TextView signUpLink, forgetPasswordLink, validationboth, validationemail, validationpass;
     private ImageView passwordeye, emailchecker;
     private FirebaseAuth mAuth;
     private boolean isPasswordVisible = false;
@@ -56,6 +56,9 @@ public class login_form extends AppCompatActivity {
         forgetPasswordLink = findViewById(R.id.forgetPassword);
         passwordeye = findViewById(R.id.passwordeye);
         emailchecker = findViewById(R.id.checkbox);
+        validationboth = findViewById(R.id.validationboth);
+        validationemail = findViewById(R.id.validationemail);
+        validationpass = findViewById(R.id.validationpass);
 
         // Initialize loading dialog
         loading1 = new loading1(this);
@@ -113,25 +116,36 @@ public class login_form extends AppCompatActivity {
     private boolean validateInput() {
         String email = logEmail.getText().toString().trim();
         String password = logPassword.getText().toString().trim();
-
-        // Validate email
-        if (email.isEmpty()) {
-            logEmail.setError("Field cannot be empty");
+        if(password.isEmpty() && email.isEmpty()){
+            validationemail.setVisibility(View.VISIBLE);
+            validationpass.setVisibility(View.VISIBLE);
             logEmail.requestFocus();
             return false;
+        }
+        // Validate email
+        if (email.isEmpty()) {
+//            logEmail.setError("Field cannot be empty");
+            logEmail.requestFocus();
+            validationemail.setVisibility(View.VISIBLE);
+            return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            logEmail.setError("Enter a valid email");
+//            logEmail.setError("Enter a valid email");
+            validationemail.setText("Enter a valid email");
+            validationemail.setVisibility(View.VISIBLE);
             logEmail.requestFocus();
             return false;
         }
 
         // Validate password
         if (password.isEmpty()) {
-            logPassword.setError("Field cannot be empty");
+//            logPassword.setError("Field cannot be empty");
+            validationpass.setVisibility(View.VISIBLE);
             logPassword.requestFocus();
             return false;
-        } else if (password.length() < 6) {
-            logPassword.setError("Minimum 6 characters");
+        } else if (password.length() < 8) {
+//            logPassword.setError("Minimum 6 characters");
+            validationpass.setText("Minimum 8 characters");
+            validationpass.setVisibility(View.VISIBLE);
             logPassword.requestFocus();
             return false;
         }
@@ -163,6 +177,7 @@ public class login_form extends AppCompatActivity {
                                     // Successfully retrieved from cache
                                     setUserGlobalData(task1.getResult());
                                 } else {
+
                                     // Fallback: try fetching from the server if the cache fails
                                     firestore.collection("MobileUsers").document(user.getUid())
                                             .get(Source.SERVER) // Fetch from server if cache fails
@@ -170,20 +185,19 @@ public class login_form extends AppCompatActivity {
                                                 if (task2.isSuccessful() && task2.getResult() != null) {
                                                     setUserGlobalData(task2.getResult());
                                                 }
-//                                                else {
-//                                                    Toast.makeText(login_form.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
-//                                                }
+                                                else {
+                                                    Toast.makeText(login_form.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                                                }
                                             }).addOnFailureListener(e -> {
                                                 Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             });
                                 }
-                            }).addOnFailureListener(e -> {
-                                Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             });
                 }
             } else {
                 // Handle login failure
-                handleLoginFailure(task.getException());
+                validationboth.setVisibility(View.VISIBLE);
+//                handleLoginFailure(task.getException());
             }
         });
     }
@@ -193,7 +207,7 @@ public class login_form extends AppCompatActivity {
         GlobalUserData.setEmail(document.getString("email"));
         GlobalUserData.setContact(document.getString("number"));
         GlobalUserData.setLocation(document.getString("location"));
-        GlobalUserData.setUsername(document.getString("username"));
+//        GlobalUserData.setUsername(document.getString("username"));
         GlobalUserData.setBirthday(document.getString("birthday"));
         GlobalUserData.setGender(document.getString("gender"));
         GlobalUserData.setProfileImage(document.getString("profileImage"));
@@ -268,9 +282,6 @@ public class login_form extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         // Create an intent and put the email as an extra
-
-
-
 
                         loading1.cancel();
                     }else{

@@ -21,16 +21,28 @@ public class Menubar extends AppCompatActivity {
 
         Intent intent = getIntent();
         String fragmentToDisplay = intent.getStringExtra("EXTRA_FRAGMENT");
-        String fragmentReminder = intent.getStringExtra("EXTRA_FRAGMENT_REMINDER");
 
         // Replace fragment on start
         if (savedInstanceState == null){
-            if("PROFILE".equals(fragmentToDisplay)){
+            if("PROFILE".equals(fragmentToDisplay) || "UPDATE".equals(fragmentToDisplay)){
                 replaceFragment(new profile_fragment());
-            } else if ("REMINDER".equals(fragmentReminder)) {
+                binding.buttonNav.setSelectedItemId(R.id.profile);
+            } else if ("REMINDER".equals(fragmentToDisplay)) {
                 replaceFragment(new reminder_fragment());
-            } else {
+                binding.buttonNav.setSelectedItemId(R.id.reminder);
+            } else if ("SIGNIN".equals(fragmentToDisplay)) {
+                replaceFragment(new reminder_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.reminder);
+            }else if("VIEW".equals(fragmentToDisplay)){
+                replaceFragment(new reminder_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.reminder);
+            } else if("BACK".equals(fragmentToDisplay)){
+                replaceFragment(new profile_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.profile);
+            }
+            else {
                 replaceFragment(new home1_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.home);
             }
         }
 

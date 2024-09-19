@@ -90,16 +90,20 @@ public class reminder_fragment extends Fragment {
                                 reminderList.clear();
                                 for (QueryDocumentSnapshot document : snapshots) {
                                     String medicineName = document.getString("medicineName");
-                                    String medicineDosage = document.getString("medicineDosage");
+                                    String dosageValue = document.getString("dosageValue");
                                     String startDate = document.getString("startDate");
+                                    String medicineType = document.getString("medicineType");
+                                    String alertTime = document.getString("alarmTime");
+                                    Boolean statusBoolean = document.getBoolean("status");
+                                    boolean status = (statusBoolean != null) ? statusBoolean : false; // Default to false if null
 
-                                    Log.d(TAG, "Fetched startDate: " + startDate);  // Add this to check startDate
+                                    Log.d(TAG, "Fetched alertTimes: " + alertTime);  // Add this to check startDate
 
-                                    if (medicineName != null && medicineDosage != null && startDate != null) {
+                                    if (medicineName != null && dosageValue != null && medicineType != null && startDate != null) {
                                         String formattedDate = formatStartDate(startDate);
                                         Log.d(TAG, "Formatted startDate: " + formattedDate);  // Check the formatted date
 
-                                        Reminder reminder = new Reminder(medicineName, medicineDosage, formattedDate);
+                                        Reminder reminder = new Reminder(medicineName, dosageValue, formattedDate, medicineType, alertTime, status);
                                         reminderList.add(reminder);
                                     } else {
                                         Log.w(TAG, "One or more fields are null for document: " + document.getId());

@@ -18,10 +18,10 @@
 
         <ImageView
             android:id="@+id/img4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="36dp"
+            android:layout_height="35dp"
             android:padding="5dp"
-            android:src="@drawable/leftbutton"/>
+            android:src="@drawable/arrow1"/>
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -77,7 +77,7 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="61dp"
-            android:backgroundTint="@color/primaryColor"
+            android:backgroundTint="@color/otherprimary"
             android:text="Verify Code"
             android:textSize="25dp"
             android:textStyle="bold"

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".medicineschedule">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="50dp"
+        android:orientation="vertical">
+
+        <!--        <ImageView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:background="@drawable/ic_add_black_24dp"-->
+        <!--            android:scaleType="centerCrop" />-->
+        <ImageView
+            android:id="@+id/medicinearrow"
+            android:layout_width="36dp"
+            android:layout_height="35dp"
+            android:padding="5dp"
+            android:layout_marginTop="17dp"
+            android:src="@drawable/arrow1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/medicineimage"
+                android:layout_width="227dp"
+                android:layout_height="211dp"
+                android:layout_marginTop="20dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/sched" />
+
+        </LinearLayout>
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Add a Reminder"
+            android:textColor="@color/primaryColor"
+            android:textSize="24sp"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="fonts/nunito_light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="Fill the details below to add a Reminder"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:alpha="0.8"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+        <TextView
+            android:id="@+id/once"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:gravity="center"
+            android:background="@drawable/border_hover"
+            android:layout_marginVertical="6dp"
+            android:text="Once Daily"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/twice"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:gravity="center"
+            android:background="@drawable/border_hover"
+            android:layout_marginVertical="6dp"
+            android:text="Twice Daily"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/thrice"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:gravity="center"
+            android:background="@drawable/border_hover"
+            android:layout_marginVertical="6dp"
+            android:text="Thrice Daily"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/custom"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:gravity="center"
+            android:background="@drawable/border_hover"
+            android:layout_marginVertical="6dp"
+            android:text="Custom"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+        <Button
+            android:id="@+id/Register"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/otherprimary"
+            android:elevation="4dp"
+            android:letterSpacing="0.1"
+            android:text="Next"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:rippleColor="@color/primary1" />
+
+    </LinearLayout>
+</ScrollView>

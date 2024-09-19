@@ -79,7 +79,7 @@ public class profile_fragment extends Fragment {
         contactTextView = view.findViewById(R.id.numberprofile);
         locationTextView = view.findViewById(R.id.locationprofile);
         profileImageView = view.findViewById(R.id.profile_image);
-        usernameTextView = view.findViewById(R.id.username_text_view);
+//        usernameTextView = view.findViewById(R.id.username_text_view);
         birthdayTextView = view.findViewById(R.id.birthdayprofile);
         genderTextView = view.findViewById(R.id.genderprofile);
         logoutTextView = view.findViewById(R.id.logoutprofile);
@@ -93,7 +93,7 @@ public class profile_fragment extends Fragment {
         emailTextView.setText(GlobalUserData.getEmail());
         contactTextView.setText(GlobalUserData.getContact());
         locationTextView.setText(GlobalUserData.getLocation());
-        usernameTextView.setText(GlobalUserData.getUsername());
+//        usernameTextView.setText(GlobalUserData.getUsername());
         birthdayTextView.setText(GlobalUserData.getBirthday());
         genderTextView.setText(GlobalUserData.getGender());
 

@@ -2,6 +2,7 @@ package com.example.mediforecast;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -9,6 +10,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,21 +28,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class medicine_signin extends AppCompatActivity {
-    private AutoCompleteTextView reminderMedicineType;
-    private EditText medicinemameET, medicinedosageET;
+    private AutoCompleteTextView reminderMedicineType, reminderUnitType;
+    private EditText medicinemameET;
     private TextView medicinestartdate, medicineenddate;
     private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
-    String[] medicineType = {"Tablet", "Capsule", "Syrup", "Injection"};
+    String[] unitType = {"IU", "ampoule(s)","application(s)","application(s)", "capsule(s)","drop(s)","gram(s)",
+            "injection(s)", "milligram(s)", "milliliter(s)", "mm", "packet(s)", "packet(s)", "patch(es)",
+            "pessary(ies)", "piece(s)","pill(s)", "portion(s)", "puff(s)", "spray(s)","suppository(ies)",
+            "tablespoon(s)", "teaspoon(s)", "unit(s)", "vaginal capsule(s)", "vaginal insert(s)",
+            "vaginal tablet(s)", "µg"};
+    String[] medicineType = {"Tablet", "Capsule", "Syrup", "Injection", "Inhaler", "Drop", "Suppositories", "Tropical Medicines"};
     ArrayAdapter<String> medicineTypeAdapter;
+    ArrayAdapter<String> reminderUnitTypeAdapter;
     private Button buttonAdd;
-    private TextView sunday, monday, tuesday, wednesday, thursday, friday, saturday;
+    private TextView sunday, monday, tuesday, wednesday, thursday, friday, saturday, schedule;
     private CheckBox everyDayCheckBox;
     // List to store selected days
     private ArrayList<String> selectedDays;
+    private ImageView medicinearrow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +65,27 @@ public class medicine_signin extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonadd);
         reminderMedicineType = findViewById(R.id.reminderMedicineType);
         medicinemameET = findViewById(R.id.medicinename);
-        medicinedosageET = findViewById(R.id.medicinedosage);
         medicineenddate = findViewById(R.id.medicineenddate);
+        schedule = findViewById(R.id.schedule);
+        medicinearrow = findViewById(R.id.medicinearrow);
+        reminderUnitType = findViewById(R.id.unit);
+        // Retrieve values from Intent
+
+        Intent intents = getIntent();
+        String onceDaily = intents.getStringExtra("onceDaily");
+        schedule.setText(onceDaily);
+
+
+        reminderUnitTypeAdapter = new ArrayAdapter<>(this, R.layout.list_item, unitType);
+        reminderUnitType.setAdapter(reminderUnitTypeAdapter);
+        reminderUnitType.setOnItemClickListener((adapterView, view, position, id) -> {
+            String selectedMedicineUnitType = adapterView.getItemAtPosition(position).toString();
+            Toast.makeText(medicine_signin.this, "Medicine Unit Type: " + selectedMedicineUnitType, Toast.LENGTH_SHORT).show();
+            getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                    .edit()
+                    .putString("SelectedSchedule", selectedMedicineUnitType)
+                    .apply();
+        });
 
         medicineTypeAdapter = new ArrayAdapter<>(this, R.layout.list_item, medicineType);
         reminderMedicineType.setAdapter(medicineTypeAdapter);
@@ -68,6 +98,26 @@ public class medicine_signin extends AppCompatActivity {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 //            return insets;
 //        });
+        medicinearrow.setOnClickListener(v->{
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear(); // This will erase all saved data
+            editor.apply();
+
+            ClearField();
+            // Confirm clearing
+            Toast.makeText(this, "Data cleared", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(medicine_signin.this, Menubar.class);
+            intent.putExtra("EXTRA_FRAGMENT", "SIGNIN");
+            startActivity(intent);
+            finish();
+        });
+        schedule.setOnClickListener(v-> {
+            Intent intent = new Intent(medicine_signin.this, medicineschedule.class);
+            startActivity(intent);
+            finish();
+        });
         buttonAdd.setOnClickListener(v -> addingReminder());
         medicinestartdate.setOnClickListener(v -> {
             showDatePickerDialog();
@@ -174,6 +224,47 @@ public class medicine_signin extends AppCompatActivity {
             dayView.setTextColor(getResources().getColor(R.color.primaryColor));
         }
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("medicineName", medicinemameET.getText().toString().trim());
+        editor.putString("medicineType", reminderMedicineType.getText().toString().trim());
+        editor.putString("medicineStartDate", medicinestartdate.getText().toString().trim());
+        editor.putString("medicineEndDate", medicineenddate.getText().toString().trim());
+        editor.putString("selectedUnitType", reminderUnitType.getText().toString().trim());
+        editor.putBoolean("isEveryDay", everyDayCheckBox.isChecked());
+        editor.putStringSet("selectedDays", new HashSet<>(selectedDays));
+        editor.apply();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        medicinemameET.setText(preferences.getString("medicineName", ""));
+        reminderMedicineType.setText(preferences.getString("medicineType", ""));
+        medicinestartdate.setText(preferences.getString("medicineStartDate", ""));
+        medicineenddate.setText(preferences.getString("medicineEndDate", ""));
+        reminderUnitType.setText(preferences.getString("selectedUnitType", ""));
+        everyDayCheckBox.setChecked(preferences.getBoolean("isEveryDay", false));
+        selectedDays.clear();
+        selectedDays.addAll(preferences.getStringSet("selectedDays", new HashSet<>()));
+        updateDaySelectionUI(); // Method to update the UI based on selectedDays
+        }
+
+    private void updateDaySelectionUI() {
+        // Update the UI for the selected days based on the selectedDays list
+        for (String day : selectedDays) {
+            switch (day) {
+                case "Sunday":
+                    toggleDayViewState(sunday, true);
+                    break;
+                // Repeat for other days...
+            }
+        }
+    }
+
     private void addingReminder() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         LocalDateTime dateTime = LocalDateTime.now();
@@ -181,15 +272,19 @@ public class medicine_signin extends AppCompatActivity {
         if (currentUser != null) {
             String email = currentUser.getEmail();
 
+            Intent intents = getIntent();
+            String time = intents.getStringExtra("time");
+            String dose = intents.getStringExtra("dose");
+            String onceDaily = intents.getStringExtra("onceDaily");
+
         String medicineName = medicinemameET.getText().toString().trim();
-        String medicineDosage = medicinedosageET.getText().toString().trim();
         String medicineType = reminderMedicineType.getText().toString().trim();
         String dateAndTime = dateTime.toString().trim();
         String medicineStartDate = medicinestartdate.getText().toString().trim();
         String medicineEndDate = medicineenddate.getText().toString().trim();
         boolean isEveryDay = everyDayCheckBox.isChecked();
         // Validation logic
-            if (medicineName.isEmpty() || medicineDosage.isEmpty()  || selectedDays.isEmpty()) {
+            if (medicineName.isEmpty()  || selectedDays.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields and select at least one day", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -197,13 +292,16 @@ public class medicine_signin extends AppCompatActivity {
         Map<String, Object> reminder = new HashMap<>();
         reminder.put("email", email);
         reminder.put("medicineName", medicineName);
-        reminder.put("medicineDosage", medicineDosage);
         reminder.put("medicineType", medicineType);
         reminder.put("created_by", dateAndTime);
         reminder.put("startDate", medicineStartDate);
         reminder.put("endDate", medicineEndDate);
         reminder.put("isEveryDay", isEveryDay);
         reminder.put("selectedDays", selectedDays);
+        reminder.put("alarmTime", time);
+        reminder.put("medicineDosage", dose);
+        reminder.put("schedule", onceDaily);
+        reminder.put("status", false);
 
         firestore.collection("MedicineReminder")
                 .add(reminder)
@@ -214,6 +312,7 @@ public class medicine_signin extends AppCompatActivity {
                         Intent intent = new Intent(medicine_signin.this, splashscreenaddalarm.class);
                         startActivity(intent);
                         finish();
+                        ClearField();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -263,5 +362,13 @@ public class medicine_signin extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    private void ClearField(){
+        medicinestartdate.setText("");
+        reminderMedicineType.setText("");
+        medicinemameET.setText("");
+        medicineenddate.setText("");
+        schedule.setText("");
+        reminderUnitType.setText("");
+    }
 
 }

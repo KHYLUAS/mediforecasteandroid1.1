@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view_medicine_reminder">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="50dp"
+        android:orientation="vertical">
+
+        <!--        <ImageView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:background="@drawable/ic_add_black_24dp"-->
+        <!--            android:scaleType="centerCrop" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="View Reminder"
+                android:textColor="@color/primaryColor"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+
+
+        <TextView
+            fontPath="fonts/nunito_light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="Here's the details of this Reminder"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:alpha="0.8"
+            android:textSize="18sp"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Medicine Name"
+            android:textSize="16dp"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:id="@+id/medicinename"
+            fontPath="fonts/nunito_light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/border_hover"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="14sp"
+            tools:ignore="MissingPrefix" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:orientation="vertical"-->
+            <!--                android:gravity="center_horizontal"-->
+            <!--                android:layout_marginEnd="20dp">-->
+
+
+            <!--                <TextView-->
+            <!--                    android:layout_marginLeft="3dp"-->
+
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginTop="10dp"-->
+            <!--                    android:text="Dosage"-->
+            <!--                    tools:ignore="MissingPrefix" />-->
+
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/medicinedosage"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="57dp"-->
+            <!--                    android:layout_marginTop="3dp"-->
+            <!--                    android:background="@drawable/border_hover"-->
+            <!--                    android:gravity="center"-->
+            <!--                    android:padding="10dp"-->
+            <!--                    android:singleLine="true"-->
+            <!--                    android:text="1"-->
+            <!--                    android:textSize="20sp"-->
+            <!--                    tools:ignore="MissingPrefix" />-->
+            <!--            </LinearLayout>-->
+            <!-- Gender Selection Input -->
+
+
+
+            <!-- Birthday Selection -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_marginLeft="3dp"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Dosage Unit"
+                    tools:ignore="MissingPrefix" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout2"
+                    style="@style/CustomTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="@string/select2"
+                    >
+
+                    <AutoCompleteTextView
+                        android:id="@+id/unit"
+                        style="@style/CustomTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="10"
+
+                        android:inputType="none"
+
+                        android:textSize="17sp"
+                        android:maxLines="1"
+
+                        android:background="@drawable/roundback" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                >
+                <TextView
+                    android:layout_marginLeft="3dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Medicine Type"
+                    tools:ignore="MissingPrefix" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout3"
+                    style="@style/CustomTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="@string/select3"
+                    android:layout_marginTop="3dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/reminderMedicineType"
+                        style="@style/CustomTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="10"
+
+                        android:inputType="none"
+
+                        android:textSize="17sp"
+                        android:maxLines="1"
+
+                        android:background="@drawable/roundback" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginTop="6dp"
+            >
+
+
+
+            <TextView
+                android:layout_marginLeft="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Schedule"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                android:id="@+id/schedule"
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:layout_marginVertical="6dp"
+                android:layout_marginTop="2dp"
+                android:text="Schedule"
+                android:gravity="center"
+
+                android:background="@drawable/border_hover"
+
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textSize="14sp"
+                tools:ignore="MissingPrefix" />
+        </LinearLayout>
+        <!--            <TextView-->
+        <!--                android:layout_marginLeft="3dp"-->
+
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginTop="30dp"-->
+        <!--                android:text="Medicine Type"-->
+        <!--                tools:ignore="MissingPrefix" />-->
+
+        <!--            <com.google.android.material.textfield.TextInputLayout-->
+        <!--                android:id="@+id/textInputLayout"-->
+        <!--                style="@style/CustomTextInputLayout"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:hint="Choose Medicine Type"-->
+        <!--                android:layout_marginTop="20dp">-->
+
+        <!--                    <AutoCompleteTextView-->
+        <!--                        android:id="@+id/reminderMedicineType"-->
+        <!--                        style="@style/CustomTextInputLayout"-->
+        <!--                        android:layout_width="match_parent"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:alpha="0.9"-->
+        <!--                        android:inputType="none"-->
+        <!--                        android:textAlignment="center"-->
+        <!--                        android:textSize="17dp"-->
+        <!--                        android:maxLines="1"-->
+        <!--                        android:background="@drawable/roundback"/>-->
+        <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp"> <!-- Space between the two date sections -->
+
+                <TextView
+                    android:layout_marginLeft="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:id="@+id/medicinestartdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="51dp"
+                    android:background="@drawable/border_hover"
+                    android:padding="12dp"
+                    android:singleLine="true"
+                    android:layout_marginTop="5dp"
+                    android:hint="01/01/2001"
+                    android:textAlignment="center"
+                    android:textSize="19sp"
+                    tools:ignore="MissingPrefix" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"> <!-- Change to vertical for proper alignment -->
+
+                <TextView
+                    android:layout_marginLeft="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:id="@+id/medicineenddate"
+                    android:layout_width="match_parent"
+                    android:layout_height="51dp"
+                    android:background="@drawable/border_hover"
+                    android:padding="12dp"
+                    android:singleLine="true"
+                    android:hint="01/01/2001"
+                    android:textAlignment="center"
+                    android:layout_marginTop="5dp"
+                    android:textSize="19sp"
+                    tools:ignore="MissingPrefix" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            app:cardCornerRadius="4dp"-->
+<!--            app:cardElevation="2dp"-->
+<!--            app:cardUseCompatPadding="true"-->
+<!--            app:contentPadding="16dp"-->
+<!--            android:backgroundTint="#0D174188">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                &lt;!&ndash; The "Every day" button with "Medicine Days" label &ndash;&gt;-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:paddingBottom="8dp">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Medicine Days"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:gravity="center_vertical" />-->
+<!--                </LinearLayout>-->
+<!--                <androidx.appcompat.widget.AppCompatCheckBox-->
+<!--                    android:id="@+id/every_day"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Every day"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    />-->
+
+<!--                &lt;!&ndash; TextViews for individual days &ndash;&gt;-->
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/button_layout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:gravity="center"-->
+<!--                    android:weightSum="7">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_sunday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="S"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_monday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="M"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_tuesday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="T"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_wednesday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="W"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_thursday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="T"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_friday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="F"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dv_saturday"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:text="S"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/primaryColor"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        android:padding="8dp"/>-->
+<!--                </LinearLayout>-->
+<!--            </LinearLayout>-->
+<!--        </androidx.cardview.widget.CardView>-->
+
+
+        <Button
+            android:id="@+id/buttonadd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textCapWords"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/otherprimary"
+            android:elevation="4dp"
+            android:letterSpacing="0.1"
+            android:text="CLOSE"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:rippleColor="@color/primary1"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+</ScrollView>

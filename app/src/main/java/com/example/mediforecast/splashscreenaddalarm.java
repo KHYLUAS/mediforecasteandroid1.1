@@ -25,7 +25,7 @@ public class splashscreenaddalarm extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(splashscreenaddalarm.this, Menubar.class);
-                intent.putExtra("EXTRA_FRAGMENT_REMINDER", "REMINDER");
+                intent.putExtra("EXTRA_FRAGMENT", "REMINDER");
                 startActivity(intent);
                 finish();
             }

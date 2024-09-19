@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.style.StyleSpan;
@@ -23,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,15 +42,16 @@ public class signin extends AppCompatActivity {
     private Button Register;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
-    private TextView txtview7, signLogin;
+    private TextView txtview7, signLogin, validationfname, validationmname, validationbirthday, validationlname, validationgender, validationbarangay, validationemail, validationnumber, validationpassword, validationrpassword;
     private loading1 loading1;
-    private ImageView  passwordeyes,passwordeyee;
+    private ImageView  passwordeyes,passwordeyee,emailchecks;
     private boolean forgetPassVisible,forgetVisible = false;
     private CheckBox checkBox;
     private MaterialAlertDialogBuilder materialAlertDialogBuilder;
+    private boolean isAtleast8 = false, hasUpperCase = false, hasLowerCase = false, hasNumber = false, hasSymbol = false;
+    private CardView frameOne, frameTwo, frameThree, frameFour, frameFive;
 
-
-    String[] Location = {"Balucuc", "Calantipe", "Cansinala", "Capalangan","Colgante", "Paligui","Sampaloc","San Juan","San Vincete","Sucad","Sulipan","Tabuyuc"};
+    String[] Location = {"Balucuc, Apalit Pampanga", "Calantipe, Apalit Pampanga", "Cansinala, Apalit Pampanga", "Capalangan, Apalit Pampanga","Colgante, Apalit Pampanga", "Paligui, Apalit Pampanga","Sampaloc, Apalit Pampanga","San Juan, Apalit Pampanga","San Vincete, Apalit Pampanga","Sucad, Apalit Pampanga","Sulipan, Apalit Pampanga","Tabuyuc, Apalit Pampanga"};
     String[] Gender = {"Male", "Female"};
 
     ArrayAdapter<String> locationAdapter;
@@ -68,6 +73,7 @@ public class signin extends AppCompatActivity {
         signupFname = findViewById(R.id.signupFname);
         signupMname = findViewById(R.id.signupMname);
         signupLname = findViewById(R.id.signupLname);
+        emailchecks = findViewById(R.id.checkbox);
 //        signupUsername = findViewById(R.id.signupUsername);
         signupEmail = findViewById(R.id.signupEmail);
         txtview7 = findViewById(R.id.txtview7);
@@ -81,6 +87,21 @@ public class signin extends AppCompatActivity {
         Register = findViewById(R.id.Register);
         loading1 = new loading1(this);
         checkBox = findViewById(R.id.signcheckbox);
+        validationfname = findViewById(R.id.validationfname);
+        validationmname = findViewById(R.id.validationmname);
+        validationlname = findViewById(R.id.validationlname);
+        validationgender = findViewById(R.id.validationgender);
+        validationbarangay = findViewById(R.id.validationbarangay);
+        validationemail = findViewById(R.id.validationemail);
+        validationnumber = findViewById(R.id.validationnumber);
+        validationpassword = findViewById(R.id.validationpassword);
+        validationrpassword = findViewById(R.id.validationrpassword);
+        validationbirthday = findViewById(R.id.validationbirthday);
+        frameOne = findViewById(R.id.frameOne);
+        frameTwo = findViewById(R.id.frameTwo);
+        frameThree = findViewById(R.id.frameThree);
+        frameFour = findViewById(R.id.frameFour);
+        frameFive = findViewById(R.id.frameFive);
 
 
         ///terms and conditon
@@ -92,8 +113,19 @@ public class signin extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         //////error hide the action barr fix
+        emailchecks.setVisibility(View.INVISIBLE);
+        signupEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validateEmail(s.toString());
+            }
 
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         //checkbox agreement
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -195,7 +227,7 @@ public class signin extends AppCompatActivity {
         signupLocation.setAdapter(locationAdapter);
         signupLocation.setOnItemClickListener((adapterView, view, position, id) -> {
             String selectedLocation = adapterView.getItemAtPosition(position).toString();
-            Toast.makeText(signin.this, "Barangay: " + selectedLocation + ", Apalit, Pampanga", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(signin.this, "Barangay: " + selectedLocation + ", Apalit Pampanga", Toast.LENGTH_SHORT).show();
         });
 
         // Setup for Gender dropdown
@@ -235,7 +267,7 @@ public class signin extends AppCompatActivity {
             }
         });
 
-
+    inputChange();
 
     }
 
@@ -261,38 +293,85 @@ public class signin extends AppCompatActivity {
 
             Toast.makeText(this, "All fields are empty, please fill up the form", Toast.LENGTH_LONG).show();
             isValid = false;
+            validationfname.setVisibility(View.VISIBLE);
+            validationmname.setVisibility(View.VISIBLE);
+            validationlname.setVisibility(View.VISIBLE);
+            validationgender.setVisibility(View.VISIBLE);
+            validationbirthday.setVisibility(View.VISIBLE);
+            validationnumber.setVisibility(View.VISIBLE);
+            validationemail.setVisibility(View.VISIBLE);
+            validationbarangay.setVisibility(View.VISIBLE);
         }
-
         // Validation for each field
         if (fname.isEmpty()) {
-            signupFname.setError("Field cannot be empty");
+//            signupFname.setError("Field cannot be empty");
             signupFname.requestFocus();
+            validationfname.setVisibility(View.VISIBLE);
             isValid = false;
         } else if (!fname.matches("[a-zA-Z]+(?: [a-zA-Z]+)*")) {
-            signupFname.setError("Enter only Alphabetical Characters");
+//            signupFname.setError("Enter only Alphabetical Characters");
             signupFname.requestFocus();
+            validationmname.setVisibility(View.VISIBLE);
             isValid = false;
+            validationfname.setText("Enter only Alphabetical Character");
+            validationfname.setVisibility(View.VISIBLE);
         }
 
         else if (mname.isEmpty()) {
-            signupMname.setError("Field cannot be empty");
+//            signupMname.setError("Field cannot be empty");
             signupMname.requestFocus();
             isValid = false;
+            validationmname.setVisibility(View.VISIBLE);
         }
         else if (!mname.matches("[a-zA-Z]+")) {
-            signupMname.setError("Enter only Alphabetical Character");
+//            signupMname.setError("Enter only Alphabetical Character");
             signupMname.requestFocus();
             isValid = false;
+            validationmname.setText("Enter only Alphabetical Character");
+            validationmname.setVisibility(View.VISIBLE);
         }
         else if (lname.isEmpty()) {
-            signupLname.setError("Field cannot be empty");
+//            signupLname.setError("Field cannot be empty");
             signupLname.requestFocus();
             isValid = false;
+            validationlname.setVisibility(View.VISIBLE);
         }
         else if (!lname.matches("[a-zA-Z]+")) {
-            signupLname.setError("Enter only Alphabetical Character");
+//            signupLname.setError("Enter only Alphabetical Character");
             signupLname.requestFocus();
             isValid = false;
+            validationlname.setText("Enter only Alphabetical Character");
+            validationlname.setVisibility(View.VISIBLE);
+        }  else if (gender.isEmpty()) {
+//            signupGender.setError("Field cannot be empty");
+            signupGender.requestFocus();
+            isValid = false;
+            validationgender.setVisibility(View.VISIBLE);
+        }    //features date
+        else if (birthday.isEmpty()) {
+//            txtview7.setError("Field cannot be empty");
+            txtview7.requestFocus();
+            validationbirthday.setVisibility(View.VISIBLE);
+            isValid = false;
+        }  else if (number.isEmpty()) {
+//            signupNumber.setError("Field cannot be empty");
+            signupNumber.requestFocus();
+            isValid = false;
+            validationnumber.setVisibility(View.VISIBLE);
+        }
+        else if (!number.matches("^09[0-9]{9}$")) {  // Checks for numbers starting with '09' and followed by 9 digits
+//            signupNumber.setError("Number must be in the format 09123456789");
+            signupNumber.requestFocus();
+            isValid = false;
+            validationnumber.setText("Number must be in the format 09123456789");
+            validationnumber.setVisibility(View.VISIBLE);
+        }
+        else if (!number.matches("\\d+")) {  // Ensures the input contains only digits
+//            signupNumber.setError("Only numeric characters are allowed");
+            signupNumber.requestFocus();
+            isValid = false;
+            validationnumber.setText("Only numeric characters are allowed");
+            validationnumber.setVisibility(View.VISIBLE);
         }
 //        else if (username.isEmpty()) {
 //            signupUsername.setError("Field cannot be empty");
@@ -305,66 +384,65 @@ public class signin extends AppCompatActivity {
 //            isValid = false;
 //        }
         else if (email.isEmpty()) {
-            signupEmail.setError("Field cannot be empty");
+//            signupEmail.setError("Field cannot be empty");
             signupEmail.requestFocus();
             isValid = false;
+            validationemail.setVisibility(View.VISIBLE);
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            signupEmail.setError("Enter a valid email");
+//            signupEmail.setError("Enter a valid email");
             signupEmail.requestFocus();
             isValid = false;
+            validationemail.setText("Enter a valid email");
+            validationemail.setVisibility(View.VISIBLE);
         }
         else if (!email.endsWith("@gmail.com")) { // New validation for @gmail.com
-            signupEmail.setError("Email must be a @gmail.com address");
+//            signupEmail.setError("Email must be a @gmail.com address");
             signupEmail.requestFocus();
             isValid = false;
-
-        }
-        else if (gender.isEmpty()) {
-            signupGender.setError("Field cannot be empty");
-            signupGender.requestFocus();
-            isValid = false;
-        }
-        //features date
-        else if (birthday.isEmpty()) {
-            txtview7.setError("Field cannot be empty");
-            txtview7.requestFocus();
-
-            isValid = false;
+            validationemail.setText("Email must be a @gmail.com address");
+            validationemail.setVisibility(View.VISIBLE);
         }
         else if (location.isEmpty()) {
-            signupLocation.setError("Field cannot be empty");
+//            signupLocation.setError("Field cannot be empty");
             signupLocation.requestFocus();
             isValid = false;
+            validationbarangay.setVisibility(View.VISIBLE);
         }
         else if (number.isEmpty()) {
-            signupNumber.setError("Field cannot be empty");
+//            signupNumber.setError("Field cannot be empty");
             signupNumber.requestFocus();
             isValid = false;
+            validationnumber.setVisibility(View.VISIBLE);
         }
         else if (!number.matches("^09[0-9]{9}$")) {  // Checks for numbers starting with '09' and followed by 9 digits
-            signupNumber.setError("Number must be in the format 09123456789");
+//            signupNumber.setError("Number must be in the format 09123456789");
             signupNumber.requestFocus();
             isValid = false;
+            validationnumber.setText("Number must be in the format 09123456789");
+            validationnumber.setVisibility(View.VISIBLE);
         }
         else if (!number.matches("\\d+")) {  // Ensures the input contains only digits
-            signupNumber.setError("Only numeric characters are allowed");
+//            signupNumber.setError("Only numeric characters are allowed");
             signupNumber.requestFocus();
             isValid = false;
+            validationnumber.setText("Only numeric characters are allowed");
+            validationnumber.setVisibility(View.VISIBLE);
         }
 
         else if (password.isEmpty()) {
             signupPassword.setError("Field cannot be empty");
             signupPassword.requestFocus();
             isValid = false;
+            validationpassword.setVisibility(View.VISIBLE);
         }
-        else if (password.length() < 7) {
-            signupPassword.setError("Minimum 7 characters");
+        else if (password.length() < 8) {
+//            signupPassword.setError("Minimum 7 characters");
             signupPassword.requestFocus();
             isValid = false;
         }
         else if (!password.matches(".*[A-Z].*")) { // Check for at least one uppercase letter
-            signupPassword.setError("Must contain at least one uppercase letter and one special symbol");
+//            signupPassword.setError("Must contain at least one uppercase letter and one special symbol");
             signupPassword.requestFocus();
             isValid = false;
         }
@@ -374,28 +452,139 @@ public class signin extends AppCompatActivity {
 //            isValid = false;
 //        }
         else if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?~`].*")) {
-            signupPassword.setError("Must contain at least one uppercase letter and one special symbol");
+//            signupPassword.setError("Must contain at least one uppercase letter and one special symbol");
             signupPassword.requestFocus();
             isValid = false;
         }
 
         else if (rpassword.isEmpty()) {
-            signupRPassword.setError("Field cannot be empty");
+//            signupRPassword.setError("Field cannot be empty");
             signupRPassword.requestFocus();
             isValid = false;
-
+            validationrpassword.setVisibility(View.VISIBLE);
         }
         else if (!rpassword.equals(password)) { // Check if rpassword matches password
-            signupRPassword.setError("Passwords do not match");
+//            signupRPassword.setError("Passwords do not match");
             signupRPassword.requestFocus();
             isValid = false;
+            validationrpassword.setText("Passwords do not match");
+            validationrpassword.setVisibility(View.VISIBLE);
         }
 
 
         return isValid;
     }
+    private void validateEmail(String email) {
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches() && email.endsWith(".com")) {
+            emailchecks.setVisibility(View.VISIBLE);  // Show checkmark if email is valid and ends with .com
+        } else {
+            emailchecks.setVisibility(View.INVISIBLE);  // Hide checkmark if email is invalid or doesn't end with .com
+        }
+    }
 
+    private void passwordCheck(){
+     String password = signupPassword.getText().toString().trim();
 
+     //for 8 characters
+     if(password.length() >= 8){
+         isAtleast8 = true;
+         int color = ContextCompat.getColor(this, R.color.colorGreen);
+         frameOne.setCardBackgroundColor(color);
+     }else {
+         isAtleast8 = false;
+         int color = ContextCompat.getColor(this, R.color.red);
+         frameOne.setCardBackgroundColor(color);
+     }
+    //for uppercase
+     if (password.matches(".*[A-Z].*")){
+         hasUpperCase = true;
+         int color = ContextCompat.getColor(this, R.color.colorGreen);
+         frameTwo.setCardBackgroundColor(color);
+     }else {
+         hasUpperCase = false;
+         int color = ContextCompat.getColor(this, R.color.red);
+         frameTwo.setCardBackgroundColor(color);
+     }
+     //for lowercase
+     if(password.matches(".*[a-z].*")){
+         hasLowerCase = true;
+         int color = ContextCompat.getColor(this, R.color.colorGreen);
+         frameThree.setCardBackgroundColor(color);
+     }else{
+         hasLowerCase = false;
+         int color = ContextCompat.getColor(this, R.color.red);
+         frameThree.setCardBackgroundColor(color);
+     }
+     //for number
+     if(password.matches(".*[0-9].*")){
+         hasNumber = true;
+         int color = ContextCompat.getColor(this, R.color.colorGreen);
+         frameFour.setCardBackgroundColor(color);
+     }else{
+         hasNumber = false;
+         int color = ContextCompat.getColor(this, R.color.red);
+         frameFour.setCardBackgroundColor(color);
+     }
+     //for symbol
+     if(password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?~`].*")){
+         hasSymbol = true;
+         int color = ContextCompat.getColor(this, R.color.colorGreen);
+         frameFive.setCardBackgroundColor(color);
+     }else{
+         hasSymbol = false;
+         int color = ContextCompat.getColor(this, R.color.red);
+         frameFive.setCardBackgroundColor(color);
+     }
+     if(password.isEmpty()){
+         int color = ContextCompat.getColor(this, R.color.colorDefault);
+         frameOne.setCardBackgroundColor(color);
+         frameTwo.setCardBackgroundColor(color);
+         frameThree.setCardBackgroundColor(color);
+         frameFour.setCardBackgroundColor(color);
+         frameFive.setCardBackgroundColor(color);
+     }
+ }
+ private void inputChange(){
+        signupPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            passwordCheck();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        signupRPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String password = signupPassword.getText().toString().trim();
+                String rpassword = signupRPassword.getText().toString().trim();
+                if(!rpassword.equals(password)){
+                    validationrpassword.setText("Passwords do not match");
+                    validationrpassword.setVisibility(View.VISIBLE);
+                }else{
+                    validationrpassword.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+ }
     ////username exist or not
 
 //    private void checkUsernameAndEmailExists(String username, String email) {
@@ -543,7 +732,16 @@ private void checkEmailExists(String email) {
         intent.putExtra("birthday", birthday);
         intent.putExtra("password", password);
         Toast.makeText(signin.this, "Registration successful", Toast.LENGTH_SHORT).show();
+
         startActivity(intent);
+        validationfname.setVisibility(View.GONE);
+        validationmname.setVisibility(View.GONE);
+        validationlname.setVisibility(View.GONE);
+        validationgender.setVisibility(View.GONE);
+        validationbirthday.setVisibility(View.GONE);
+        validationnumber.setVisibility(View.GONE);
+        validationemail.setVisibility(View.GONE);
+        validationbarangay.setVisibility(View.GONE);
         loading1.cancel();
     }
 

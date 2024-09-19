@@ -1,12 +1,14 @@
 package com.example.mediforecast;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +22,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class editprofile extends AppCompatActivity {
@@ -31,8 +32,8 @@ public class editprofile extends AppCompatActivity {
     private Button prUpdate;
     private TextView prBirthday;
     private AutoCompleteTextView prGender, prLocation;
-
-    String[] Location = {"Balucuc", "Calantipe", "Cansinala", "Capalangan", "Colgante", "Paligui", "Sampaloc", "San Juan", "San Vincete", "Sucad", "Sulipan", "Tabuyuc"};
+    private ImageView prImage;
+    String[] Location = {"Balucuc, Apalit Pampanga", "Calantipe, Apalit Pampanga", "Cansinala, Apalit Pampanga", "Capalangan, Apalit Pampanga","Colgante, Apalit Pampanga", "Paligui, Apalit Pampanga","Sampaloc, Apalit Pampanga","San Juan, Apalit Pampanga","San Vincete, Apalit Pampanga","Sucad, Apalit Pampanga","Sulipan, Apalit Pampanga","Tabuyuc, Apalit Pampanga"};
     String[] Gender = {"Male", "Female"};
     ArrayAdapter<String> locationAdapter;
     ArrayAdapter<String> genderAdapter;
@@ -51,19 +52,15 @@ public class editprofile extends AppCompatActivity {
         prFname = findViewById(R.id.prFname);
         prMname = findViewById(R.id.prMname);
         prLname = findViewById(R.id.prLname);
-        prUsername = findViewById(R.id.prUsername);
+//        prUsername = findViewById(R.id.prUsername);
         prEmail = findViewById(R.id.prEmail);
         prGender = findViewById(R.id.prGender);
         prBirthday = findViewById(R.id.prBirthday);
         prLocation = findViewById(R.id.prLocation);
         prNumber = findViewById(R.id.prNumber);
         prUpdate = findViewById(R.id.prUpdate);
+        prImage = findViewById(R.id.profile_button);
 
-        locationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, Location);
-        prLocation.setAdapter(locationAdapter);
-        prLocation.setThreshold(1);
-        Log.d("LocationArray", Arrays.toString(Location));
-        Log.d("GenderArray", Arrays.toString(Gender));
         // Initialize ArrayAdapter for Gender
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, Gender);
         prGender.setAdapter(genderAdapter);
@@ -75,6 +72,18 @@ public class editprofile extends AppCompatActivity {
             prGender.showDropDown();
         });
 
+        prImage.setOnClickListener(v -> {
+            Intent intent = new Intent(editprofile.this, Menubar.class);
+            intent.putExtra("EXTRA_FRAGMENT", "UPDATE");
+            startActivity(intent);
+            finish();
+        });
+        locationAdapter = new ArrayAdapter<>(this, R.layout.list_item, Location);
+       prLocation.setAdapter(locationAdapter);
+        prLocation.setOnItemClickListener((adapterView, view, position, id) -> {
+            String selectedLocation = adapterView.getItemAtPosition(position).toString();
+//            Toast.makeText(signin.this, "Barangay: " + selectedLocation + ", Apalit Pampanga", Toast.LENGTH_SHORT).show();
+        });
 
 
         prBirthday.setOnClickListener(v -> {
@@ -107,7 +116,7 @@ public class editprofile extends AppCompatActivity {
                                 String firstName = value.getString("fname");
                                 String middleName = value.getString("mname");
                                 String lastName = value.getString("lname");
-                                String username = value.getString("username");
+//                                String username = value.getString("username");
                                 String email = value.getString("email");
                                 String gender = value.getString("gender");
                                 String birthday = value.getString("birthday");
@@ -118,11 +127,11 @@ public class editprofile extends AppCompatActivity {
                                 prFname.setText(firstName);
                                 prMname.setText(middleName);
                                 prLname.setText(lastName);
-                                prUsername.setText(username);
+//                                prUsername.setText(username);
                                 prEmail.setText(email);
-                                prGender.setText(gender);
+//                                prGender.setText(gender);
                                 prBirthday.setText(birthday);
-                                prLocation.setText(location);
+//                                prLocation.setText(location);
                                 prNumber.setText(number);
 
                                 Log.d("FetchedGender", gender);
@@ -148,7 +157,7 @@ public class editprofile extends AppCompatActivity {
             String firstName = prFname.getText().toString();
             String middleName = prMname.getText().toString();
             String lastName = prLname.getText().toString();
-            String username = prUsername.getText().toString();
+//            String username = prUsername.getText().toString();
             String email = prEmail.getText().toString();
             String gender = prGender.getText().toString();
             String birthday = prBirthday.getText().toString();
@@ -160,7 +169,7 @@ public class editprofile extends AppCompatActivity {
                     .update("fname", firstName,
                             "mname", middleName,
                             "lname", lastName,
-                            "username", username,
+//                            "username", username,
                             "email", email,
                             "gender", gender,
                             "birthday", birthday,

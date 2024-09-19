@@ -22,7 +22,7 @@
         android:id="@+id/buttonNav"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/primary1"
+        android:background="@color/otherprimary"
         app:itemPaddingBottom="10dp"
         app:itemIconTint="@drawable/icon_selector"
         app:itemTextColor="@color/white"

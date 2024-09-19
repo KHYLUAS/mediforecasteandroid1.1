@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class OTPVerification extends AppCompatActivity {
     private loading1 loading1;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
+    private ImageView img4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,14 @@ public class OTPVerification extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         resendBtn = findViewById(R.id.resendBtn);
-
+        img4 = findViewById(R.id.img4);
 
         // Retrieve the email from the intent
          email = getIntent().getStringExtra("email");
          fname = getIntent().getStringExtra("fname");
          mname = getIntent().getStringExtra("mname");
         lname = getIntent().getStringExtra("lname");
-        username = getIntent().getStringExtra("username");
+//        username = getIntent().getStringExtra("username");
          gender = getIntent().getStringExtra("gender");
         birthday = getIntent().getStringExtra("birthday");
         location = getIntent().getStringExtra("location");
@@ -88,6 +90,17 @@ public class OTPVerification extends AppCompatActivity {
             }
         });
 
+
+        img4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    Intent intent = new Intent(OTPVerification.this, signin.class);
+                    startActivity(intent);
+                    finish();
+
+            }
+        });
 
         resendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +206,7 @@ public class OTPVerification extends AppCompatActivity {
         userData.put("fname", fname);
         userData.put("mname", mname);
         userData.put("lname", lname);
-        userData.put("username", username);
+//        userData.put("username", username);
         userData.put("gender", gender);
         userData.put("number", number);
         userData.put("location", location);

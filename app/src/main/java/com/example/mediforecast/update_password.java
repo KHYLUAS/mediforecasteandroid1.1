@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class update_password extends AppCompatActivity {
 
     private EditText oldPasswordField, newPasswordField, confirmPasswordField;
-    private ImageView oldPasswordEye, newPasswordEye, confirmPasswordEye;
+    private ImageView oldPasswordEye, newPasswordEye, confirmPasswordEye,back;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
     private boolean oldPasswordVisible = false, newPasswordVisible = false, confirmPasswordVisible = false;
@@ -41,7 +41,7 @@ public class update_password extends AppCompatActivity {
         newPasswordEye = findViewById(R.id.passwordeye);
         confirmPasswordEye = findViewById(R.id.forgetconfirm);
         Button resetButton = findViewById(R.id.reset);
-
+        back = findViewById(R.id.img4);
         // Firebase initialization
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -52,6 +52,13 @@ public class update_password extends AppCompatActivity {
         confirmPasswordEye.setOnClickListener(v -> toggleConfirmPasswordVisibility());
 
         resetButton.setOnClickListener(v -> updatePassword());
+
+        back.setOnClickListener(v -> {
+            Intent intent = new Intent(update_password.this, Menubar.class);
+            intent.putExtra("EXTRA_FRAGMENT", "BACK");
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void toggleOldPasswordVisibility() {

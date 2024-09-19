@@ -11,6 +11,9 @@ public class Reminder {
     private String medicineName;
     private String medicineDosage;
     private String startDate;
+    private String medicineType;
+    private String alarmTime;
+    private boolean status;
 
     private static final SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/yyyy", Locale.US);
     private static final SimpleDateFormat outputDateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
@@ -18,10 +21,13 @@ public class Reminder {
     public Reminder() {
     }
 
-    public Reminder(String medicineName, String medicineDosage, String startDate) {
+    public Reminder(String medicineName, String medicineDosage, String startDate, String medicineType, String alertTime, boolean status) {
         this.medicineName = medicineName;
         this.medicineDosage = medicineDosage;
         this.startDate = startDate;
+        this.medicineType = medicineType;
+        this.alarmTime = alertTime;
+        this.status = status;
     }
 
     public String getMedicineName() {
@@ -31,6 +37,27 @@ public class Reminder {
     public void setMedicineName(String medicineName) {
         this.medicineName = medicineName;
     }
+    public String getAlarmTime() {
+        return alarmTime;
+    }
+    public boolean isStatus() {
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public void setAlarmTime(String alarmTime) {
+        this.alarmTime = alarmTime;
+    }
+    public String getMedicineType() {
+        return medicineType;
+    }
+
+    public void setMedicineType(String medicineType) {
+        this.medicineType = medicineType;
+    }
+
 
     public String getMedicineDosage() {
         return medicineDosage;

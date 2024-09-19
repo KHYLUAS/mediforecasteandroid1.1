@@ -10,7 +10,7 @@ public class GlobalUserData {
     private static String email;
     private static String contact;
     private static String location;
-    private static String username;
+//    private static String username;
     private static String birthday;
     private static String gender;
     private static String profileImage;
@@ -59,13 +59,13 @@ public class GlobalUserData {
         }
     }
 
-    public static String getUsername() {
-        return username;
-    }
-    public static void setUsername(String username) {
-        GlobalUserData.username = username;
-    }
-
+//    public static String getUsername() {
+//        return username;
+//    }
+//    public static void setUsername(String username) {
+//        GlobalUserData.username = username;
+//    }
+//
 
     // Getter and Setter for email
     public static String getEmail() {
