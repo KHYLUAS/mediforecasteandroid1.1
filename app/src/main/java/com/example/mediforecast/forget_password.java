@@ -5,22 +5,17 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.chaos.view.PinView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
@@ -42,7 +37,7 @@ public class forget_password extends AppCompatActivity {
     private String generatedOTP;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
-
+    private ImageView image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +50,7 @@ public class forget_password extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         resendBtn = findViewById(R.id.resendBtn);
-
+        image = findViewById(R.id.img4);
 
         // Retrieve the email from the intent
         email = getIntent().getStringExtra("email");
@@ -79,7 +74,11 @@ public class forget_password extends AppCompatActivity {
                 Toast.makeText(forget_password.this, "Invalid OTP. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
-
+        image.setOnClickListener(v -> {
+            Intent intent = new Intent(forget_password.this, login_form.class);
+            startActivity(intent);
+            finish();
+        });
 
         resendBtn.setOnClickListener(new View.OnClickListener() {
             @Override

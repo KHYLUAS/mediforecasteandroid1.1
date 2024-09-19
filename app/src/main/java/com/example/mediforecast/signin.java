@@ -32,7 +32,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class signin extends AppCompatActivity {
 
@@ -170,12 +174,7 @@ public class signin extends AppCompatActivity {
                             "7. Limitation of Liability\n" +
                             "No Warranty: MediForecast is provided \"as is\" and \"as available\" without any warranties, express or implied. We do not guarantee that the app will be available at all times or free from errors.\n" +
                             "Limitation: To the fullest extent permitted by law, we shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the app.\n" +
-                            "\n" +
-                            "8. Governing Law\n" +
-                            "These Terms are governed by and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of laws principles.\n" +
-                            "\n" +
-                            "9. Contact Us\n" +
-                            "If you have any questions about these Terms, please contact us at [Your Contact Information].");
+                            "\n");
 
                     materialAlertDialogBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                         @Override
@@ -353,7 +352,15 @@ public class signin extends AppCompatActivity {
             txtview7.requestFocus();
             validationbirthday.setVisibility(View.VISIBLE);
             isValid = false;
-        }  else if (number.isEmpty()) {
+        } else if (birthday.isEmpty()) {
+            // If the birthday field is empty, show validation error
+            txtview7.requestFocus();
+            validationbirthday.setVisibility(View.VISIBLE);
+            isValid = false;
+        }
+
+
+        else if (number.isEmpty()) {
 //            signupNumber.setError("Field cannot be empty");
             signupNumber.requestFocus();
             isValid = false;
@@ -469,7 +476,32 @@ public class signin extends AppCompatActivity {
             isValid = false;
             validationrpassword.setText("Passwords do not match");
             validationrpassword.setVisibility(View.VISIBLE);
+        }else  {
+            // Parsing the birthday entered by the user
+            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+            sdf.setLenient(false); // To strictly enforce date format
+
+            try {
+                Date enteredBirthday = sdf.parse(birthday);  // Parse the birthday input
+                Date today = new Date(); // Get today's date
+
+                // Check if the entered birthday is after today's date
+                if (enteredBirthday != null && enteredBirthday.after(today)) {
+                    txtview7.requestFocus();
+                    validationbirthday.setText("Birthday cannot be later than today.");
+                    validationbirthday.setVisibility(View.VISIBLE);
+                    isValid = false;
+                } else {
+                    validationbirthday.setVisibility(View.GONE); // Hide the error if valid
+                }
+            } catch (ParseException e) {
+                // Handle parse exception if the date format is invalid
+                validationbirthday.setText("Invalid date format. Use d/M/yyyy.");
+                validationbirthday.setVisibility(View.VISIBLE);
+                isValid = false;
+            }
         }
+
 
 
         return isValid;
