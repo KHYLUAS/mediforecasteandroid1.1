@@ -36,204 +36,30 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Content 1: Rural Health I Banner -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <!--here -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bannercommunity">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <!-- Left-aligned Logo -->
-                <ImageView
-                    android:id="@+id/logo"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="16dp"
-                    app:srcCompat="@drawable/rullogo"
-                    android:scaleType="centerInside"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <!-- Centered Title: Rural Health I -->
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rural Health III"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    app:layout_constraintStart_toEndOf="@id/logo"
-                    app:layout_constraintTop_toTopOf="@id/logo"
-                    app:layout_constraintBottom_toBottomOf="@id/logo"
-                    android:layout_marginStart="8dp" />
+                    <ImageView
+                        android:id="@+id/noDataImage"
+                        android:layout_width="300dp"
+                        android:layout_height="600dp"
+                        android:layout_gravity="center" />
 
-                <!-- Banner Image -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/taskRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Magkita-kita po tayo sa Biyernes sa Barangay Sampaloc para sa ating People’s Day"
-                    android:textColor="@android:color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textView8" />
+                </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/imageView7"
-                    android:layout_width="0dp"
-                    android:layout_height="207dp"
-                    android:layout_marginTop="16dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textView9"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/barangay" />
-
-                <!-- Description Text Below Image -->
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- Content 2: Second Banner -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bannercommunity">
-
-                <!-- Left-aligned Logo -->
-                <ImageView
-                    android:id="@+id/logo2"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="16dp"
-                    app:srcCompat="@drawable/rullogo"
-                    android:scaleType="centerInside"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <!-- Centered Title: Rural Health I -->
-                <TextView
-                    android:id="@+id/text10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rural Health II"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    app:layout_constraintStart_toEndOf="@id/logo2"
-                    app:layout_constraintTop_toTopOf="@id/logo2"
-                    app:layout_constraintBottom_toBottomOf="@id/logo2"
-                    android:layout_marginStart="8dp" />
-
-                <!-- Banner Image -->
-
-                <TextView
-                    android:id="@+id/text11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Magkita-kita po tayo sa Biyernes sa Barangay Cansinala para sa ating People’s Day"
-                    android:textColor="@android:color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text10" />
-
-                <ImageView
-                    android:id="@+id/imageView9"
-                    android:layout_width="0dp"
-                    android:layout_height="207dp"
-                    android:layout_marginTop="16dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text11"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/cansi" />
-
-                <!-- Description Text Below Image -->
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/bannercommunity">
-
-                <!-- Left-aligned Logo -->
-                <ImageView
-                    android:id="@+id/logo1"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="16dp"
-                    app:srcCompat="@drawable/rullogo"
-                    android:scaleType="centerInside"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <!-- Centered Title: Rural Health I -->
-                <TextView
-                    android:id="@+id/text9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rural Health III"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    app:layout_constraintStart_toEndOf="@id/logo1"
-                    app:layout_constraintTop_toTopOf="@id/logo1"
-                    app:layout_constraintBottom_toBottomOf="@id/logo1"
-                    android:layout_marginStart="8dp" />
-
-                <!-- Banner Image -->
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Magkita-kita po tayo sa Biyernes sa Barangay Cansinala para sa ating People’s Day"
-                    android:textColor="@android:color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text9" />
-
-                <ImageView
-                    android:id="@+id/imageView8"
-                    android:layout_width="0dp"
-                    android:layout_height="207dp"
-                    android:layout_marginTop="16dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textView10"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/rul" />
-
-                <!-- Description Text Below Image -->
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

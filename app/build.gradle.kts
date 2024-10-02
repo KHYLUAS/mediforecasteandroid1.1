@@ -57,10 +57,11 @@ dependencies {
     implementation ("com.github.dhaval2404:imagepicker:2.1")//imagepicker api
 //    implementation ("com.jakewharton:butterknife:10.2.3")//Butterknife for binding the ids
 //    annotationProcessor ("com.jakewharton:butterknife-compiler:10.2.3")
-
+    implementation ("kr.co.prnd:readmore-textview:1.0.0")// read more
+    implementation ("androidx.media3:media3-exoplayer:1.1.0")//media player for video in community post
+    implementation ("androidx.media3:media3-ui:1.1.0")//media player for video in community post
     implementation ("androidx.activity:activity-ktx:1.2.3")//imagepicker api
     implementation ("androidx.fragment:fragment-ktx:1.3.3")//imagepicker api
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

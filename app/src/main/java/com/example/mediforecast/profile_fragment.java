@@ -1,13 +1,21 @@
 package com.example.mediforecast;
 
+import static com.example.mediforecast.login_form.PREF_EMAIL;
+import static com.example.mediforecast.login_form.PREF_PASSWORD;
+import static com.example.mediforecast.login_form.PREF_REMEMBER_ME;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,14 +97,38 @@ public class profile_fragment extends Fragment {
 
 
 
-        nameTextView.setText(GlobalUserData.getName());
-        emailTextView.setText(GlobalUserData.getEmail());
-        contactTextView.setText(GlobalUserData.getContact());
-        locationTextView.setText(GlobalUserData.getLocation());
-//        usernameTextView.setText(GlobalUserData.getUsername());
-        birthdayTextView.setText(GlobalUserData.getBirthday());
-        genderTextView.setText(GlobalUserData.getGender());
-
+//        nameTextView.setText(GlobalUserData.getName());
+//        emailTextView.setText(GlobalUserData.getEmail());
+//        contactTextView.setText(GlobalUserData.getContact());
+//        locationTextView.setText(GlobalUserData.getLocation());
+////        usernameTextView.setText(GlobalUserData.getUsername());
+//        birthdayTextView.setText(GlobalUserData.getBirthday());
+//        genderTextView.setText(GlobalUserData.getGender());
+//
+//        // Retrieve user data from SharedPreferences
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+//
+//        String name = sharedPreferences.getString("name", "Name not provided");
+//        String email = sharedPreferences.getString("email", "Email not provided");
+//        String contact = sharedPreferences.getString("contact", "Contact not provided");
+//        String location = sharedPreferences.getString("location", "Location not provided");
+//        String birthday = sharedPreferences.getString("birthday", "Birthday not provided");
+//        String gender = sharedPreferences.getString("gender", "Gender not provided");
+//        String profileImageUrl = sharedPreferences.getString("profileImage", "");
+//
+//        nameTextView.setText(name);
+//        emailTextView.setText(email);
+//        contactTextView.setText(contact);
+//        locationTextView.setText(location);
+//        birthdayTextView.setText(birthday);
+//        genderTextView.setText(gender);
+//
+//        // Load profile image if available
+//        if (!profileImageUrl.isEmpty()) {
+//            Glide.with(profile_fragment.this)
+//                    .load(profileImageUrl)
+//                    .into(profileImageView);
+//        }
 
         // Set up Firestore listener for real-time updates
         if (currentUser != null) {
@@ -146,15 +178,6 @@ public class profile_fragment extends Fragment {
             }
         });
 
-        // Handle camera icon click to open Image Picker
-//        cameraTextView.setOnClickListener(v -> {
-//            ImagePicker.with(requireActivity())  // Use requireActivity() to get the hosting Activity's context
-//                    .crop()                      // Crop image (Optional)
-//                    .compress(1024)              // Final image size will be less than 1 MB (Optional)
-//                    .maxResultSize(1080, 1080)   // Final image resolution will be less than 1080 x 1080 (Optional)
-//                    .start();
-//        });
-
         cameraTextView.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             activityResultLauncher.launch(intent);  // Launch the image picker intent with the result launcher
@@ -173,20 +196,6 @@ public class profile_fragment extends Fragment {
 
         return view;
     }
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//
-//        loadUserProfile();
-//    }
-//    private void loadUserProfile() {
-//        Glide.with(this)
-//                .load(GlobalUserData.getProfileImage())
-//                .into(profileImageView);
-//    }
-
-
-
 
     private void uploadImageToFirebase(Uri uri) {
         if (currentUser != null) {
@@ -241,7 +250,9 @@ public class profile_fragment extends Fragment {
 
                 // Show a message to the user
                 Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+                clearLoginCredentials();
 
+                resetLoginFields();
                 // Redirect to the login screen
                 Intent intent = new Intent(getActivity(), login_form.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -263,43 +274,32 @@ public class profile_fragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+    private void clearLoginCredentials() {
+        SharedPreferences preferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
 
+    private void resetLoginFields() {
+        // Check if the current activity is the login_form
+        if (getActivity() instanceof login_form) {
+            login_form activity = (login_form) getActivity();
 
+            // Clear the EditText fields
+            if (activity.logEmail != null) {
+                activity.logEmail.setText("");  // Clear email field
+            }
+            if (activity.logPassword != null) {
+                activity.logPassword.setText("");  // Clear password field
+            }
+            if (activity.rememberMeCB != null) {
+                activity.rememberMeCB.setChecked(false);  // Uncheck "Remember Me" checkbox
+            }
+        }
 
+}
 }
 
 
-//    private void fetchUserData(String uid) {
-//        firestore.collection("MobileUsers").document(uid).get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful() && task.getResult() != null) {
-//                        DocumentSnapshot document = task.getResult();
-//                        if (document.exists()) {
-//                            String firstname = document.getString("fname");
-//                            String lastname = document.getString("lname");
-//                            String name = firstname + " " + lastname;
-//                            String email = document.getString("email");
-//                            String contact = document.getString("number");
-//                            String location = document.getString("location");
-//                            String username = document.getString("username");
-//
-//                            // Populate the UI with the fetched data
-////                            nameTextView.setText(name);
-////                            emailTextView.setText(email);
-////                            contactTextView.setText(contact);
-////                            locationTextView.setText(location);
-////                            usernameTextView.setText(username);
-//
-//                            // Optionally, set the profile image if you have it stored in Firestore
-//                            // Load image into profileImageView (You can use a library like Glide)
-//
-//                        } else {
-//                            Toast.makeText(getActivity(), "No user data found", Toast.LENGTH_SHORT).show();
-//                        }
-//                    } else {
-//                        Toast.makeText(getActivity(), "Failed to fetch user data", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-//    }
 

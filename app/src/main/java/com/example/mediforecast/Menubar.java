@@ -50,7 +50,9 @@ public class Menubar extends AppCompatActivity {
         // Set up navigation listener
         binding.buttonNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.home) {
+           if(itemId == R.id.Dashboard){
+               replaceFragment(new dashboard_fragment());
+           } else if (itemId == R.id.home) {
                 replaceFragment(new home1_fragment());
             } else if (itemId == R.id.patientchecker) {
                 replaceFragment(new checker_fragment());
