@@ -1,9 +1,5 @@
 package com.example.mediforecast;
 
-import static com.example.mediforecast.login_form.PREF_EMAIL;
-import static com.example.mediforecast.login_form.PREF_PASSWORD;
-import static com.example.mediforecast.login_form.PREF_REMEMBER_ME;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -39,6 +35,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class profile_fragment extends Fragment {
@@ -53,6 +52,7 @@ public class profile_fragment extends Fragment {
     private FirebaseStorage storage;
     private ImageView imageView;
     private loading1 loading1;
+    public SharedPreferences preferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,12 +67,12 @@ public class profile_fragment extends Fragment {
         // Initialize FirebaseAuth
         auth = FirebaseAuth.getInstance();
 
+        preferences = getActivity().getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE);
         //Initialize FirebaseStorage
         storage = FirebaseStorage.getInstance();
 
         // Initialize loading dialog
         loading1 = new loading1(requireActivity());
-
     }
 
     @Nullable
@@ -95,40 +95,8 @@ public class profile_fragment extends Fragment {
         cameraTextView = view.findViewById(R.id.imageView5);
         updateTextView = view.findViewById(R.id.updatepass);
 
-
-
-//        nameTextView.setText(GlobalUserData.getName());
-//        emailTextView.setText(GlobalUserData.getEmail());
-//        contactTextView.setText(GlobalUserData.getContact());
-//        locationTextView.setText(GlobalUserData.getLocation());
-////        usernameTextView.setText(GlobalUserData.getUsername());
-//        birthdayTextView.setText(GlobalUserData.getBirthday());
-//        genderTextView.setText(GlobalUserData.getGender());
-//
-//        // Retrieve user data from SharedPreferences
-//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-//
-//        String name = sharedPreferences.getString("name", "Name not provided");
-//        String email = sharedPreferences.getString("email", "Email not provided");
-//        String contact = sharedPreferences.getString("contact", "Contact not provided");
-//        String location = sharedPreferences.getString("location", "Location not provided");
-//        String birthday = sharedPreferences.getString("birthday", "Birthday not provided");
-//        String gender = sharedPreferences.getString("gender", "Gender not provided");
-//        String profileImageUrl = sharedPreferences.getString("profileImage", "");
-//
-//        nameTextView.setText(name);
-//        emailTextView.setText(email);
-//        contactTextView.setText(contact);
-//        locationTextView.setText(location);
-//        birthdayTextView.setText(birthday);
-//        genderTextView.setText(gender);
-//
-//        // Load profile image if available
-//        if (!profileImageUrl.isEmpty()) {
-//            Glide.with(profile_fragment.this)
-//                    .load(profileImageUrl)
-//                    .into(profileImageView);
-//        }
+        // Load cached data from SharedPreferences
+        loadCachedProfileData();
 
         // Set up Firestore listener for real-time updates
         if (currentUser != null) {
@@ -142,6 +110,22 @@ public class profile_fragment extends Fragment {
                             }
                             if (snapshot != null && snapshot.exists()) {
                                 String profileImageUrl = snapshot.getString("profileImage");
+                                String profileEmail = snapshot.getString("email");
+                                String profileFname = snapshot.getString("fname");
+                                String profileLname = snapshot.getString("lname");
+                                String profileBirthday = snapshot.getString("birthday");
+                                String profileNumber = snapshot.getString("number");
+                                String profileGender = snapshot.getString("gender");
+                                String profileLocation = snapshot.getString("location");
+
+                                birthdayFormatDate(profileBirthday);
+
+                                // Save profile data to SharedPreferences
+                                saveProfileToSharedPreferences(profileImageUrl, profileEmail, profileFname, profileLname, profileBirthday, profileNumber, profileGender, profileLocation);
+
+                                // Update UI with new data
+                                updateProfileUI(profileImageUrl, profileEmail, profileFname, profileLname, profileBirthday, profileNumber, profileGender, profileLocation);
+
                                 if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                                     Glide.with(profile_fragment.this)
                                             .load(profileImageUrl)
@@ -151,6 +135,7 @@ public class profile_fragment extends Fragment {
                         }
                     });
         }
+
 
         logoutTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +181,69 @@ public class profile_fragment extends Fragment {
 
         return view;
     }
+    // Load cached profile data from SharedPreferences
+    private void loadCachedProfileData() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE);
+        String profileImageUrl = preferences.getString("profileImage", "");
+        String profileEmail = preferences.getString("profileEmail", "");
+        String profileFname = preferences.getString("profileFname", "");
+        String profileLname = preferences.getString("profileLname", "");
+        String profileBirthday = preferences.getString("profileBirthday", "");
+        String profileNumber = preferences.getString("profileNumber", "");
+        String profileGender = preferences.getString("profileGender", "");
+        String profileLocation = preferences.getString("profileLocation", "");
 
+        // If there's cached data, update the UI
+        if (!profileEmail.isEmpty()) {
+            birthdayFormatDate(profileBirthday);
+            updateProfileUI(profileImageUrl, profileEmail, profileFname, profileLname, profileBirthday, profileNumber, profileGender, profileLocation);
+        }
+    }
+
+    // Save profile data to SharedPreferences
+    private void saveProfileToSharedPreferences(String profileImageUrl, String profileEmail, String profileFname, String profileLname, String profileBirthday, String profileNumber, String profileGender, String profileLocation) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("profileImage", profileImageUrl);
+        editor.putString("profileEmail", profileEmail);
+        editor.putString("profileFname", profileFname);
+        editor.putString("profileLname", profileLname);
+        editor.putString("profileBirthday", profileBirthday);
+        editor.putString("profileNumber", profileNumber);
+        editor.putString("profileGender", profileGender);
+        editor.putString("profileLocation", profileLocation);
+        editor.apply(); // Save changes
+    }
+
+    // Update UI with profile data
+    private void updateProfileUI(String profileImageUrl, String profileEmail, String profileFname, String profileLname, String profileBirthday, String profileNumber, String profileGender, String profileLocation) {
+        nameTextView.setText(profileFname + " " + profileLname);
+        emailTextView.setText(profileEmail);
+        contactTextView.setText(profileNumber);
+        genderTextView.setText(profileGender);
+        locationTextView.setText(profileLocation);
+
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            Glide.with(profile_fragment.this)
+                    .load(profileImageUrl)
+                    .into(profileImageView);
+        }
+    }
+
+    private void birthdayFormatDate(String profileBirthday){
+        String birthdayDate = profileBirthday;
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(birthdayDate);
+
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
+            String formattedDate = outputFormat.format(date);
+
+            birthdayTextView.setText(formattedDate);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private void uploadImageToFirebase(Uri uri) {
         if (currentUser != null) {
             // Creating Storage reference
@@ -248,11 +295,13 @@ public class profile_fragment extends Fragment {
                 // Sign out the user
                 auth.signOut();
 
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+
                 // Show a message to the user
                 Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
-                clearLoginCredentials();
 
-                resetLoginFields();
                 // Redirect to the login screen
                 Intent intent = new Intent(getActivity(), login_form.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -274,31 +323,7 @@ public class profile_fragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void clearLoginCredentials() {
-        SharedPreferences preferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.apply();
-    }
 
-    private void resetLoginFields() {
-        // Check if the current activity is the login_form
-        if (getActivity() instanceof login_form) {
-            login_form activity = (login_form) getActivity();
-
-            // Clear the EditText fields
-            if (activity.logEmail != null) {
-                activity.logEmail.setText("");  // Clear email field
-            }
-            if (activity.logPassword != null) {
-                activity.logPassword.setText("");  // Clear password field
-            }
-            if (activity.rememberMeCB != null) {
-                activity.rememberMeCB.setChecked(false);  // Uncheck "Remember Me" checkbox
-            }
-        }
-
-}
 }
 
 

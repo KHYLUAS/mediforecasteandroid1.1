@@ -24,7 +24,7 @@ public class Menubar extends AppCompatActivity {
 
         // Replace fragment on start
         if (savedInstanceState == null){
-            if("PROFILE".equals(fragmentToDisplay) || "UPDATE".equals(fragmentToDisplay)){
+            if("PROFILE".equals(fragmentToDisplay) || "UPDATE".equals(fragmentToDisplay)  || "EDIT".equals(fragmentToDisplay)){
                 replaceFragment(new profile_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.profile);
             } else if ("REMINDER".equals(fragmentToDisplay)) {

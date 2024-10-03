@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryColor"
+    android:background="@color/onemore"
     tools:context=".login_form">
 
     <LinearLayout
@@ -164,22 +164,22 @@
                 android:layout_marginLeft="10dp"
                 android:textSize="17sp"
                 android:visibility="gone"/>
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp">-->
+<!--                <CheckBox-->
+<!--                    android:id="@+id/rememberMeCB"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Remember Me"-->
+<!--                    android:layout_marginStart="-5dp"-->
+<!--                    />-->
+<!--            </RelativeLayout>-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-                <CheckBox
-                    android:id="@+id/rememberMeCB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Remember Me"
-                    android:layout_marginStart="-5dp"
-                    />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="8dp">
                 <TextView
                     android:id="@+id/forgetPassword"
                     android:layout_width="wrap_content"

@@ -65,12 +65,9 @@ public class editprofile extends AppCompatActivity {
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, Gender);
         prGender.setAdapter(genderAdapter);
 
-        prGender.setThreshold(1);
-
-
-        prGender.setOnClickListener(v -> {
-            prGender.showDropDown();
-        });
+        // Initialize ArrayAdapter for Location
+        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, Location);
+        prLocation.setAdapter(locationAdapter);
 
         prImage.setOnClickListener(v -> {
             Intent intent = new Intent(editprofile.this, Menubar.class);
@@ -79,11 +76,7 @@ public class editprofile extends AppCompatActivity {
             finish();
         });
         locationAdapter = new ArrayAdapter<>(this, R.layout.list_item, Location);
-       prLocation.setAdapter(locationAdapter);
-        prLocation.setOnItemClickListener((adapterView, view, position, id) -> {
-            String selectedLocation = adapterView.getItemAtPosition(position).toString();
-//            Toast.makeText(signin.this, "Barangay: " + selectedLocation + ", Apalit Pampanga", Toast.LENGTH_SHORT).show();
-        });
+
 
 
         prBirthday.setOnClickListener(v -> {
@@ -129,13 +122,15 @@ public class editprofile extends AppCompatActivity {
                                 prLname.setText(lastName);
 //                                prUsername.setText(username);
                                 prEmail.setText(email);
-//                                prGender.setText(gender);
+                                 prGender.setText(gender, false);
                                 prBirthday.setText(birthday);
-//                                prLocation.setText(location);
+                                 prLocation.setText(location, false);
                                 prNumber.setText(number);
 
                                 Log.d("FetchedGender", gender);
                                 Log.d("FetchedLocation", location);
+
+
                             } else {
                                 Toast.makeText(editprofile.this, "No profile data found.", Toast.LENGTH_SHORT).show();
                             }
@@ -146,6 +141,9 @@ public class editprofile extends AppCompatActivity {
         }
 
 
+        // Set click listeners for showing the dropdown when the AutoCompleteTextViews are clicked
+        prGender.setOnClickListener(v -> prGender.showDropDown());
+        prLocation.setOnClickListener(v -> prLocation.showDropDown());
 
         // Set up OnClickListener for Update button
         prUpdate.setOnClickListener(v -> updateProfile());
@@ -175,10 +173,17 @@ public class editprofile extends AppCompatActivity {
                             "birthday", birthday,
                             "location", location,
                             "number", number)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(editprofile.this, "Profile updated successfully.", Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(aVoid ->{
+                        Intent intent = new Intent(editprofile.this, Menubar.class);
+                        intent.putExtra("EXTRA_FRAGMENT", "EDIT");
+                        startActivity(intent);
+                        finish(); // Close the splash screen activity
+                        Toast.makeText(editprofile.this, "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                    })
                     .addOnFailureListener(e -> Toast.makeText(editprofile.this, "Failed to update profile.", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "User is not logged in.", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
