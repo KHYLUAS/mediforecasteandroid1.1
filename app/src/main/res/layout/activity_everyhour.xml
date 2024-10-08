@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".oncedaily">
+    tools:context=".everyhour">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -93,24 +93,39 @@
 
                 <!-- Time Label -->
                 <TextView
+                    android:id="@+id/timeValue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Time"
+                    android:text="Every Selected Hour(s)"
                     android:textSize="16sp"
                     android:textColor="#000000" />
-
-                <!-- Time Value -->
-                <TextView
-                    android:id="@+id/timeValue"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout2"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/card"
-                    android:padding="8dp"
-                    android:text="8:00 AM"
-                    android:textColor="#ffff66"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    app:hintEnabled="false"
+                    >
+                    <AutoCompleteTextView
+                        android:id="@+id/hoursACTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:gravity="center"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:textSize="16sp"
+                        android:inputType="none"
+                        android:textStyle="bold"
+                        android:textColor="#ffff66"
+                        android:maxLines="1"
+                        android:backgroundTint="#023d54"
+                        android:background="@drawable/card"
+                        android:padding="4dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <!-- Time Value -->
+
             </LinearLayout>
             <View
                 android:layout_width="match_parent"

@@ -43,5 +43,9 @@ public class medicineschedule extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        custom.setOnClickListener(v->{
+            Intent intent = new Intent(medicineschedule.this, everyhour.class);
+            startActivity(intent);
+        });
     }
 }

@@ -26,6 +26,9 @@
         android:theme="@style/Theme.MEDIFORECAST"
         tools:targetApi="31">
         <activity
+            android:name=".everyhour"
+            android:exported="false" />
+        <activity
             android:name=".view_medicine_reminder"
             android:exported="false" />
         <activity
