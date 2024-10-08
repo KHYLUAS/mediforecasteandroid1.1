@@ -24,29 +24,26 @@ public class Menubar extends AppCompatActivity {
 
         // Replace fragment on start
         if (savedInstanceState == null){
-            if("PROFILE".equals(fragmentToDisplay) || "UPDATE".equals(fragmentToDisplay)  || "EDIT".equals(fragmentToDisplay)){
+            if("PROFILE".equals(fragmentToDisplay) || "UPDATE".equals(fragmentToDisplay)
+                    || "EDIT".equals(fragmentToDisplay) || "BACK".equals(fragmentToDisplay)){
                 replaceFragment(new profile_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.profile);
-            } else if ("REMINDER".equals(fragmentToDisplay)) {
+            } else if ("REMINDER".equals(fragmentToDisplay) || "REMINDERDB".equals(fragmentToDisplay)
+                    || "SIGNIN".equals(fragmentToDisplay) || "VIEW".equals(fragmentToDisplay)) {
                 replaceFragment(new reminder_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.reminder);
-            } else if ("SIGNIN".equals(fragmentToDisplay)) {
-                replaceFragment(new reminder_fragment());
-                binding.buttonNav.setSelectedItemId(R.id.reminder);
-            }else if("VIEW".equals(fragmentToDisplay)){
-                replaceFragment(new reminder_fragment());
-                binding.buttonNav.setSelectedItemId(R.id.reminder);
-            } else if("BACK".equals(fragmentToDisplay)){
-                replaceFragment(new profile_fragment());
-                binding.buttonNav.setSelectedItemId(R.id.profile);
-            }
-            else {
+            }  else if("COMMUNITYDB".equals(fragmentToDisplay)){
                 replaceFragment(new home1_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.home);
+            }else if("SELFCHECKERDB".equals(fragmentToDisplay)){
+                replaceFragment(new checker_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.patientchecker);
+            }else{
+                replaceFragment(new dashboard_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.Dashboard);
             }
         }
-
-
+        
         // Set up navigation listener
         binding.buttonNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

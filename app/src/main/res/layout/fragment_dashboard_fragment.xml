@@ -6,16 +6,35 @@
     android:background="#F0EEEE"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".dashboard_fragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/otherprimary">
 
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="DASHBOARD"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/logs" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="120dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
         android:layout_alignParentEnd="true"> <!-- Aligning to the right -->
 
         <ImageView
@@ -111,8 +130,8 @@
                     android:layout_centerHorizontal="true"
                     android:text="Community"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                    android:textSize="18sp"
+
+                    android:textSize="16sp"
                     android:layout_marginTop="5dp" />
 
                 </RelativeLayout>
@@ -132,7 +151,7 @@
                         android:layout_centerInParent="true"/>
 
                     <ImageView
-                        android:id="@+id/selfcheckr"
+                        android:id="@+id/selfchecker"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/patientchecker"
@@ -148,8 +167,8 @@
                         android:layout_centerHorizontal="true"
                         android:text="Self Checker"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
+
+                        android:textSize="16sp"
                         android:layout_marginTop="5dp" />
 
                 </RelativeLayout>
@@ -184,8 +203,8 @@
                         android:layout_centerHorizontal="true"
                         android:text="Reminder"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
+
+                        android:textSize="16sp"
                         android:layout_marginTop="5dp" />
 
                 </RelativeLayout>
