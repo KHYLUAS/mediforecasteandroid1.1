@@ -1,14 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F0EEEE"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".dashboard_fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:src="@drawable/logs" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_alignParentEnd="true"> <!-- Aligning to the right -->
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/notify"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/not"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/bell"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+
+
+    <androidx.cardview.widget.CardView
+
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-28dp"
+        app:cardCornerRadius="28dp"
+        android:background="#FFFFFF">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="487dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Our Service"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="25dp"/>
+
+
+
+            <TextView
+                android:id="@+id/validationboth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:alpha=".8"
+                android:text="Invalid Email or Password"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="35dp"
+                    android:layout_marginStart="20dp"> <!-- Margin between items -->
+
+                    <ImageView
+                        android:id="@+id/community"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/circle"
+                        android:layout_centerInParent="true"/>
+
+                    <ImageView
+                        android:id="@+id/communitypost"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/event"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="@color/primaryColor"/>
+
+                    <TextView
+                        android:id="@+id/com"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/community"
+                    android:layout_centerHorizontal="true"
+                    android:text="Community"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginTop="5dp" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="34dp"
+                    android:layout_marginStart="15dp"> <!-- Margin between items -->
+
+                    <ImageView
+                        android:id="@+id/self"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/circle"
+                        android:layout_centerInParent="true"/>
+
+                    <ImageView
+                        android:id="@+id/selfcheckr"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/patientchecker"
+                        android:backgroundTint="@color/primaryColor"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="5dp" />
+
+                    <TextView
+                        android:id="@+id/selfs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/self"
+                        android:layout_centerHorizontal="true"
+                        android:text="Self Checker"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginTop="5dp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="15dp"> <!-- Margin between items -->
+
+                    <ImageView
+                        android:id="@+id/reminder"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/circle"
+                        android:layout_centerInParent="true"/>
+
+                    <ImageView
+                        android:id="@+id/medicinereminder"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/asd"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="@color/primaryColor"/>
+
+                    <TextView
+                        android:id="@+id/med"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/reminder"
+                        android:layout_centerHorizontal="true"
+                        android:text="Reminder"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginTop="5dp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Checker History"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See All"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:background="@drawable/border_hover"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
