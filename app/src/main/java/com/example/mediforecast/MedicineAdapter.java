@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +17,42 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.os.Handler;
 
 public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.MedicineViewHolder> {
 
     private Context context;
     private List<Medicine> medicines;
     private MedicineRepository medicineRepository;
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Timer timer;
+
 
     public MedicineAdapter(Context context, List<Medicine> medicines, MedicineRepository medicineRepository) {
         this.context = context;
         this.medicines = medicines;
         this.medicineRepository = medicineRepository;
+        startUpdating();
+    }
+
+    private void startUpdating() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // Update the UI on the main thread
+                handler.post(() -> notifyDataSetChanged());
+            }
+        }, 0, 10000); // Repeat every minute
     }
 
     @NonNull
@@ -42,10 +67,11 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     public void onBindViewHolder(@NonNull MedicineViewHolder holder, int position) {
         Medicine medicine = medicines.get(position);
         holder.nameTextView.setText(medicine.getMedicineName());
-        holder.time.setText(medicine.getTime1());
-
-        String combDosage = "Take " + medicine.getDose1() + "(" + medicine.getMedicineType() + ")";
-        holder.dosage.setText(combDosage);
+//        holder.time.setText(medicine.getTime1());
+//
+//        String combDosage = "Take " + medicine.getDose1() + "(" + medicine.getMedicineType() + ")";
+//        holder.dosage.setText(combDosage);
+        updateMedicineDisplay(holder, medicine);
 
         Log.d("MedicineAdapter", "Medicine at position " + position + ": " + medicine.toString());
 
@@ -81,6 +107,62 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
             popupMenu.show();
         });
     }
+
+    private void updateMedicineDisplay(MedicineViewHolder holder, Medicine medicine) {
+        long currentTime = System.currentTimeMillis();
+
+        long time1End = getTimeEnd(medicine.getTime1());
+        long time2End = getTimeEnd(medicine.getTime2());
+        long time3End = getTimeEnd(medicine.getTime3());
+
+        Log.d("MedicineAdapter", "Current time: " + currentTime);
+        Log.d("MedicineAdapter", "Time1 End: " + time1End);
+        Log.d("MedicineAdapter", "Time2 End: " + time2End);
+        Log.d("MedicineAdapter", "Time3 End: " + time3End);
+
+        if (currentTime < time1End) {
+            holder.time.setText(medicine.getTime1());
+            holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+        } else if (time2End != Long.MAX_VALUE && currentTime < time2End) { // Check if time2 is valid
+            holder.time.setText(medicine.getTime2());
+            holder.dosage.setText("Take " + medicine.getDose2() + " (" + medicine.getMedicineType() + ")");
+        } else if (time3End != Long.MAX_VALUE && currentTime < time3End) { // Check if time3 is valid
+            holder.time.setText(medicine.getTime3());
+            holder.dosage.setText("Take " + medicine.getDose3() + " (" + medicine.getMedicineType() + ")");
+        } else {
+            holder.time.setText(medicine.getTime1());
+            holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+        }
+    }
+
+
+    private long getTimeEnd(String time) {
+        if (time == null || time.isEmpty()) {
+            return Long.MAX_VALUE; // Treat null or empty as if the time has already passed
+        }
+        return convertToMillis(time); // Don't add an hour if not needed
+    }
+
+    private long convertToMillis(String time) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            Date date = sdf.parse(time);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            Calendar now = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, now.get(Calendar.YEAR));
+            calendar.set(Calendar.MONTH, now.get(Calendar.MONTH));
+            calendar.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+
+            return calendar.getTimeInMillis();
+        } catch (ParseException e) {
+            Log.e("MedicineAdapter", "Error parsing time: " + time, e);
+            return 0; // Return 0 in case of error
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -147,6 +229,13 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
             month = itemView.findViewById(R.id.month);
             time = itemView.findViewById(R.id.time);
             dosage = itemView.findViewById(R.id.dosage);
+        }
+    }
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (timer != null) {
+            timer.cancel(); // Stop the timer
         }
     }
 }

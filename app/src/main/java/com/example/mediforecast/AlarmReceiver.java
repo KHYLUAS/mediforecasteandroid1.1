@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class AlarmReceiver extends BroadcastReceiver {
+    //To do: every hour
+    //update
+    //intent click notification
+    //remind to check if everyday repeat alarm
     private static final String CHANNEL_ID = "MedicineReminderChannel";
     private static Ringtone ringtone;
     private static Vibrator vibrator;
