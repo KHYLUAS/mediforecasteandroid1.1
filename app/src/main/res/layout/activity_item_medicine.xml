@@ -79,6 +79,7 @@
                     tools:text="Biogesic"
                     android:singleLine="true"
                     android:textSize="20sp"
+                    android:textStyle="bold"
                     android:layout_weight="1"
                     android:id="@+id/medicinenameTV"
                     android:textColor="@android:color/black"/>
@@ -106,8 +107,8 @@
                     android:paddingEnd="8dp"
                     android:singleLine="true"
                     android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    tools:text="100mg" />
+                    android:textSize="13sp"
+                    tools:text="Take 1 tablet 100mg" />
 
                 <!-- Align baseline -->
 
@@ -120,53 +121,20 @@
                 android:layout_height="match_parent"
                 >
 
+
                 <TextView
-                    android:id="@+id/scheduleday"
+                    android:id="@+id/time"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="1dp"
-                    android:layout_marginEnd="167dp"
-                    android:layout_toStartOf="@+id/status"
-                    android:alpha="0.5"
-                    android:gravity="center"
-
-                    android:singleLine="true"
-                    android:text="M"
-                    android:textAlignment="center"
-                    android:textColor="@color/otherprimary"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/twice"
-                    android:layout_width="88dp"
-                    android:layout_height="20dp"
-                    android:layout_above="@+id/status"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="165dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="120dp"
                     android:layout_marginLeft="70dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginBottom="3dp"
                     android:gravity="center"
-                    android:text="12:00"
+                    android:text="12:00 PM"
                     android:textColor="@color/otherprimary"
-                    android:textSize="18sp"
+                    android:textSize="32sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="9dp"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="COMPLETED"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
             </RelativeLayout>
 
 

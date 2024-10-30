@@ -2,6 +2,7 @@ package com.example.mediforecast;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,18 +24,29 @@ public class medicineschedule extends AppCompatActivity {
         custom = findViewById(R.id.custom);
         medicinearrow = findViewById(R.id.medicinearrow);
 
+        Intent updateIntent = getIntent();
+        boolean isUpdate = updateIntent.getBooleanExtra("isUpdate", false);
+
+        if (isUpdate) {
+            Log.d("MedicineSchedule", "Update mode");
+        } else {
+            Log.d("MedicineSchedule", "Add mode");
+        }
         once.setOnClickListener(v->{
             Intent intent = new Intent(medicineschedule.this, oncedaily.class);
+            intent.putExtra("isUpdate", isUpdate);
             startActivity(intent);
             finish();
         });
         twice.setOnClickListener(v->{
-            Intent intent = new Intent(medicineschedule.this, secondaily.class);
+            Intent intent = new Intent(medicineschedule.this, twicedaily.class);
+            intent.putExtra("isUpdate", isUpdate);
             startActivity(intent);
             finish();
         });
         thrice.setOnClickListener(v->{
-            Intent intent = new Intent(medicineschedule.this, thirddaily.class);
+            Intent intent = new Intent(medicineschedule.this, thricedaily.class);
+            intent.putExtra("isUpdate", isUpdate);
             startActivity(intent);
             finish();
         });
@@ -42,10 +54,6 @@ public class medicineschedule extends AppCompatActivity {
             Intent intent = new Intent(medicineschedule.this, medicine_signin.class);
             startActivity(intent);
             finish();
-        });
-        custom.setOnClickListener(v->{
-            Intent intent = new Intent(medicineschedule.this, everyhour.class);
-            startActivity(intent);
         });
     }
 }

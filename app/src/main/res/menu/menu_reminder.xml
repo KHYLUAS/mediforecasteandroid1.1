@@ -6,7 +6,7 @@
         android:title="View"
         />
     <item
-        android:id="@+id/menuDelete"
+        android:id="@+id/action_delete"
         android:title="Delete"
         />
 

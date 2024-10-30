@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,121 +27,55 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class reminder_fragment extends Fragment {
 
-    private static final String TAG = "ReminderFragment";
-    private ImageView addButton;
+    private MedicineRepository medicineRepository;
     private RecyclerView recyclerView;
-    private ReminderAdapter adapter;
-    private ArrayList<Reminder> reminderList = new ArrayList<>();
-    private FirebaseFirestore firestore;
-    private FirebaseAuth mAuth;
-    private ImageView noDataImage;
-    private SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/yyyy", Locale.US);
-    private SimpleDateFormat outputDateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+    private ImageView addButton;
+    private MedicineAdapter adapter;
+    Medicine medicine;
+    private Map<String, Integer> dayOfWeekMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firestore = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+
+        medicineRepository = new MedicineRepository(requireActivity().getApplication());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reminder_fragment, container, false);
-
-        addButton = view.findViewById(R.id.Addimage);
+        // Set up RecyclerView
         recyclerView = view.findViewById(R.id.taskRecycler);
-        noDataImage = view.findViewById(R.id.noDataImage);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ReminderAdapter(getContext(), reminderList);
+
+        // Initialize adapter with empty list
+        adapter = new MedicineAdapter(getContext(), null, medicineRepository);
         recyclerView.setAdapter(adapter);
 
+        // Set up Add button
+        addButton = view.findViewById(R.id.Addimage);
         addButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), medicine_signin.class);
+            // Start activity to add a new medicine
+            Intent intent = new Intent(getContext(), medicine_signin.class);
             startActivity(intent);
         });
 
-        fetchReminders();
+        // Observe the LiveData and update the adapter when data changes
+        medicineRepository.getAllMedicines().observe(getViewLifecycleOwner(), new Observer<List<Medicine>>() {
+            @Override
+            public void onChanged(List<Medicine> medicines) {
+                adapter.setMedicines(medicines);
+            }
+        });
 
         return view;
     }
 
-    private void fetchReminders() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            String email = currentUser.getEmail();
-            firestore.collection("MedicineReminder")
-                    .whereEqualTo("email", email)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Log.e(TAG, "Error fetching data", error);
-                                Toast.makeText(getContext(), "Error fetching data", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            if (snapshots != null) {
-                                reminderList.clear();
-                                for (QueryDocumentSnapshot document : snapshots) {
-                                    String medicineName = document.getString("medicineName");
-                                    String dosageValue = document.getString("dosageValue");
-                                    String startDate = document.getString("startDate");
-                                    String medicineType = document.getString("medicineType");
-                                    String alertTime = document.getString("alarmTime");
-                                    Boolean statusBoolean = document.getBoolean("status");
-                                    boolean status = (statusBoolean != null) ? statusBoolean : false; // Default to false if null
-
-                                    Log.d(TAG, "Fetched alertTimes: " + alertTime);  // Add this to check startDate
-
-                                    if (medicineName != null && dosageValue != null && medicineType != null && startDate != null) {
-                                        String formattedDate = formatStartDate(startDate);
-                                        Log.d(TAG, "Formatted startDate: " + formattedDate);  // Check the formatted date
-
-                                        Reminder reminder = new Reminder(medicineName, dosageValue, formattedDate, medicineType, alertTime, status);
-                                        reminderList.add(reminder);
-                                    } else {
-                                        Log.w(TAG, "One or more fields are null for document: " + document.getId());
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();
-                                if (reminderList.isEmpty()) {
-                                    noDataImage.setVisibility(View.VISIBLE);
-                                    recyclerView.setVisibility(View.GONE);
-                                } else {
-                                    noDataImage.setVisibility(View.GONE);
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                }
-                            } else {
-                                Log.d(TAG, "No documents found");
-                                Toast.makeText(getContext(), "No data found", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        } else {
-            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private String formatStartDate(String startDate) {
-        if (startDate == null || startDate.isEmpty()) {
-            return "";
-        }
-
-        try {
-            Date date = inputDateFormat.parse(startDate);
-            if (date != null) {
-                return outputDateFormat.format(date);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 }

@@ -15,40 +15,70 @@ import com.google.android.material.timepicker.TimeFormat;
 
 import java.util.Calendar;
 
-public class thirddaily extends AppCompatActivity {
-    private TextView timeValue, timeValue2, timeValue3, doseValue, doseValue2, doseValue3;
+public class twicedaily extends AppCompatActivity {
+    private TextView timeValue, timeValue1, doseValue, doseValue1;
     private ImageView medicinearrow;
     private MaterialTimePicker timePicker;
     private Calendar calendar;
     private int currentDose = 1;
+    private Button Register;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_thirddaily);
+        setContentView(R.layout.activity_twicedaily);
+        Register = findViewById(R.id.Register);
         timeValue = findViewById(R.id.timeValue);
-        timeValue2 = findViewById(R.id.timeValue2);
-        timeValue3 = findViewById(R.id.timeValue3);
+        timeValue1 = findViewById(R.id.timeValue1);
         doseValue = findViewById(R.id.doseValue);
-        doseValue2 = findViewById(R.id.doseValue2);
-        doseValue3 = findViewById(R.id.doseValue3);
+        doseValue1 = findViewById(R.id.doseValue1);
         medicinearrow = findViewById(R.id.medicinearrow);
+        boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
         medicinearrow.setOnClickListener(v->{
-            Intent intent = new Intent(thirddaily.this, medicineschedule.class);
+            Intent intent = new Intent(twicedaily.this, medicineschedule.class);
             startActivity(intent);
             finish();
         });
+        // Set click listeners for both timeValue and timeValue1 to show time pickers
         timeValue.setOnClickListener(v -> showTimePicker(timeValue));
-        timeValue2.setOnClickListener(v -> showTimePicker(timeValue2));
-        timeValue3.setOnClickListener(v -> showTimePicker(timeValue3));
+        timeValue1.setOnClickListener(v -> showTimePicker(timeValue1));
         doseValue.setOnClickListener(v -> showDosePicker(doseValue));
-        doseValue2.setOnClickListener(v -> showDosePicker(doseValue2));
-        doseValue3.setOnClickListener(v -> showDosePicker(doseValue3));
+        doseValue1.setOnClickListener(v -> showDosePicker(doseValue1));
         String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                .getString("selectedUnitType", "");// Default dose value
+                .getString("selectedUnitType", "");
         doseValue.setText(unitType);
-        doseValue2.setText(unitType);
-        doseValue3.setText(unitType);
+        doseValue1.setText(unitType);
+
+        Register.setOnClickListener(v->{
+            String time1 = timeValue.getText().toString();
+            String time2 = timeValue1.getText().toString();
+            String dose1 = doseValue.getText().toString();
+            String dose2 = doseValue1.getText().toString();
+            String twiceDaily = "Twice Daily";
+
+            if (isUpdate){
+                // Pass both times and doses to the next activity
+                Intent intent = new Intent(twicedaily.this, UpdateReminder.class);
+                intent.putExtra("time1", time1);
+                intent.putExtra("time2", time2);
+                intent.putExtra("dose1", dose1);
+                intent.putExtra("dose2", dose2);
+                intent.putExtra("twiceDaily", twiceDaily);
+                startActivity(intent);
+                finish();
+            }else{
+                // Pass both times and doses to the next activity
+                Intent intent = new Intent(twicedaily.this, medicine_signin.class);
+                intent.putExtra("time1", time1);
+                intent.putExtra("time2", time2);
+                intent.putExtra("dose1", dose1);
+                intent.putExtra("dose2", dose2);
+                intent.putExtra("twiceDaily", twiceDaily);
+                startActivity(intent);
+                finish();
+            }
+
+        });
     }
     private void showTimePicker(TextView timeTextView) {
         // Initialize the MaterialTimePicker
@@ -74,7 +104,7 @@ public class thirddaily extends AppCompatActivity {
                     selectedMinute,
                     (selectedHour >= 12) ? "PM" : "AM");
 
-            // Set the formatted time in the respective TextView (timeValue, timeValue2, or timeValue3)
+            // Set the formatted time in the respective TextView (timeValue or timeValue1)
             timeTextView.setText(formattedTime);
         });
     }

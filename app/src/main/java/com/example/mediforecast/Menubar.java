@@ -29,7 +29,8 @@ public class Menubar extends AppCompatActivity {
                 replaceFragment(new profile_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.profile);
             } else if ("REMINDER".equals(fragmentToDisplay) || "REMINDERDB".equals(fragmentToDisplay)
-                    || "SIGNIN".equals(fragmentToDisplay) || "VIEW".equals(fragmentToDisplay)) {
+                    || "SIGNIN".equals(fragmentToDisplay) || "VIEW".equals(fragmentToDisplay) ||
+            "ADDREMINDER".equals(fragmentToDisplay) || "UPDATEREMINDER".equals(fragmentToDisplay)){
                 replaceFragment(new reminder_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.reminder);
             }  else if("COMMUNITYDB".equals(fragmentToDisplay)){

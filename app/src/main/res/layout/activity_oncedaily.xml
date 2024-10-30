@@ -105,12 +105,12 @@
                     android:id="@+id/timeValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/card"
-                    android:padding="8dp"
                     android:text="8:00 AM"
-                    android:textColor="#ffff66"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="#ffff66"
+                    android:background="@drawable/card"
+                    android:padding="8dp" />
             </LinearLayout>
             <View
                 android:layout_width="match_parent"

@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".splashscreenupdate"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -44,10 +43,10 @@
             android:layout_marginTop="7dp"
             android:layout_marginEnd="25dp"
             android:alpha=".8"
-            android:text="Your Reminder as successfully."
+            android:text="Medicine Reminder added successfully."
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

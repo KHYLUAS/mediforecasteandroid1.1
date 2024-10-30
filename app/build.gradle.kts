@@ -62,6 +62,10 @@ dependencies {
     implementation ("androidx.media3:media3-ui:1.1.0")//media player for video in community post
     implementation ("androidx.activity:activity-ktx:1.2.3")//imagepicker api
     implementation ("androidx.fragment:fragment-ktx:1.3.3")//imagepicker api
+
+    implementation ("androidx.room:room-runtime:2.5.2")//room database
+    implementation ("androidx.room:room-ktx:2.5.2")//""
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")// ""
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

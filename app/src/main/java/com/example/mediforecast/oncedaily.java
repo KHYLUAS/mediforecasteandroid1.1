@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mediforecast.databinding.ActivityMainBinding;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
@@ -21,7 +20,6 @@ public class oncedaily extends AppCompatActivity {
     private ImageView medicinearrow;
     private TextView timeValue;
     private TextView doseValue;
-    private ActivityMainBinding binding;
     private MaterialTimePicker timePicker;
     private Calendar calendar;
     private int currentDose = 1;
@@ -38,6 +36,9 @@ public class oncedaily extends AppCompatActivity {
         doseValue = findViewById(R.id.doseValue);
         Register = findViewById(R.id.Register);
         medicinearrow = findViewById(R.id.medicinearrow);
+
+        boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
+
         String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
                 .getString("selectedUnitType", "");// Default dose value
         Log.e("This is the unityType", unitType);
@@ -61,17 +62,24 @@ public class oncedaily extends AppCompatActivity {
         // Handle dose value click to show modal
         doseValue.setOnClickListener(v -> showDosePicker());
         Register.setOnClickListener(v -> {
-            String time = timeValue.getText().toString();
-            String dose = doseValue.getText().toString();
+            String time1 = timeValue.getText().toString();
+            String dose1 = doseValue.getText().toString();
             String onceDaily = "Once Daily";
-
-            // Optionally, navigate to another activity or show a confirmation message
-            Intent intent = new Intent(oncedaily.this, medicine_signin.class);
-            intent.putExtra("time", time);
-            intent.putExtra("dose", dose);
-            intent.putExtra("onceDaily", onceDaily);
-            startActivity(intent);
-            finish();
+            if(isUpdate){
+                Intent intent = new Intent(oncedaily.this, UpdateReminder.class);
+                intent.putExtra("time1", time1);
+                intent.putExtra("dose1", dose1);
+                intent.putExtra("onceDaily", onceDaily);
+                startActivity(intent);
+                finish();
+            }else {
+                Intent intent = new Intent(oncedaily.this, medicine_signin.class);
+                intent.putExtra("time1", time1);
+                intent.putExtra("dose1", dose1);
+                intent.putExtra("onceDaily", onceDaily);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 
