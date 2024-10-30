@@ -63,56 +63,48 @@ public class home1_fragment extends Fragment {
     }
 
     private void fetch_communityPost() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            // Set up real-time listener for the "CommunityPost" collection
-            CollectionReference communityPostRef = db.collection("CommunityPost");
-            communityPostRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot snapshot,
-                                    @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-                    if (snapshot != null) {
-                        homeList.clear();
-                        // Loop through all documents in the collection
-                        for (QueryDocumentSnapshot document : snapshot) {
-                            Log.d(TAG, "Community post: " + document.getId() + " => " + document.getData());
-                            // You can now handle each document, e.g., update the UI with the document data
-                            String rhu = document.getString("rhu");
-                            String createdBy = document.getString("created_by");
-                            String postImg = document.getString("postImg");
-                            String postMessage = document.getString("postMessage");
-                            String fileType = document.getString("fileType");
-
-
-                            if(rhu != null && createdBy != null && postMessage != null && postImg != null && fileType != null){
-
-                                Home home = new Home(rhu, createdBy, postMessage, postImg, fileType);
-                                homeList.add(home);
-                            } else {
-                                Log.w(TAG, "One or more fields are null for document: " + document.getId());
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
-                        if (homeList.isEmpty()) {
-                            noDataImage.setVisibility(View.VISIBLE);
-                            taskRecycler.setVisibility(View.GONE);
-                        } else {
-                            noDataImage.setVisibility(View.GONE);
-                            taskRecycler.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        Log.d(TAG, "No documents found");
-                        Toast.makeText(getContext(), "No data found", Toast.LENGTH_SHORT).show();
-                    }
+        // Set up real-time listener for the "CommunityPost" collection
+        CollectionReference communityPostRef = db.collection("CommunityPost");
+        communityPostRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error fetching posts: " + e.getMessage());
+                    Toast.makeText(getContext(), "Failed to fetch community posts: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    return;
                 }
-            });
-        }else {
-            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
-        }
+                if (snapshot != null) {
+                    homeList.clear();
+                    for (QueryDocumentSnapshot document : snapshot) {
+                        Log.d(TAG, "Community post: " + document.getId() + " => " + document.getData());
+                        String rhu = document.getString("rhu");
+                        String createdBy = document.getString("created_by");
+                        String postImg = document.getString("postImg");
+                        String postMessage = document.getString("postMessage");
+                        String fileType = document.getString("fileType");
+
+                        if (rhu != null && createdBy != null && postMessage != null && postImg != null && fileType != null) {
+                            Home home = new Home(rhu, createdBy, postMessage, postImg, fileType);
+                            homeList.add(home);
+                        } else {
+                            Log.w(TAG, "Missing fields in document: " + document.getId());
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    if (homeList.isEmpty()) {
+                        noDataImage.setVisibility(View.VISIBLE);
+                        taskRecycler.setVisibility(View.GONE);
+                    } else {
+                        noDataImage.setVisibility(View.GONE);
+                        taskRecycler.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Log.d(TAG, "No community posts found.");
+                }
+            }
+        });
+
     }
+
 }
 

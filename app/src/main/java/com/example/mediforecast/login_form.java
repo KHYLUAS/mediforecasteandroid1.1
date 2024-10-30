@@ -1,5 +1,7 @@
 package com.example.mediforecast;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
@@ -24,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.Source;
 
 public class login_form extends AppCompatActivity {
@@ -50,13 +54,13 @@ public class login_form extends AppCompatActivity {
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
-        // Check if user is already logged in
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            // User is logged in, navigate to the main activity directly
-            navigateToMainActivity();
-            return; // Exit onCreate early to prevent showing the login form
-        }
+//        // Check if user is already logged in
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if (currentUser != null) {
+//            // User is logged in, navigate to the main activity directly
+//            navigateToMainActivity();
+//            return; // Exit onCreate early to prevent showing the login form
+//        }
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
 
@@ -76,42 +80,22 @@ public class login_form extends AppCompatActivity {
         // Initialize loading dialog
         loading1 = new loading1(this);
         sharedPreferences = getSharedPreferences("SHARED_PREF", MODE_PRIVATE);
+// Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("MyInfo", MODE_PRIVATE);
 
+        // Load saved login credentials from SharedPreferences
+        String savedEmail = sharedPreferences.getString("EMAIL", null);
+        String savedPassword = sharedPreferences.getString("PASSWORD", null);
+
+        if (savedEmail != null && savedPassword != null) {
+            // Credentials exist, auto-navigate to Menubar
+            navigateToMainActivity();
+            return;
+        }
         loadLoginCredentials();
-//        // Check if the user had selected "Remember Me"
-//        if (sharedPreferences.getBoolean("CHECKBOX", false)) {
-//            String savedEmail = sharedPreferences.getString("EMAIL", "");
-//            String savedPassword = sharedPreferences.getString("PASSWORD", "");
-//
-//            if (!savedEmail.isEmpty() && !savedPassword.isEmpty()) {
-//                // Automatically log in if credentials are saved
-//                autoLogin(savedEmail, savedPassword);
-//            }
-//        }
         // Set up listeners
         setupListeners();
     }
-//    // Function to perform automatic login
-//    private void autoLogin(String email, String password) {
-//        // Show loading dialog
-//        loading1.show();
-//
-//        // Attempt to sign in using saved credentials
-//        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-//            // Hide loading dialog
-//            loading1.cancel();
-//
-//            if (task.isSuccessful()) {
-//                // User is successfully logged in, navigate to the home screen
-//                Intent intent = new Intent(login_form.this, Menubar.class);
-//                startActivity(intent);
-//                finish();
-//            } else {
-//                // In case of failure, show login form and let the user log in manually
-//                Toast.makeText(login_form.this, "Auto-login failed. Please log in manually.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
     private void setupListeners() {
         // Email validation
@@ -201,62 +185,47 @@ public class login_form extends AppCompatActivity {
 
     //
     private void loginUser() {
+        loading1.show();
         String email = logEmail.getText().toString().trim();
         String password = logPassword.getText().toString().trim();
+        firestore.collection("MobileUsers")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot.isEmpty()) {
+                        Log.d(TAG, "No matching documents found.");
+                    } else {
+                        for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                            // Retrieve the document ID
+                            String documentId = documentSnapshot.getId();
+                            Log.d(TAG, "Found document with ID: " + documentId);
 
-        // Show loading dialog
-        loading1.show();
+                            // Retrieve other fields from the document if needed
+                            String name = documentSnapshot.getString("password");
+                            String Email = documentSnapshot.getString("email");
+                            Log.d(TAG, "Name: " + name + Email);
 
-        // Sign in with Firebase Authentication
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-            // Hide loading dialog
-            loading1.cancel();
+                            if (email.equals(Email) && password.equals(name)){
+                                saveLoginCredentials(email, password);
+                                loading1.cancel();
 
-            if (task.isSuccessful()) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                if (user != null) {
-                    // First, try fetching user data from the cache
-                    firestore.collection("MobileUsers").document(user.getUid())
-                            .get(Source.CACHE)
-                            .addOnCompleteListener(task1 -> {
-                                // Save login credentials if "Remember Me" is checked
-                                    saveLoginCredentials(email, password);
-
-                                Toast.makeText(login_form.this, "Login successful", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(login_form.this, Menubar.class);
                                 startActivity(intent);
                                 finish();
-//                                if (task1.isSuccessful() && task1.getResult() != null) {
-//                                    // Successfully retrieved from cache
-//                                    setUserGlobalData(task1.getResult());
-//                                } else {
-//
-//                                    // Fallback: try fetching from the server if the cache fails
-//                                    firestore.collection("MobileUsers").document(user.getUid())
-//                                            .get(Source.SERVER) // Fetch from server if cache fails
-//                                            .addOnCompleteListener(task2 -> {
-//                                                if (task2.isSuccessful() && task2.getResult() != null) {
-//
-//                                                    setUserGlobalData(task2.getResult());
-//                                                }
-//                                                else {
-//                                                    Toast.makeText(login_form.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            }).addOnFailureListener(e -> {
-//                                                Toast.makeText(login_form.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                            });
-//                                }
-                            });
-                }
-            } else {
-                // Handle login failure
-                validationboth.setVisibility(View.VISIBLE);
-//                handleLoginFailure(task.getException());
-            }
-        });
+
+                            }else{
+                                loading1.cancel();
+                                validationboth.setVisibility(View.VISIBLE);
+                            }
+
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error getting documents: ", e));
     }
     private void saveLoginCredentials(String email, String password) {
         // Save email and password to SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("EMAIL", email);
         editor.putString("PASSWORD", password);
@@ -273,26 +242,6 @@ public class login_form extends AppCompatActivity {
         Intent intent = new Intent(login_form.this, Menubar.class);
         startActivity(intent);
         finish(); // Close the login activity
-    }
-    private void setUserGlobalData(DocumentSnapshot document) {
-        String name = document.getString("fname") + " " + document.getString("lname");
-        String email = document.getString("email");
-        String contact = document.getString("number");
-        String location = document.getString("location");
-        String birthday = document.getString("birthday");
-        String gender = document.getString("gender");
-        String profileImage = document.getString("profileImage");
-
-        // Update GlobalUserData
-        GlobalUserData.setName(name);
-        GlobalUserData.setEmail(email);
-        GlobalUserData.setContact(contact);
-        GlobalUserData.setLocation(location);
-        GlobalUserData.setBirthday(birthday);
-        GlobalUserData.setGender(gender);
-        GlobalUserData.setProfileImage(profileImage);
-
-
     }
 
     private void handleLoginFailure(Exception exception) {

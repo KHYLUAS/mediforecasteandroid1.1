@@ -26,6 +26,36 @@
         android:theme="@style/Theme.MEDIFORECAST"
         tools:targetApi="31">
         <activity
+            android:name=".question10"
+            android:exported="false" />
+        <activity
+            android:name=".question9"
+            android:exported="false" />
+        <activity
+            android:name=".question8"
+            android:exported="false" />
+        <activity
+            android:name=".quuestion7"
+            android:exported="false" />
+        <activity
+            android:name=".question6"
+            android:exported="false" />
+        <activity
+            android:name=".question5"
+            android:exported="false" />
+        <activity
+            android:name=".question4"
+            android:exported="false" />
+        <activity
+            android:name=".question3"
+            android:exported="false" />
+        <activity
+            android:name=".question2"
+            android:exported="false" />
+        <activity
+            android:name=".question1"
+            android:exported="false" />
+        <activity
             android:name=".everyhour"
             android:exported="false" />
         <activity

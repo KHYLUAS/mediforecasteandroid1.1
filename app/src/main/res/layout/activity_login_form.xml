@@ -67,10 +67,10 @@
                 android:layout_height="wrap_content"
                 android:text="Invalid Email or Password"
                 android:textColor="@color/red"
-                android:textStyle="bold"
+                android:layout_marginTop="5dp"
                 android:alpha=".8"
                 android:textAlignment="center"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:visibility="gone"
                 android:layout_centerHorizontal="true" />
 
@@ -116,10 +116,9 @@
                 android:layout_height="wrap_content"
                 android:text="Email Address is required"
                 android:textColor="@color/red"
-                android:textStyle="bold"
                 android:alpha=".8"
                 android:layout_marginLeft="10dp"
-                android:textSize="17sp"
+                android:textSize="12sp"
                 android:visibility="gone"/>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -159,10 +158,9 @@
                 android:layout_height="wrap_content"
                 android:text="Password is required"
                 android:textColor="@color/red"
-                android:textStyle="bold"
                 android:alpha=".8"
                 android:layout_marginLeft="10dp"
-                android:textSize="17sp"
+                android:textSize="12sp"
                 android:visibility="gone"/>
 <!--            <RelativeLayout-->
 <!--                android:layout_width="match_parent"-->

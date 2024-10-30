@@ -98,34 +98,41 @@ public class profile_fragment extends Fragment {
         // Load cached data from SharedPreferences
         loadCachedProfileData();
 
-        // Set up Firestore listener for real-time updates
-        if (currentUser != null) {
-            firestore.collection("MobileUsers").document(currentUser.getUid())
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                Toast.makeText(getActivity(), "Failed to load profile data.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            if (snapshot != null && snapshot.exists()) {
-                                String profileImageUrl = snapshot.getString("profileImage");
-                                String profileEmail = snapshot.getString("email");
-                                String profileFname = snapshot.getString("fname");
-                                String profileLname = snapshot.getString("lname");
-                                String profileBirthday = snapshot.getString("birthday");
-                                String profileNumber = snapshot.getString("number");
-                                String profileGender = snapshot.getString("gender");
-                                String profileLocation = snapshot.getString("location");
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyInfo", Context.MODE_PRIVATE);
+        // Retrieve email and password
+        String savedEmail = sharedPreferences.getString("EMAIL", null);  // Default is null if not found
 
+        // Set up Firestore listener for real-time updates
+        // Set up Firestore listener for real-time updates using email from SharedPreferences
+        firestore.collection("MobileUsers").whereEqualTo("email", savedEmail)
+                .addSnapshotListener((snapshot, e) -> {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), "Failed to load profile data.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (snapshot != null && !snapshot.isEmpty()) {
+                        // Loop through all matched documents (in case of multiple)
+                        for (DocumentSnapshot document : snapshot.getDocuments()) {
+                            if (document.exists()) {
+                                String profileImageUrl = document.getString("profileImage");
+                                String profileEmail = document.getString("email");
+                                String profileFname = document.getString("fname");
+                                String profileLname = document.getString("lname");
+                                String profileBirthday = document.getString("birthday");
+                                String profileNumber = document.getString("number");
+                                String profileGender = document.getString("gender");
+                                String profileLocation = document.getString("location");
+
+                                // Format the birthday if needed
                                 birthdayFormatDate(profileBirthday);
 
                                 // Save profile data to SharedPreferences
                                 saveProfileToSharedPreferences(profileImageUrl, profileEmail, profileFname, profileLname, profileBirthday, profileNumber, profileGender, profileLocation);
 
-                                // Update UI with new data
+                                // Update UI with the fetched data
                                 updateProfileUI(profileImageUrl, profileEmail, profileFname, profileLname, profileBirthday, profileNumber, profileGender, profileLocation);
 
+                                // Load profile image using Glide
                                 if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                                     Glide.with(profile_fragment.this)
                                             .load(profileImageUrl)
@@ -133,8 +140,12 @@ public class profile_fragment extends Fragment {
                                 }
                             }
                         }
-                    });
-        }
+                    } else {
+                        Toast.makeText(getActivity(), "No profile data found.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
 
 
         logoutTextView.setOnClickListener(new View.OnClickListener() {
@@ -245,39 +256,65 @@ public class profile_fragment extends Fragment {
         }
     }
     private void uploadImageToFirebase(Uri uri) {
-        if (currentUser != null) {
-            // Creating Storage reference
-            loading1.show();
-            StorageReference storageReference = storage.getReference()
-                    .child("MobileUsersProfile/" + currentUser.getUid() + ".jpg");
+        // Retrieve email from SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyInfo", Context.MODE_PRIVATE);
+        String savedEmail = sharedPreferences.getString("EMAIL", null);  // Default is null if not found
 
-            // Upload to Firebase Storage
-            storageReference.putFile(uri).addOnSuccessListener(taskSnapshot -> {
-                // Get the download URL
-                storageReference.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                    // Update Firestore with the profile image URL
-                    firestore.collection("MobileUsers").document(currentUser.getUid())
-                            .update("profileImage", downloadUri.toString())
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(getActivity(), "Profile image updated", Toast.LENGTH_SHORT).show();
-                                loading1.dismiss();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getActivity(), "Failed to update profile image", Toast.LENGTH_SHORT).show();
+        if (savedEmail != null) {
+            // Show loading dialog
+            loading1.show();
+
+            // Query Firestore to find the user by email
+            firestore.collection("MobileUsers").whereEqualTo("email", savedEmail)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // Assuming the query returns a single document (unique email)
+                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                            String userId = documentSnapshot.getId();
+
+                            // Creating Storage reference for profile image
+                            StorageReference storageReference = storage.getReference()
+                                    .child("MobileUsersProfile/" + userId + ".jpg");
+
+                            // Upload image to Firebase Storage
+                            storageReference.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                                // Get the download URL after upload
+                                storageReference.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                                    // Update Firestore document with the profile image URL
+                                    firestore.collection("MobileUsers").document(userId)
+                                            .update("profileImage", downloadUri.toString())
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(getActivity(), "Profile image updated", Toast.LENGTH_SHORT).show();
+                                                loading1.dismiss();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(getActivity(), "Failed to update profile image", Toast.LENGTH_SHORT).show();
+                                                loading1.dismiss();
+                                            });
+                                }).addOnFailureListener(e -> {
+                                    Toast.makeText(getActivity(), "Failed to get image URL", Toast.LENGTH_SHORT).show();
+                                    loading1.dismiss();
+                                });
+                            }).addOnFailureListener(e -> {
+                                Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show();
                                 loading1.dismiss();
                             });
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(getActivity(), "Failed to get image URL", Toast.LENGTH_SHORT).show();
-                    loading1.dismiss();
-                });
-            }).addOnFailureListener(e -> {
-                Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show();
-                loading1.dismiss();
-            });
+                        } else {
+                            Toast.makeText(getActivity(), "No user found with this email", Toast.LENGTH_SHORT).show();
+                            loading1.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getActivity(), "Failed to query user by email", Toast.LENGTH_SHORT).show();
+                        loading1.dismiss();
+                    });
+
         } else {
-            Toast.makeText(getActivity(), "No user logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No email found in SharedPreferences", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 
@@ -292,10 +329,8 @@ public class profile_fragment extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Sign out the user
-                auth.signOut();
-
-                SharedPreferences.Editor editor = preferences.edit();
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyInfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit(); // Use sharedPreferences here
                 editor.clear();
                 editor.apply();
 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".question10"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:text="10. Lorem ipsum"
+            android:textAlignment="center"
+            android:textColor="@color/onemore"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Check me!"
+                android:textColor="@color/onemore"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkBox"
+                android:layout_marginTop="10dp"
+                android:text="Check me!"
+                android:textColor="@color/onemore"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkBox1"
+                android:layout_marginTop="10dp"
+                android:text="Check me!"
+                android:textColor="@color/onemore"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkBox2"
+                android:layout_marginTop="10dp"
+                android:text="Check me!"
+                android:textColor="@color/onemore"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <com.google.android.material.button.MaterialButton
+
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:backgroundTint="@color/otherprimary"
+            android:text="Next"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:cornerRadius="40dp"
+            android:layout_marginTop="30dp"
+            android:id="@+id/update"
+            android:layout_marginHorizontal="100dp"/>
+    </LinearLayout>
+
+</LinearLayout>

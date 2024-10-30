@@ -46,6 +46,18 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:backgroundTint="@color/otherprimary"
+                android:text="Get's Started"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:cornerRadius="40dp"
+                android:id="@+id/started"
+                android:layout_marginHorizontal="50dp"/>
         </LinearLayout>
     </ScrollView>
 
