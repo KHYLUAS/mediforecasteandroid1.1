@@ -59,7 +59,26 @@ public class Medicine {
         this.time3 = time3;
         this.dose3 = dose3;
     }
-
+    // Constructor for updating existing Medicine entries
+    public Medicine(int id, String medicineName, String startDate, String endDate, String medicineType,
+                    String unitType, String schedule, String selectedDays, String time1,
+                    String dose1, @Nullable String time2, @Nullable String dose2,
+                    @Nullable String time3, @Nullable String dose3) {
+        this.id = id; // Set ID for updates
+        this.medicineName = medicineName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.medicineType = medicineType;
+        this.unitType = unitType;
+        this.schedule = schedule;
+        this.selectedDays = selectedDays;
+        this.time1 = time1;
+        this.dose1 = dose1;
+        this.time2 = time2;
+        this.dose2 = dose2;
+        this.time3 = time3;
+        this.dose3 = dose3;
+    }
     public int getId() {
         return id;
     }

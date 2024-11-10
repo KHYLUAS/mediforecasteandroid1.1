@@ -19,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mediforecast.databinding.ActivityMainBinding;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class everyhour extends AppCompatActivity {
     private ImageView medicinearrow;
     private TextView timeValue; // Initialize timeValue
@@ -27,7 +30,7 @@ public class everyhour extends AppCompatActivity {
     private int currentDose = 1;
     private Button Register;
     private AutoCompleteTextView hoursACTV;
-    String[] hoursA = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    String[] hoursA = {"1", "2", "3", "4", "6", "8", "12"};
     ArrayAdapter<String> hoursAAdapter;
 
     @Override
@@ -56,15 +59,19 @@ public class everyhour extends AppCompatActivity {
         hoursACTV.setOnClickListener(v -> {
             hoursACTV.showDropDown(); // Show the dropdown menu
         });
-
-        // Load unit type
-        String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                .getString("selectedUnitType", ""); // Default dose value
-        Log.e("This is the unitType", unitType);
-        if(unitType.isEmpty()){
-            doseValue.setText("Unit");
-        } else {
-            doseValue.setText(unitType);
+        boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
+        if (isUpdate){
+            String newUnitType = getIntent().getStringExtra("newUnitType");
+            doseValue.setText(newUnitType);
+        }else{
+            String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                    .getString("selectedUnitType", "");// Default dose value
+            Log.e("This is the unityType", unitType);
+            if(unitType.isEmpty()){
+                doseValue.setText("Unit");
+            }else{
+                doseValue.setText(unitType);
+            }
         }
 
         // Handle the back arrow click
@@ -79,17 +86,29 @@ public class everyhour extends AppCompatActivity {
 
         // Handle register button click
         Register.setOnClickListener(v -> {
-            String time = timeValue.getText().toString();
+            String time = hoursACTV.getText().toString();
             String dose = doseValue.getText().toString();
-            String onceDaily = "Once Daily";
+            String everyHours = "Every Hours";
+            String everyHoursVal = hoursACTV.getText().toString();
 
-            // Navigate to another activity or show a confirmation message
-            Intent intent = new Intent(everyhour.this, medicine_signin.class);
-            intent.putExtra("time", time);
-            intent.putExtra("dose", dose);
-            intent.putExtra("onceDaily", onceDaily);
-            startActivity(intent);
-            finish();
+            if(isUpdate){
+                Intent intent = new Intent(everyhour.this, medicine_signin.class);
+                intent.putExtra("time1", time);
+                intent.putExtra("dose1", dose);
+                intent.putExtra("everyHours", everyHours);
+                intent.putExtra("updating", true);
+                startActivity(intent);
+                finish();
+            }else{
+                Intent intent = new Intent(everyhour.this, medicine_signin.class);
+                intent.putExtra("time1", time);
+                intent.putExtra("dose1", dose);
+                intent.putExtra("everyHoursVal", everyHoursVal);
+                intent.putExtra("everyHours", everyHours);
+                startActivity(intent);
+                finish();
+            }
+
         });
     }
 

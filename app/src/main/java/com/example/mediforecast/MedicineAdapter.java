@@ -88,17 +88,19 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
             popupMenu.inflate(R.menu.menu_reminder);
             popupMenu.setOnMenuItemClickListener(item -> {
                 int itemId = item.getItemId();
-
+                Log.d("MedicineAdapter", "Menu item clicked: " + itemId);
                 if (itemId == R.id.action_delete) {
                     confirmDelete(medicine, position);
                     return true;
                 } else if (itemId == R.id.menuUpdate) {
                     int medicineId = medicine.getId();
                     updateMedicine(medicineId);
+                    Log.d("MedicineAdapter", "Selected Medicine ID for Update: " + medicineId);
                     return true;
                 } else if(itemId == R.id.menuView){
                     int medicineId = medicine.getId();
                     viewMedicine(medicineId);
+                    Log.d("MedicineAdapter", "Selected Medicine ID for View: " + medicineId);
                     return true;
                 }else {
                     return false;
@@ -109,30 +111,60 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     }
 
     private void updateMedicineDisplay(MedicineViewHolder holder, Medicine medicine) {
-        long currentTime = System.currentTimeMillis();
+        String time1Single = medicine.getTime1();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        String currentTimeNow = sdf.format(calendar.getTime());
 
-        long time1End = getTimeEnd(medicine.getTime1());
-        long time2End = getTimeEnd(medicine.getTime2());
-        long time3End = getTimeEnd(medicine.getTime3());
+        // Handle single digit time calculation
+        if (time1Single.length() == 1 && Character.isDigit(time1Single.charAt(0))) {
+            try {
+                Date currentDate = sdf.parse(currentTimeNow);
+                if (currentDate != null) {
+                    calendar.setTime(currentDate);
+                    int timeToAdd = Integer.parseInt(time1Single);
+                    calendar.add(Calendar.HOUR, timeToAdd);
 
-        Log.d("MedicineAdapter", "Current time: " + currentTime);
-        Log.d("MedicineAdapter", "Time1 End: " + time1End);
-        Log.d("MedicineAdapter", "Time2 End: " + time2End);
-        Log.d("MedicineAdapter", "Time3 End: " + time3End);
+                    String nextDoseTime = sdf.format(calendar.getTime());
 
-        if (currentTime < time1End) {
-            holder.time.setText(medicine.getTime1());
-            holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
-        } else if (time2End != Long.MAX_VALUE && currentTime < time2End) { // Check if time2 is valid
-            holder.time.setText(medicine.getTime2());
-            holder.dosage.setText("Take " + medicine.getDose2() + " (" + medicine.getMedicineType() + ")");
-        } else if (time3End != Long.MAX_VALUE && currentTime < time3End) { // Check if time3 is valid
-            holder.time.setText(medicine.getTime3());
-            holder.dosage.setText("Take " + medicine.getDose3() + " (" + medicine.getMedicineType() + ")");
-        } else {
-            holder.time.setText(medicine.getTime1());
-            holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+                    // Check if current time matches next dose time
+                    if (currentTimeNow.equals(nextDoseTime.toString())) {
+                        // Only update nextDoseTime when currentTime matches
+                        calendar.add(Calendar.HOUR, timeToAdd);
+                        nextDoseTime = sdf.format(calendar.getTime());
+
+                        // Update the UI with new dose time
+
+                    }
+                    holder.time.setText(nextDoseTime);
+                    holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+                }
+            } catch (ParseException e) {
+                Log.e("TimeCheck", "Error parsing time: " + currentTimeNow, e);
+            }
         }
+        else {
+            Log.d("TimeCheck", "Not a single digit time: " + time1Single);
+            long currentTime = System.currentTimeMillis();
+
+            long time1End = getTimeEnd(medicine.getTime1());
+            long time2End = getTimeEnd(medicine.getTime2());
+            long time3End = getTimeEnd(medicine.getTime3());
+            if (currentTime < time1End) {
+                holder.time.setText(medicine.getTime1());
+                holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+            } else if (time2End != Long.MAX_VALUE && currentTime < time2End) { // Check if time2 is valid
+                holder.time.setText(medicine.getTime2());
+                holder.dosage.setText("Take " + medicine.getDose2() + " (" + medicine.getMedicineType() + ")");
+            } else if (time3End != Long.MAX_VALUE && currentTime < time3End) { // Check if time3 is valid
+                holder.time.setText(medicine.getTime3());
+                holder.dosage.setText("Take " + medicine.getDose3() + " (" + medicine.getMedicineType() + ")");
+            } else {
+                holder.time.setText(medicine.getTime1());
+                holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+            }
+        }
+
     }
 
 
@@ -198,6 +230,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     private void updateMedicine(int medicineId){
         Intent intent = new Intent(context, UpdateReminder.class);
         intent.putExtra("MEDICINE_ID", medicineId);
+        Log.d("UpdateMedicine", "Intent Passed with Medicine ID: " + medicineId);
         context.startActivity(intent);
     }
     private void viewMedicine(int medicineId){

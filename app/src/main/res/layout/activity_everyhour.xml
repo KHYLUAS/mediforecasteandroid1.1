@@ -103,13 +103,13 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout2"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:hintEnabled="false"
                     >
                     <AutoCompleteTextView
                         android:id="@+id/hoursACTV"
-                        android:layout_width="wrap_content"
+                        android:layout_width="90dp"
                         android:layout_height="wrap_content"
                         android:text="1"
                         android:gravity="center"

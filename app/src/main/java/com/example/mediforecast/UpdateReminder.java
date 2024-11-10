@@ -1,11 +1,16 @@
 package com.example.mediforecast;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -19,16 +24,25 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class UpdateReminder extends AppCompatActivity {
+    // To do: after sending even not changing time and dose it becoming null
+    // validation
 
     private MedicineDatabase db;
     private MedicineDao medicineDao;
@@ -36,8 +50,8 @@ public class UpdateReminder extends AppCompatActivity {
 
     private AutoCompleteTextView reminderMedicineType, reminderUnitType;
     private EditText medicinenameET;
-    private TextView medicinestartdate, medicineenddate;
-    private MultiAutoCompleteTextView showSchedule;
+    private TextView medicinestartdate, medicineenddate, validationMedName, validationUnType, validationMedType, validationSched, validationStart, validationEnd, validationDays;
+    private MultiAutoCompleteTextView showSchedule, updateShowSchedule;
     ArrayAdapter<String> reminderUnitTypeAdapter;
     private TextView sunday, monday, tuesday, wednesday, thursday, friday, saturday, schedule, title, subtitle;
     private CheckBox everyDayCheckBox;
@@ -45,7 +59,7 @@ public class UpdateReminder extends AppCompatActivity {
     private ArrayList<String> selectedDays;
     private ImageView medicinearrow;
     private Button buttonUpdate;
-
+    private int forUpdate;
     String[] unitType = {"IU", "ampoule(s)", "application(s)", "application(s)", "capsule(s)", "drop(s)", "gram(s)",
             "injection(s)", "milligram(s)", "milliliter(s)", "mm", "packet(s)", "packet(s)", "patch(es)",
             "pessary(ies)", "piece(s)", "pill(s)", "portion(s)", "puff(s)", "spray(s)", "suppository(ies)",
@@ -75,7 +89,14 @@ public class UpdateReminder extends AppCompatActivity {
         showSchedule = findViewById(R.id.showSchedule);
         subtitle = findViewById(R.id.subTitle);
         title = findViewById(R.id.Header);
-
+        validationMedName = findViewById(R.id.validationMedName);
+        validationUnType= findViewById(R.id.validationUnType);
+        validationMedType = findViewById(R.id.validationMedType);
+        validationSched = findViewById(R.id.validationSched);
+        validationStart = findViewById(R.id.validationStart);
+        validationEnd = findViewById(R.id.validationEnd);
+        validationDays = findViewById(R.id.validationDays);
+        updateShowSchedule = findViewById(R.id.updateShowSchedule);
 
         //bind days
         sunday = findViewById(R.id.dv_sunday);
@@ -93,13 +114,19 @@ public class UpdateReminder extends AppCompatActivity {
         boolean viewMedicine = getIntent().getBooleanExtra("MEDICINE_VIEW", false);
         if (viewMedicine) {
             setupViewOnlyMode();
+
         }
 
         //id intent from MedicineAdapter
-        int medicineId = getIntent().getIntExtra("MEDICINE_ID", -1);
+       int medicineId = getIntent().getIntExtra("MEDICINE_ID", -1);
         if (medicineId != -1) {
             fetchMedicineReminder(medicineId);
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefsMedId", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("MEDICINE_ID", medicineId);
+            editor.apply();  // Apply the changes
         }
+        Log.d("UpdateReminder", "Medicine ID on Create: " + medicineId);
 
 
         setupDayClickListeners();
@@ -119,6 +146,7 @@ public class UpdateReminder extends AppCompatActivity {
         schedule.setOnClickListener(v -> {
             Intent intent = new Intent(UpdateReminder.this, medicineschedule.class);
             intent.putExtra("isUpdate", true);
+            intent.putExtra("unitType", reminderUnitType.getText().toString().trim());
             startActivity(intent);
             finish();
         });
@@ -130,6 +158,10 @@ public class UpdateReminder extends AppCompatActivity {
         });
         medicinearrow.setOnClickListener(v -> {
             clearForm();
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefsMedId", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("MEDICINE_ID");  // Remove the medicine ID
+            editor.apply();
             Intent intent = new Intent(UpdateReminder.this, Menubar.class);
             intent.putExtra("EXTRA_FRAGMENT", "UPDATEREMINDER");
             startActivity(intent);
@@ -138,73 +170,17 @@ public class UpdateReminder extends AppCompatActivity {
         buttonUpdate.setOnClickListener(v -> {
             updateMedicineDetails();
         });
-        StringBuilder scheduleDetails = new StringBuilder();
-        Intent intents = getIntent();
-        if (intents.hasExtra("onceDaily")) {
-            String frequency = intents.getStringExtra("onceDaily");
-            String dose1 = intents.getStringExtra("dose1");
-            String time1 = intents.getStringExtra("time1");
-            schedule.setText(frequency);
-            scheduleDetails.append("<b>First Take</b>")
-                    .append("<br>")
-                    .append("<b>Time:</b> ")
-                    .append(time1)
-                    .append("<br>")
-                    .append("<b>Dose:</b> ").append(dose1);
-            showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
-        } else if (intents.hasExtra("twiceDaily")) {
-            String time1 = intents.getStringExtra("time1");
-            String time2 = intents.getStringExtra("time2");
-            String dose1 = intents.getStringExtra("dose1");
-            String dose2 = intents.getStringExtra("dose2");
-            String frequency = intents.getStringExtra("twiceDaily");
-            schedule.setText(frequency);
-            scheduleDetails.append("<b>First Take</b>")
-                    .append("<br>")
-                    .append("<b>Time:</b> ").append(time1)
-                    .append("<br>")
-                    .append("<b>Dose:</b> ").append(dose1)
-                    .append("<br>")
-                    .append("<br>")
-                    .append("<b>Second Take</b>")
-                    .append("<br>")
-                    .append("<b>Time:</b> ").append(time2)
-                    .append("<br>")
-                    .append("<b>Dose:</b> ").append(dose2);
-            showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
-        } else if (intents.hasExtra("thriceDaily")) {
-            String time1 = intents.getStringExtra("time1");
-            String time2 = intents.getStringExtra("time2");
-            String time3 = intents.getStringExtra("time3");
-            String dose1 = intents.getStringExtra("dose1");
-            String dose2 = intents.getStringExtra("dose2");
-            String dose3 = intents.getStringExtra("dose3");
-            String frequency = intents.getStringExtra("thriceDaily");
-            schedule.setText(frequency);
-            scheduleDetails.append("<b>First Take</b>")
-                    .append("<br>")
-                    .append("<b>Time:</b> ").append(time1)
-                    .append("<br>")
-                    .append("<b>Dose:</b> ").append(dose1)
-                    .append("<br>")
-                    .append("<br>")
-                    .append("<b>Second Take</b>")
-                    .append("<br>")
-                    .append("<b>Time:</b> ").append(time2)
-                    .append("<br>")
-                    .append("<b>Dose:</b> ").append(dose2)
-                    .append("<br>")
-                    .append("<br>")
-                    .append("<b>Third Take</b>")
-                    .append("<br>")
-                    .append("<b>Time:</b> ").append(time3)
-                    .append("<br>")
-                    .append("<b>Dose:</b> ").append(dose3);
-            showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
+
+        Intent intent = getIntent();
+        boolean updating = intent.getBooleanExtra("updating", false);
+        if(updating){
+           setUpdateShowSchedule();
+        }else{
+            Log.d("MedicineSchedule", "Your Fake");
         }
-        showSchedule.setText(scheduleDetails.toString());
-        showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
+
     }
+
 
     private void fetchMedicineReminder(int id) {
         executorService.execute(() -> {
@@ -222,9 +198,10 @@ public class UpdateReminder extends AppCompatActivity {
                     medicineenddate.setText(medicine.getEndDate());
                     schedule.setText(medicine.getSchedule());
 
-                    StringBuilder scheduleDetails = new StringBuilder();
+                    StringBuilder scheduleDetailss = new StringBuilder();
+
                     if (medicine.getSchedule().equals("Once Daily")) {
-                        scheduleDetails.append("<b>First Take</b>")
+                        scheduleDetailss.append("<b>First Take</b>")
                                 .append("<br>")
                                 .append("<b>Time:</b> ")
                                 .append(medicine.getTime1())
@@ -232,7 +209,7 @@ public class UpdateReminder extends AppCompatActivity {
                                 .append("<b>Dose:</b> ").append(medicine.getDose1());
                         showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
                     } else if (medicine.getSchedule().equals("Twice Daily")) {
-                        scheduleDetails.append("<b>First Take</b>")
+                        scheduleDetailss.append("<b>First Take</b>")
                                 .append("<br>")
                                 .append("<b>Time:</b> ").append(medicine.getTime1())
                                 .append("<br>")
@@ -246,7 +223,7 @@ public class UpdateReminder extends AppCompatActivity {
                                 .append("<b>Dose:</b> ").append(medicine.getDose2());
                         showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
                     } else if (medicine.getSchedule().equals("Thrice Daily")) {
-                        scheduleDetails.append("<b>First Take</b>")
+                        scheduleDetailss.append("<b>First Take</b>")
                                 .append("<br>")
                                 .append("<b>Time:</b> ").append(medicine.getTime1())
                                 .append("<br>")
@@ -266,9 +243,18 @@ public class UpdateReminder extends AppCompatActivity {
                                 .append("<br>")
                                 .append("<b>Dose:</b> ").append(medicine.getDose3());
                         showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
+                    }else if(medicine.getSchedule().equals("Every Hours")){
+                        scheduleDetailss.append("<b>Takes</b>")
+                                .append("<br>")
+                                .append("<b>Time: </b> Every ")
+                                .append(medicine.getTime1())
+                                .append(" Hour(s)")
+                                .append("<br>")
+                                .append("<b>Dose:</b> ").append(medicine.getDose1());
+                        showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
                     }
-                    showSchedule.setText(scheduleDetails.toString());
-                    showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
+                    showSchedule.setText(scheduleDetailss.toString());
+                    showSchedule.setText(Html.fromHtml(scheduleDetailss.toString(), Html.FROM_HTML_MODE_COMPACT));
 
 
 
@@ -299,69 +285,226 @@ public class UpdateReminder extends AppCompatActivity {
         });
     }
 
-    //    // Method to update the medicine details in the database
     private void updateMedicineDetails() {
+        // Retrieve updated details from input fields
         String updatedMedicineName = medicinenameET.getText().toString();
         String updatedStartDate = medicinestartdate.getText().toString();
         String updatedEndDate = medicineenddate.getText().toString();
         String updatedMedicineType = reminderMedicineType.getText().toString();
         String updatedUnitType = reminderUnitType.getText().toString();
         String updatedSchedule = schedule.getText().toString();
-        String updatedSelectedDays = String.join(",", selectedDays);
+        String updatedSelectedDays = String.join(", ", selectedDays);
 
-        Intent intents = getIntent();
-        int medicineId = intents.getIntExtra("medicineId", -1);
-        // Check if the medicine ID is valid
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefsMedId", MODE_PRIVATE);
+       int medicineId = sharedPreferences.getInt("MEDICINE_ID", -1);
+        Log.d("MedicineID", "Retrieved medicineId onCreate: " + medicineId);
+//        int medicineId = getIntent().getIntExtra("MEDICINE_ID", -1);
+//        Log.d("UpdateMedicineDetails", "Medicine ID during update: " + medicineId);
+//        Log.d("UpdateMedicineDetails", "Passing Medicine ID during update: " + forUpdate);
+        Intent intent = getIntent();
+        boolean updating = intent.getBooleanExtra("updating", false);
+        boolean isViewMode = intent.getBooleanExtra("MEDICINE_VIEW", false);
+        Log.d("UpdateMedicine", "Is View Mode: " + isViewMode);
         if (medicineId == -1) {
-            Toast.makeText(this, "Error: Medicine ID not found", Toast.LENGTH_SHORT).show();
+            Log.e("UpdateReminder", "Error: No medicine ID passed.");
+            Toast.makeText(this, "No medicine ID found.", Toast.LENGTH_SHORT).show();
             return;
         }
-        Medicine existingMedicine = medicineDao.getMedicineById(medicineId); // Assuming this method exists
-        if (existingMedicine == null) {
-            Toast.makeText(this, "Error: Medicine not found", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Initialize time and dose variables
-        String updateTime1 = null;
-        String updateDose1 = null;
-        String updateTime2 = null;
-        String updateDose2 = null;
-        String updateTime3 = null;
-        String updateDose3 = null;
-
-        // Fetch time and dose details based on the frequency from the Intent
-        if (intents.hasExtra("onceDaily")) {
-            updateTime1 = intents.getStringExtra("time1");
-            updateDose1 = intents.getStringExtra("dose1");
-        } else if (intents.hasExtra("twiceDaily")) {
-            updateTime1 = intents.getStringExtra("time1");
-            updateDose1 = intents.getStringExtra("dose1");
-            updateTime2 = intents.getStringExtra("time2");
-            updateDose2 = intents.getStringExtra("dose2");
-        } else if (intents.hasExtra("thriceDaily")) {
-            updateTime1 = intents.getStringExtra("time1");
-            updateDose1 = intents.getStringExtra("dose1");
-            updateTime2 = intents.getStringExtra("time2");
-            updateDose2 = intents.getStringExtra("dose2");
-            updateTime3 = intents.getStringExtra("time3");
-            updateDose3 = intents.getStringExtra("dose3");
-        }
+        Log.d("UpdateMedicineDetails", "Intent extras: " + getIntent().getExtras());
 
 
-        Medicine updatedMedicine = new Medicine(updatedMedicineName, updatedStartDate,
-                updatedEndDate, updatedMedicineType, updatedUnitType, updatedSchedule, updatedSelectedDays,
-                updateTime1, updateDose1, updateTime2, updateDose2, updateTime3, updateDose3); // Assuming Medicine has this constructor
 
+        // Perform database query in the background
         executorService.execute(() -> {
-            medicineDao.update(updatedMedicine); // Assuming this method exists
-            runOnUiThread(() -> {
-                Toast.makeText(UpdateReminder.this, "Successfully Update Reminder", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(UpdateReminder.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            });
+            String updateTime1, updateDose1, updateTime2, updateDose2, updateTime3, updateDose3;
+            if (updating) {
+                updateTime1 = intent.getStringExtra("time1");
+                updateDose1 = intent.getStringExtra("dose1");
+                updateTime2 = intent.getStringExtra("time2");
+                updateDose2 = intent.getStringExtra("dose2");
+                updateTime3 = intent.getStringExtra("time3");
+                updateDose3 = intent.getStringExtra("dose3");
+            }else{
+                // If not updating, fetch the medicine from the database
+                Medicine medicine = medicineDao.getMedicineById(medicineId);
+
+                // Ensure the medicine exists before proceeding
+                if (medicine == null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(UpdateReminder.this, "Medicine not found", Toast.LENGTH_SHORT).show();
+                    });
+                    return;
+                }
+                // Fetch time and dose details from the database
+                updateTime1 = medicine.getTime1();
+                updateDose1 = medicine.getDose1();
+                updateTime2 = medicine.getTime2();
+                updateDose2 = medicine.getDose2();
+                updateTime3 = medicine.getTime3();
+                updateDose3 = medicine.getDose3();
+            }
+
+            if (updatedMedicineName.isEmpty()) {
+                showToastAndLog("medicineName is required");
+                validationMedName.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (updatedUnitType.isEmpty()) {
+                showToastAndLog("unitType is required");
+                validationUnType.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (updatedMedicineType.isEmpty()) {
+                showToastAndLog("medicineType is required");
+                validationMedType.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (updatedStartDate.isEmpty()) {
+                showToastAndLog("startDate is required");
+                validationStart.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (updatedEndDate.isEmpty()) {
+                showToastAndLog("endDate is required");
+                validationEnd.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (updatedSchedule.equals("Choose Schedule")) {
+                showToastAndLog("schedules is required");
+                validationSched.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            // Perform date validation
+            if (!isValidDate(updatedStartDate) || !isDateInFutureOrToday(updatedStartDate)) {
+                showToastAndLog("startDate must be today or in the future (d/M/yyyy)");
+                validationStart.setText("Start Date must today or in the future");
+                validationStart.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (!isValidDate(updatedEndDate) || !isDateInFutureOrToday(updatedEndDate)) {
+                showToastAndLog("endDate must be today or in the future (d/M/yyyy)");
+                validationEnd.setText("End Date must today or in the future");
+                validationEnd.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            // Update medicine in database
+            Medicine updatedMedicine = new Medicine(
+                    medicineId, updatedMedicineName,updatedStartDate, updatedEndDate, updatedMedicineType,
+                    updatedUnitType, updatedSchedule, updatedSelectedDays,
+                    updateTime1, updateDose1, updateTime2, updateDose2, updateTime3, updateDose3);
+
+                // Update in database
+                medicineDao.update(updatedMedicine);
+                rescheduleAlarm(updatedMedicine);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("MEDICINE_ID");  // Remove the medicine ID
+                editor.apply();
+                // Success feedback
+                runOnUiThread(() -> {
+                    Intent intents = new Intent(UpdateReminder.this , Menubar.class);
+                    intents.putExtra("EXTRA_FRAGMENT", "REMINDERDB");
+                    Toast.makeText(UpdateReminder.this, "Medicine updated successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
         });
+    }
+    private void setUpdateShowSchedule(){
+        Log.d("MedicineSchedule", "Updating Now");
+        StringBuilder scheduleDetail = new StringBuilder();
+        Intent intents = getIntent();
+        if (intents.hasExtra("onceDaily")) {
+            String frequency = intents.getStringExtra("onceDaily");
+            String dose1 = intents.getStringExtra("dose1");
+            String time1 = intents.getStringExtra("time1");
+            schedule.setText(frequency);
+            scheduleDetail.append("<b>First Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(time1)
+                    .append("<br>")
+                    .append("<b>Dose:</b> ").append(dose1);
+            showSchedule.setVisibility(MultiAutoCompleteTextView.GONE);
+            updateShowSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
+        } else if (intents.hasExtra("twiceDaily")) {
+            String time1 = intents.getStringExtra("time1");
+            String time2 = intents.getStringExtra("time2");
+            String dose1 = intents.getStringExtra("dose1");
+            String dose2 = intents.getStringExtra("dose2");
+            String frequency = intents.getStringExtra("twiceDaily");
+            schedule.setText(frequency);
+            scheduleDetail.append("<b>First Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ").append(time1)
+                    .append("<br>")
+                    .append("<b>Dose:</b> ").append(dose1)
+                    .append("<br>")
+                    .append("<br>")
+                    .append("<b>Second Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ").append(time2)
+                    .append("<br>")
+                    .append("<b>Dose:</b> ").append(dose2);
+            showSchedule.setVisibility(MultiAutoCompleteTextView.GONE);
+            updateShowSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
+        } else if (intents.hasExtra("thriceDaily")) {
+            String time1 = intents.getStringExtra("time1");
+            String time2 = intents.getStringExtra("time2");
+            String time3 = intents.getStringExtra("time3");
+            String dose1 = intents.getStringExtra("dose1");
+            String dose2 = intents.getStringExtra("dose2");
+            String dose3 = intents.getStringExtra("dose3");
+            String frequency = intents.getStringExtra("thriceDaily");
+            schedule.setText(frequency);
+            scheduleDetail.append("<b>First Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ").append(time1)
+                    .append("<br>")
+                    .append("<b>Dose:</b> ").append(dose1)
+                    .append("<br>")
+                    .append("<br>")
+                    .append("<b>Second Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ").append(time2)
+                    .append("<br>")
+                    .append("<b>Dose:</b> ").append(dose2)
+                    .append("<br>")
+                    .append("<br>")
+                    .append("<b>Third Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ").append(time3)
+                    .append("<br>")
+                    .append("<b>Dose:</b> ").append(dose3);
+            showSchedule.setVisibility(MultiAutoCompleteTextView.GONE);
+            updateShowSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
+        }
+        updateShowSchedule.setText(scheduleDetail.toString());
+        updateShowSchedule.setText(Html.fromHtml(scheduleDetail.toString(), Html.FROM_HTML_MODE_COMPACT));
+    }
+    private boolean isValidDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        try {
+            LocalDate parsedDate = LocalDate.parse(date, formatter);
+            Log.d("DateValidation", "Parsed date: " + parsedDate);
+            return true;
+        } catch (DateTimeParseException e) {
+            Log.d("DateValidation", "Invalid date format: " + date);
+            return false;
+        }
+    }
+
+    private boolean isDateInFutureOrToday(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate parsedDate = LocalDate.parse(date, formatter);
+        LocalDate today = LocalDate.now();
+        Log.d("DateValidation", "Parsed date: " + parsedDate + ", Today: " + today);
+        return !parsedDate.isBefore(today);
+    }
+    private void showToastAndLog(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Log.d("ValidationError", message);
     }
 
     private void setupDayClickListeners() {
@@ -446,6 +589,27 @@ public class UpdateReminder extends AppCompatActivity {
         editor.putString("selectedUnitType", reminderUnitType.getText().toString().trim());
         editor.putBoolean("isEveryDay", everyDayCheckBox.isChecked());
         editor.putStringSet("selectedDays", new HashSet<>(selectedDays));
+
+//        Intent intent = getIntent();
+//        if(intent.hasExtra("onceDaily")){
+//            editor.putString("frequency", "onceDaily");
+//            editor.putString("dose1", intent.getStringExtra("dose1"));
+//            editor.putString("time1", intent.getStringExtra("time1"));
+//        }else if (intent.hasExtra("twiceDaily")) {
+//            editor.putString("frequency", "twiceDaily");
+//            editor.putString("dose1", intent.getStringExtra("dose1"));
+//            editor.putString("time1", intent.getStringExtra("time1"));
+//            editor.putString("dose2", intent.getStringExtra("dose2"));
+//            editor.putString("time2", intent.getStringExtra("time2"));
+//        } else if (intent.hasExtra("thriceDaily")) {
+//            editor.putString("frequency", "thriceDaily");
+//            editor.putString("dose1", intent.getStringExtra("dose1"));
+//            editor.putString("time1", intent.getStringExtra("time1"));
+//            editor.putString("dose2", intent.getStringExtra("dose2"));
+//            editor.putString("time2", intent.getStringExtra("time2"));
+//            editor.putString("dose3", intent.getStringExtra("dose3"));
+//            editor.putString("time3", intent.getStringExtra("time3"));
+//        }
         editor.apply();
     }
 
@@ -484,6 +648,69 @@ public class UpdateReminder extends AppCompatActivity {
             if (day.equals("Friday")) toggleDayViewState(friday, true);
             if (day.equals("Saturday")) toggleDayViewState(saturday, true);
         }
+        // Restore frequency-related data and update UI
+//        String frequency = preferences.getString("frequency", "");
+//        StringBuilder scheduleDetails = new StringBuilder();
+//
+//        if ("onceDaily".equals(frequency)) {
+//            scheduleDetails.append("<b>First Take</b>")
+//                    .append("<br>")
+//                    .append("<b>Time:</b> ")
+//                    .append(preferences.getString("time1", ""))
+//                    .append("<br>")
+//                    .append("<b>Dose:</b> ")
+//                    .append(preferences.getString("dose1", ""));
+//        } else if ("twiceDaily".equals(frequency)) {
+//            scheduleDetails.append("<b>First Take</b>")
+//                    .append("<br>")
+//                    .append("<b>Time:</b> ")
+//                    .append(preferences.getString("time1", ""))
+//                    .append("<br>")
+//                    .append("<b>Dose:</b> ")
+//                    .append(preferences.getString("dose1", ""))
+//                    .append("<br><br>")
+//                    .append("<b>Second Take</b>")
+//                    .append("<br>")
+//                    .append("<b>Time:</b> ")
+//                    .append(preferences.getString("time2", ""))
+//                    .append("<br>")
+//                    .append("<b>Dose:</b> ")
+//                    .append(preferences.getString("dose2", ""));
+//        } else if ("thriceDaily".equals(frequency)) {
+//            scheduleDetails.append("<b>First Take</b>")
+//                    .append("<br>")
+//                    .append("<b>Time:</b> ")
+//                    .append(preferences.getString("time1", ""))
+//                    .append("<br>")
+//                    .append("<b>Dose:</b> ")
+//                    .append(preferences.getString("dose1", ""))
+//                    .append("<br><br>")
+//                    .append("<b>Second Take</b>")
+//                    .append("<br>")
+//                    .append("<b>Time:</b> ")
+//                    .append(preferences.getString("time2", ""))
+//                    .append("<br>")
+//                    .append("<b>Dose:</b> ")
+//                    .append(preferences.getString("dose2", ""))
+//                    .append("<br><br>")
+//                    .append("<b>Third Take</b>")
+//                    .append("<br>")
+//                    .append("<b>Time:</b> ")
+//                    .append(preferences.getString("time3", ""))
+//                    .append("<br>")
+//                    .append("<b>Dose:</b> ")
+//                    .append(preferences.getString("dose3", ""));
+//        }
+//
+//        // Set the schedule text if there is data to display
+//        if (scheduleDetails.length() > 0) {
+//            showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
+//            showSchedule.setVisibility(View.VISIBLE);
+//            updateShowSchedule.setVisibility(View.GONE);
+//        } else {
+//            showSchedule.setVisibility(View.GONE);
+//            updateShowSchedule.setVisibility(View.VISIBLE);
+//        }
     }
 
     private void showDatePickerDialog() {
@@ -524,6 +751,37 @@ public class UpdateReminder extends AppCompatActivity {
                 year, month, day);
         datePickerDialog.show();
     }
+    private void displayUpdatedScheduleDetails() {
+        StringBuilder scheduleDetails = new StringBuilder();
+        Intent intent = getIntent();
+
+        // Check for schedule type and build the display details accordingly
+        if (intent.hasExtra("onceDaily")) {
+            scheduleDetails.append("<b>First Take</b><br>")
+                    .append("<b>Time:</b> ").append(intent.getStringExtra("time1"))
+                    .append("<br><b>Dose:</b> ").append(intent.getStringExtra("dose1"));
+        } else if (intent.hasExtra("twiceDaily")) {
+            scheduleDetails.append("<b>First Take</b><br>")
+                    .append("<b>Time:</b> ").append(intent.getStringExtra("time1"))
+                    .append("<br><b>Dose:</b> ").append(intent.getStringExtra("dose1"))
+                    .append("<br><br><b>Second Take</b><br>")
+                    .append("<b>Time:</b> ").append(intent.getStringExtra("time2"))
+                    .append("<br><b>Dose:</b> ").append(intent.getStringExtra("dose2"));
+        } else if (intent.hasExtra("thriceDaily")) {
+            scheduleDetails.append("<b>First Take</b><br>")
+                    .append("<b>Time:</b> ").append(intent.getStringExtra("time1"))
+                    .append("<br><b>Dose:</b> ").append(intent.getStringExtra("dose1"))
+                    .append("<br><br><b>Second Take</b><br>")
+                    .append("<b>Time:</b> ").append(intent.getStringExtra("time2"))
+                    .append("<br><b>Dose:</b> ").append(intent.getStringExtra("dose2"))
+                    .append("<br><br><b>Third Take</b><br>")
+                    .append("<b>Time:</b> ").append(intent.getStringExtra("time3"))
+                    .append("<br><b>Dose:</b> ").append(intent.getStringExtra("dose3"));
+        }
+
+        // Set the HTML-formatted text to updateShowSchedule
+        updateShowSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
+    }
 
     private void clearForm() {
         medicinenameET.setText("");
@@ -534,6 +792,9 @@ public class UpdateReminder extends AppCompatActivity {
         schedule.setText("");
         selectedDays.clear();
         deselectAllDays();
+        everyDayCheckBox.setChecked(false);
+        showSchedule.setText("");
+        showSchedule.setVisibility(MultiAutoCompleteTextView.GONE);
 
     }
 
@@ -548,6 +809,7 @@ public class UpdateReminder extends AppCompatActivity {
         schedule.setEnabled(false);
         reminderUnitType.setInputType(View.AUTOFILL_TYPE_NONE);
         everyDayCheckBox.setFocusable(false);
+        validationSched.setVisibility(View.GONE);
     }
 
     private void setupAdapters() {
@@ -633,4 +895,109 @@ public class UpdateReminder extends AppCompatActivity {
                 break;
         }
     }
+
+    //Still need to check if its working
+    @SuppressLint("ScheduleExactAlarm")
+    private void rescheduleAlarm(Medicine updatedMedicine) {
+        // Ensure the medicine name and times are valid
+        String medicineName = updatedMedicine.getMedicineName();
+        String startDate = updatedMedicine.getStartDate();
+        String endDate = updatedMedicine.getEndDate();
+        String selectedDays = String.join(", ", updatedMedicine.getSelectedDays());
+
+        // Retrieve all times and doses
+        String[] times = {updatedMedicine.getTime1(), updatedMedicine.getTime2(), updatedMedicine.getTime3()};
+        String[] doses = {updatedMedicine.getDose1(), updatedMedicine.getDose2(), updatedMedicine.getDose3()};
+
+        if (medicineName != null && times != null) {
+            for (int i = 0; i < times.length; i++) {
+                String timeString = times[i];
+                String dose = doses[i];
+
+                if (timeString != null && !timeString.isEmpty()) {
+                    try {
+                        String timeLabel = "Dose Time " + (i + 1);
+
+                        // Log the received time
+                        Log.d("MedicineReminder", "Received " + timeLabel + ": " + timeString);
+
+                        // Parse the input time string (with AM/PM if present)
+                        SimpleDateFormat inputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                        Date date = inputFormat.parse(timeString); // Parsing "12:36 PM" or "01:30 PM"
+
+                        // Log the parsed Date object
+                        Log.d("MedicineReminder", "Parsed Date (" + timeLabel + "): " + date.toString());
+
+                        // Convert to 24-hour format
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                        String formattedTime = outputFormat.format(date); // e.g., "15:30"
+
+                        // Log the formatted time (24-hour format)
+                        Log.d("MedicineReminder", "Formatted Time (" + timeLabel + "): " + formattedTime);
+
+                        // Split the formatted time into hours and minutes
+                        String[] timeParts = formattedTime.split(":");
+                        int hours = Integer.parseInt(timeParts[0]);
+                        int minutes = Integer.parseInt(timeParts[1]);
+
+                        // Set up the calendar object with the desired time
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, hours);
+                        calendar.set(Calendar.MINUTE, minutes);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        // Log the updated calendar time
+                        Log.d("MedicineReminder", "Updated Alarm Calendar Time (" + timeLabel + "): " + calendar.getTime().toString());
+
+                        // Retrieve the requestCode from SharedPreferences for this medicine and time
+                        SharedPreferences prefs = getSharedPreferences("MedicinePrefs", MODE_PRIVATE);
+                        int requestCode = prefs.getInt(medicineName + "_requestCode_" + i, -1); // Save with index to distinguish between times
+
+                        if (requestCode != -1) {
+                            // Cancel the existing alarm using the saved requestCode
+                            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                            if (alarmManager != null) {
+                                Intent intent = new Intent(this, AlarmReceiver.class);
+                                intent.putExtra("medicine_name", medicineName);
+                                intent.putExtra("dose", dose);
+                                intent.putExtra("time", timeString);
+                                intent.putExtra("start_date", startDate);
+                                intent.putExtra("end_date", endDate);
+                                intent.putExtra("selected_days", selectedDays);
+
+                                // Use the stored requestCode to identify the pending intent
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                        this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+                                // Cancel the previous alarm
+                                alarmManager.cancel(pendingIntent);
+                                Log.d("MedicineReminder", "Previous alarm canceled for requestCode: " + requestCode);
+
+                                // Set the new alarm
+                                alarmManager.setExactAndAllowWhileIdle(
+                                        AlarmManager.RTC_WAKEUP,
+                                        calendar.getTimeInMillis(),
+                                        pendingIntent
+                                );
+
+                                Log.d("MedicineReminder", "New alarm scheduled for: " + calendar.getTime().toString());
+                            } else {
+                                Log.e("MedicineReminder", "AlarmManager is null, cannot reschedule");
+                            }
+                        } else {
+                            Log.e("MedicineReminder", "No requestCode found for medicine: " + medicineName + " at time index " + i);
+                        }
+                    } catch (ParseException e) {
+                        Log.e("MedicineReminder", "Error parsing the time string: " + e.getMessage(), e);
+                    }
+                } else {
+                    Log.e("MedicineReminder", "Error: Time string " + (i + 1) + " is null or empty");
+                }
+            }
+        } else {
+            Log.e("MedicineReminder", "Error: Medicine name or times array is null");
+        }
+    }
+
+
 }

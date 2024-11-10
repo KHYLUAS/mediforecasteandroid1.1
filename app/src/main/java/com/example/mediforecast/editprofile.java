@@ -1,7 +1,11 @@
 package com.example.mediforecast;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -15,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -94,51 +99,36 @@ public class editprofile extends AppCompatActivity {
             }, year, month, day).show();
         });
 
-        if (currentUser != null) {
-            firestore.collection("MobileUsers").document(currentUser.getUid())
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Toast.makeText(editprofile.this, "Failed to load profile data.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
 
-                            if (value != null && value.exists()) {
-                                // Fetch the user data from the document snapshot
-                                String firstName = value.getString("fname");
-                                String middleName = value.getString("mname");
-                                String lastName = value.getString("lname");
-//                                String username = value.getString("username");
-                                String email = value.getString("email");
-                                String gender = value.getString("gender");
-                                String birthday = value.getString("birthday");
-                                String location = value.getString("location");
-                                String number = value.getString("number");
+        SharedPreferences sharedPreferences = this.getSharedPreferences("MyInfo", Context.MODE_PRIVATE);
+        // Retrieve email and password
+        String savedEmail = sharedPreferences.getString("EMAIL", null);  // Default is null if not found
 
-                                // Set the data to the EditText and AutoCompleteTextView fields
-                                prFname.setText(firstName);
-                                prMname.setText(middleName);
-                                prLname.setText(lastName);
-//                                prUsername.setText(username);
-                                prEmail.setText(email);
-                                 prGender.setText(gender, false);
-                                prBirthday.setText(birthday);
-                                 prLocation.setText(location, false);
-                                prNumber.setText(number);
-
-                                Log.d("FetchedGender", gender);
-                                Log.d("FetchedLocation", location);
-
-
-                            } else {
-                                Toast.makeText(editprofile.this, "No profile data found.", Toast.LENGTH_SHORT).show();
+        firestore.collection("MobileUsers").whereEqualTo("email", savedEmail)
+                .addSnapshotListener((snapshot, e) -> {
+                    if (e != null) {
+                        Toast.makeText(this, "Failed to load profile data.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (snapshot != null && !snapshot.isEmpty()) {
+                        // Loop through all matched documents (in case of multiple)
+                        for (DocumentSnapshot document : snapshot.getDocuments()) {
+                            if (document.exists()) {
+                                prFname.setText(document.getString("fname"));
+                                prMname.setText(document.getString("mname"));
+                                prLname.setText(document.getString("lname"));
+                                prEmail.setText(document.getString("email"));
+                                prGender.setText(document.getString("gender"), false);
+                                prBirthday.setText(document.getString("birthday"));
+                                prLocation.setText(document.getString("location"), false);
+                                prNumber.setText(document.getString("number"));
                             }
                         }
-                    });
-        } else {
-            Toast.makeText(this, "User is not logged in.", Toast.LENGTH_SHORT).show();
-        }
+                    } else {
+                        Toast.makeText(this, "No profile data found.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
 
         // Set click listeners for showing the dropdown when the AutoCompleteTextViews are clicked
@@ -146,44 +136,35 @@ public class editprofile extends AppCompatActivity {
         prLocation.setOnClickListener(v -> prLocation.showDropDown());
 
         // Set up OnClickListener for Update button
-        prUpdate.setOnClickListener(v -> updateProfile());
+        prUpdate.setOnClickListener(v -> updateProfile(savedEmail));
     }
 
-    private void updateProfile() {
-        if (currentUser != null) {
-            // Collect data from fields
-            String firstName = prFname.getText().toString();
-            String middleName = prMname.getText().toString();
-            String lastName = prLname.getText().toString();
-//            String username = prUsername.getText().toString();
-            String email = prEmail.getText().toString();
-            String gender = prGender.getText().toString();
-            String birthday = prBirthday.getText().toString();
-            String location = prLocation.getText().toString();
-            String number = prNumber.getText().toString();
-
-            // Update Firestore document
-            firestore.collection("MobileUsers").document(currentUser.getUid())
-                    .update("fname", firstName,
-                            "mname", middleName,
-                            "lname", lastName,
-//                            "username", username,
-                            "email", email,
-                            "gender", gender,
-                            "birthday", birthday,
-                            "location", location,
-                            "number", number)
-                    .addOnSuccessListener(aVoid ->{
-                        Intent intent = new Intent(editprofile.this, Menubar.class);
-                        intent.putExtra("EXTRA_FRAGMENT", "EDIT");
-                        startActivity(intent);
-                        finish(); // Close the splash screen activity
-                        Toast.makeText(editprofile.this, "Profile updated successfully.", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(editprofile.this, "Failed to update profile.", Toast.LENGTH_SHORT).show());
-        } else {
-            Toast.makeText(this, "User is not logged in.", Toast.LENGTH_SHORT).show();
-        }
+    private void updateProfile(String email) {
+        firestore.collection("MobileUsers").whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        document.getReference().update(
+                                "fname", prFname.getText().toString(),
+                                "mname", prMname.getText().toString(),
+                                "lname", prLname.getText().toString(),
+                                "email", prEmail.getText().toString(),
+                                "gender", prGender.getText().toString(),
+                                "birthday", prBirthday.getText().toString(),
+                                "location", prLocation.getText().toString(),
+                                "number", prNumber.getText().toString()
+                        ).addOnSuccessListener(aVoid -> {
+                            Intent intent = new Intent(editprofile.this, Menubar.class);
+                            intent.putExtra("EXTRA_FRAGMENT", "EDIT");
+                            startActivity(intent);
+                            finish();
+                            Toast.makeText(editprofile.this, "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                        }).addOnFailureListener(e -> Toast.makeText(editprofile.this, "Failed to update profile.", Toast.LENGTH_SHORT).show());
+                    } else {
+                        Toast.makeText(this, "Profile not found.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update profile.", Toast.LENGTH_SHORT).show());
     }
-
 }

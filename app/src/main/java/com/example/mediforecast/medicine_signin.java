@@ -9,8 +9,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -24,7 +27,11 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,11 +43,11 @@ public class medicine_signin extends AppCompatActivity {
 
     private AutoCompleteTextView reminderMedicineType, reminderUnitType;
     private EditText medicinenameET;
-    private TextView medicinestartdate, medicineenddate;
+    private TextView medicinestartdate, medicineenddate, validationMedName, validationUnType, validationMedType, validationSched, validationStart, validationEnd, validationDays;
     private MultiAutoCompleteTextView showSchedule;
 
 
-    String[] unitType = {"IU", "ampoule(s)","application(s)","application(s)", "capsule(s)","drop(s)","gram(s)",
+    String[] unitType = {"IU", "ampoule(s)","application(s)", "capsule(s)","drop(s)","gram(s)",
             "injection(s)", "milligram(s)", "milliliter(s)", "mm", "packet(s)", "packet(s)", "patch(es)",
             "pessary(ies)", "piece(s)","pill(s)", "portion(s)", "puff(s)", "spray(s)","suppository(ies)",
             "tablespoon(s)", "teaspoon(s)", "unit(s)", "vaginal capsule(s)", "vaginal insert(s)",
@@ -75,6 +82,13 @@ public class medicine_signin extends AppCompatActivity {
         reminderUnitType = findViewById(R.id.unit);
         everyDayCheckBox = findViewById(R.id.every_day);
         showSchedule = findViewById(R.id.showSchedule);
+        validationMedName = findViewById(R.id.validationMedName);
+        validationUnType= findViewById(R.id.validationUnType);
+        validationMedType = findViewById(R.id.validationMedType);
+        validationSched = findViewById(R.id.validationSched);
+        validationStart = findViewById(R.id.validationStart);
+        validationEnd = findViewById(R.id.validationEnd);
+        validationDays = findViewById(R.id.validationDays);
 
         everyDayCheckBox.setChecked(false);
         StringBuilder scheduleDetails = new StringBuilder();
@@ -141,6 +155,20 @@ public class medicine_signin extends AppCompatActivity {
                    .append("<br>")
                    .append("<b>Dose:</b> ").append(dose3);
            showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
+       }else if(intents.hasExtra("everyHours")){
+           // I Change this with update 1:23 AM nov 10
+           String time1 = intents.getStringExtra("time1");
+           String dose1 = intents.getStringExtra("dose1");
+           String frequency = intents.getStringExtra("everyHours");
+           schedule.setText(frequency);
+           scheduleDetails.append("<b>Takes</b>")
+                   .append("<br>")
+                   .append("<b>Time: </b> Every ")
+                   .append(time1)
+                   .append(" Hour(s)")
+                   .append("<br>")
+                   .append("<b>Dose:</b> ").append(dose1);
+           showSchedule.setVisibility(MultiAutoCompleteTextView.VISIBLE);
        }
         showSchedule.setText(scheduleDetails.toString());
         showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
@@ -156,6 +184,12 @@ public class medicine_signin extends AppCompatActivity {
                     .edit()
                     .putString("SelectedSchedule", selectedMedicineUnitType)
                     .apply();
+            // I Change this with update 1:23 AM nov 10
+            if(selectedMedicineUnitType != null){
+                validationSched.setVisibility(View.GONE);
+            }else{
+                validationSched.setVisibility(View.VISIBLE);
+            }
         });
 
         // Initialize ArrayAdapter for medicine types
@@ -223,10 +257,78 @@ public class medicine_signin extends AppCompatActivity {
             String time3 = intents.hasExtra("time3") ? intents.getStringExtra("time3") : null;
             String dose3 = intents.hasExtra("dose3") ? intents.getStringExtra("dose3") : null;
 
-            if (medicineName.isEmpty() || startDate.isEmpty() || endDate.isEmpty()) {
-                Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            if (medicineName.isEmpty()) {
+                String message = "medicineName is required";
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                Log.d("ValidationError", message);
+                validationMedName.setVisibility(View.VISIBLE);
                 return;
             }
+            if (unitType.isEmpty()) {
+            String message = "unitType is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            schedule.setEnabled(false);
+            validationUnType.setVisibility(View.VISIBLE);
+            return;
+         }
+            if (medicineType.isEmpty()) {
+            String message = "medicineType is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            validationMedType.setVisibility(View.VISIBLE);
+            return;
+           }
+            if (startDate.isEmpty()) {
+            String message = "startDate is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            validationStart.setVisibility(View.VISIBLE);
+            return;
+          }
+         if (endDate.isEmpty()) {
+            String message = "endDate is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            validationEnd.setVisibility(View.VISIBLE);
+            return;
+         }
+         if (schedules.equals("Choose Schedule")) {
+            String message = "schedules is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            validationSched.setText("Schedule is required!");
+            validationSched.setVisibility(View.VISIBLE);
+              return;
+         }
+         if (time1 == null) {
+            String message = "time1 is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            return;
+         }
+         if (dose1 == null) {
+            String message = "dose1 is required";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d("ValidationError", message);
+            return;
+         }
+            if (!isValidDate(startDate) || !isDateInFutureOrToday(startDate)) {
+                showToastAndLog("startDate must be today or in the future (dd/MM/yyyy)");
+                validationStart.setText("Start Date must today or in the future");
+                validationStart.setVisibility(View.VISIBLE);
+                return;
+            }
+          if (!isValidDate(endDate) || !isDateInFutureOrToday(endDate)) {
+                showToastAndLog("endDate must be today or in the future (dd/MM/yyyy)");
+              validationEnd.setText("End Date must today or in the future");
+              validationEnd.setVisibility(View.VISIBLE);
+                return;
+          }
+          if(SelectedDays.equals(", ")){
+              validationDays.setVisibility(View.VISIBLE);
+          }
+
 
             // Create a new Medicine object
             Medicine medicine = new Medicine(medicineName, startDate, endDate, medicineType, unitType, schedules, SelectedDays,
@@ -234,12 +336,18 @@ public class medicine_signin extends AppCompatActivity {
 
             // Insert into the database
             medicineRepository.insert(medicine);
+            String everyHours = intents.getStringExtra("everyHours");
+            String everyHoursVal = intents.getStringExtra("everyHoursVal");
 
             Toast.makeText(this, "Medicine added successfully!", Toast.LENGTH_SHORT).show();
-            setMedicineReminder(medicineName, time1, time2, time3, startDate, endDate, SelectedDays); // Pass value to schedule reminder
+            setMedicineReminder(medicineName, time1, time2, time3, startDate, endDate, SelectedDays, everyHoursVal); // Pass value to schedule reminder
             finish(); // Finish and go back to the previous activity
             // Optional: clear form fields
             clearForm();
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.apply();
 
             Intent intent = new Intent(medicine_signin.this, splashscreenaddalarm.class);
             startActivity(intent);
@@ -265,8 +373,51 @@ public class medicine_signin extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        schedule.setEnabled(!reminderUnitType.getText().toString().isEmpty());
+        reminderUnitType.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                schedule.setEnabled(!s.toString().isEmpty());
+
+            }
+        });
     }
+
+    private boolean isValidDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        try {
+            LocalDate parsedDate = LocalDate.parse(date, formatter);
+            Log.d("DateValidation", "Parsed date: " + parsedDate);
+            return true;
+        } catch (DateTimeParseException e) {
+            Log.d("DateValidation", "Invalid date format: " + date);
+            return false;
+        }
+    }
+
+    private boolean isDateInFutureOrToday(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate parsedDate = LocalDate.parse(date, formatter);
+        LocalDate today = LocalDate.now();
+        Log.d("DateValidation", "Parsed date: " + parsedDate + ", Today: " + today);
+        return !parsedDate.isBefore(today);
+    }
+    private void showToastAndLog(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Log.d("ValidationError", message);
+    }
+
+
     private void clearForm() {
         medicinenameET.setText("");
         medicinestartdate.setText("");
@@ -277,6 +428,8 @@ public class medicine_signin extends AppCompatActivity {
         selectedDays.clear();
         deselectAllDays();
         everyDayCheckBox.setChecked(false);
+        showSchedule.setText("");
+        showSchedule.setVisibility(MultiAutoCompleteTextView.GONE);
 
     }
     @Override
@@ -291,6 +444,32 @@ public class medicine_signin extends AppCompatActivity {
         editor.putString("selectedUnitType", reminderUnitType.getText().toString().trim());
         editor.putBoolean("isEveryDay", everyDayCheckBox.isChecked());
         editor.putStringSet("selectedDays", new HashSet<>(selectedDays));
+
+        Intent intent = getIntent();
+        if(intent.hasExtra("onceDaily")){
+            editor.putString("frequency", "onceDaily");
+            editor.putString("dose1", intent.getStringExtra("dose1"));
+            editor.putString("time1", intent.getStringExtra("time1"));
+        }else if (intent.hasExtra("twiceDaily")) {
+            editor.putString("frequency", "twiceDaily");
+            editor.putString("dose1", intent.getStringExtra("dose1"));
+            editor.putString("time1", intent.getStringExtra("time1"));
+            editor.putString("dose2", intent.getStringExtra("dose2"));
+            editor.putString("time2", intent.getStringExtra("time2"));
+        } else if (intent.hasExtra("thriceDaily")) {
+            editor.putString("frequency", "thriceDaily");
+            editor.putString("dose1", intent.getStringExtra("dose1"));
+            editor.putString("time1", intent.getStringExtra("time1"));
+            editor.putString("dose2", intent.getStringExtra("dose2"));
+            editor.putString("time2", intent.getStringExtra("time2"));
+            editor.putString("dose3", intent.getStringExtra("dose3"));
+            editor.putString("time3", intent.getStringExtra("time3"));
+        } else if (intent.hasExtra("everyHours")) {
+            // I Change this with update 1:23 AM nov 10
+            editor.putString("frequency", "everyHours");
+            editor.putString("dose1", intent.getStringExtra("dose1"));
+            editor.putString("time1", intent.getStringExtra("time1"));
+        }
         editor.apply();
     }
     @Override
@@ -327,6 +506,75 @@ public class medicine_signin extends AppCompatActivity {
             if (day.equals("Thursday")) toggleDayViewState(thursday, true);
             if (day.equals("Friday")) toggleDayViewState(friday, true);
             if (day.equals("Saturday")) toggleDayViewState(saturday, true);
+        }
+        // Restore frequency-related data and update UI
+        String frequency = preferences.getString("frequency", "");
+        StringBuilder scheduleDetails = new StringBuilder();
+
+        if ("onceDaily".equals(frequency)) {
+            scheduleDetails.append("<b>First Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(preferences.getString("time1", ""))
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose1", ""));
+        } else if ("twiceDaily".equals(frequency)) {
+            scheduleDetails.append("<b>First Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(preferences.getString("time1", ""))
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose1", ""))
+                    .append("<br><br>")
+                    .append("<b>Second Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(preferences.getString("time2", ""))
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose2", ""));
+        } else if ("thriceDaily".equals(frequency)) {
+            scheduleDetails.append("<b>First Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(preferences.getString("time1", ""))
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose1", ""))
+                    .append("<br><br>")
+                    .append("<b>Second Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(preferences.getString("time2", ""))
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose2", ""))
+                    .append("<br><br>")
+                    .append("<b>Third Take</b>")
+                    .append("<br>")
+                    .append("<b>Time:</b> ")
+                    .append(preferences.getString("time3", ""))
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose3", ""));
+        }else if ("everyHours".equals(frequency)){
+            // I Change this with update 1:23 AM nov 10
+            scheduleDetails.append("<b>Takes</b>")
+                    .append("<br>")
+                    .append("<b>Time: </b> Every ")
+                    .append(preferences.getString("time1", ""))
+                    .append(" Hour(s)")
+                    .append("<br>")
+                    .append("<b>Dose:</b> ")
+                    .append(preferences.getString("dose1", ""));
+        }
+
+        // Set the schedule text if there is data to display
+        if (scheduleDetails.length() > 0) {
+            showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
+            showSchedule.setVisibility(View.VISIBLE);
         }
     }
     // Method to handle day selection click listeners
@@ -443,11 +691,29 @@ public class medicine_signin extends AppCompatActivity {
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    private void setMedicineReminder(String medicineName, String time1, String time2, String time3, String startDate, String endDate, String SelectedDays) {
-        scheduleAlarmForTime(medicineName, time1, "time1", startDate, endDate, SelectedDays);
-        scheduleAlarmForTime(medicineName, time2, "time2", startDate, endDate, SelectedDays);
-        scheduleAlarmForTime(medicineName, time3, "time3", startDate, endDate, SelectedDays);
+    private void setMedicineReminder(String medicineName, String time1, String time2, String time3, String startDate, String endDate, String selectedDays, String everyHoursVal) {
+        scheduleAlarmForTime(medicineName, time1, "time1", startDate, endDate, selectedDays);
+        scheduleAlarmForTime(medicineName, time2, "time2", startDate, endDate, selectedDays);
+        scheduleAlarmForTime(medicineName, time3, "time3", startDate, endDate, selectedDays);
 
+        // Check if repeating interval (everyHours) is valid and schedule repeating alarm
+        if (everyHoursVal != null && !everyHoursVal.isEmpty()) {
+            try {
+                // Ensure the value is numeric and parse it as an integer
+                int intervalHours = Integer.parseInt(everyHoursVal);
+
+                if (intervalHours > 0) {
+                    // Schedule repeating alarm
+                    scheduleRepeatingAlarm(medicineName, intervalHours, startDate, endDate, selectedDays);
+                } else {
+                    Log.e("MedicineReminder", "Invalid interval: must be greater than zero.");
+                }
+            } catch (NumberFormatException e) {
+                // Log the error if it's not a valid integer
+                Log.e("MedicineReminder", "Invalid interval format: " + everyHoursVal, e);
+                Toast.makeText(this, "Invalid hourly interval format", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
     @SuppressLint("ScheduleExactAlarm")
     private void scheduleAlarmForTime(String medicineName, String time, String timeLabel, String startDate, String endDate, String SelectedDays){
@@ -481,8 +747,6 @@ public class medicine_signin extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, minutes);
                 calendar.set(Calendar.SECOND, 0);
 
-
-
                 // Log the final calendar time
                 Log.d("MedicineReminder", "Alarm set for " + timeLabel + ": " + calendar.getTime().toString());
 
@@ -494,7 +758,7 @@ public class medicine_signin extends AppCompatActivity {
                 intent.putExtra("selected_days", SelectedDays);
 
                 // Generate a unique request code using current time (or any other unique method)
-                int requestCode = (int) System.currentTimeMillis();
+                int requestCode = (medicineName + timeLabel).hashCode();
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 // Set up the alarm
@@ -506,20 +770,78 @@ public class medicine_signin extends AppCompatActivity {
                             pendingIntent
                     );
                 }
-//            } catch (ParseException e) {
-//                // Handle parsing error and log it
-//                Log.e("MedicineReminder", "ParseException: " + e.getMessage());
-//                Toast.makeText(this, "Invalid time format: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                // Save the requestCode to SharedPreferences for later cancellation
+                SharedPreferences prefs = getSharedPreferences("MedicinePrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt(medicineName + "_requestCode", requestCode);
+                editor.apply();
+
+                Log.d("MedicineReminder", "Alarm set with requestCode: " + requestCode);
             } catch (Exception e) {
                 // Handle any other exceptions and log it
                 Log.e("MedicineReminder", "Error: " + e.getMessage());
                 Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
+
         }
-//        else {
-//            // Handle the case where time1 is null or empty
-//            Log.e("MedicineReminder", "Time string is null or empty");
-//            Toast.makeText(this, "Invalid time for reminder", Toast.LENGTH_SHORT).show();
-//        }
     }
+    @SuppressLint("ScheduleExactAlarm")
+    private void scheduleRepeatingAlarm(String medicineName, int intervalHours, String startDate, String endDate, String selectedDays) {
+        if (intervalHours <= 0) {
+            Log.e("MedicineReminder", "Invalid intervalHours: Must be a positive integer.");
+            return;
+        }
+
+        long intervalMillis = intervalHours * 60 * 60 * 1000L; // Convert hours to milliseconds
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // Move to the next multiple of intervalHours to start the alarm
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int hoursUntilNextInterval = intervalHours - (currentHour % intervalHours);
+        calendar.add(Calendar.HOUR_OF_DAY, hoursUntilNextInterval);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        try {
+            startCal.setTime(dateFormat.parse(startDate));
+            endCal.setTime(dateFormat.parse(endDate));
+            endCal.set(Calendar.HOUR_OF_DAY, 23);
+            endCal.set(Calendar.MINUTE, 59);
+            endCal.set(Calendar.SECOND, 59);
+        } catch (ParseException e) {
+            Log.e("MedicineReminder", "Unparseable date format. Expected format is d/M/yyyy.");
+            return;
+        }
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("medicine_name", medicineName);
+        intent.putExtra("start_date", startDate);
+        intent.putExtra("end_date", endDate);
+        intent.putExtra("selected_days", selectedDays);
+
+        int requestCode = (medicineName + "_repeat").hashCode();
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        if (calendar.compareTo(startCal) >= 0 && calendar.compareTo(endCal) <= 0 && alarmManager != null) {
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    intervalMillis,
+                    pendingIntent
+            );
+            Log.d("MedicineReminder", "Repeating alarm set for every " + intervalHours + " hours.");
+        } else {
+            Log.d("MedicineReminder", "Current date is outside the specified range; alarm not set.");
+        }
+    }
+
+
 }

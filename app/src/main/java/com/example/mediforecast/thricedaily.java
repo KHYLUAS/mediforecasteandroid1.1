@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +21,9 @@ public class thricedaily extends AppCompatActivity {
     private ImageView medicinearrow;
     private MaterialTimePicker timePicker;
     private Calendar calendar;
-    private int currentDose = 1;
+    private int currentDose1 = 1;  // Use a separate dose variable for dose 1
+    private int currentDose2 = 1;
+    private int currentDose3 = 1;  // Use a separate dose variable for dose 1
     private Button Register;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +40,37 @@ public class thricedaily extends AppCompatActivity {
         boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
         Register = findViewById(R.id.Register);
         medicinearrow.setOnClickListener(v->{
-            Intent intent = new Intent(thricedaily.this, medicineschedule.class);
-            startActivity(intent);
-            finish();
+            if (isUpdate){
+                // I Change this with update 1:23 AM nov 10
+                Intent intent = new Intent(thricedaily.this, medicineschedule.class);
+                intent.putExtra("isUpdating", true);
+                startActivity(intent);
+                finish();
+            }else{
+                Intent intent = new Intent(thricedaily.this, medicineschedule.class);
+                startActivity(intent);
+                finish();
+            }
         });
         timeValue.setOnClickListener(v -> showTimePicker(timeValue));
         timeValue2.setOnClickListener(v -> showTimePicker(timeValue2));
         timeValue3.setOnClickListener(v -> showTimePicker(timeValue3));
-        doseValue.setOnClickListener(v -> showDosePicker(doseValue));
-        doseValue2.setOnClickListener(v -> showDosePicker(doseValue2));
-        doseValue3.setOnClickListener(v -> showDosePicker(doseValue3));
-        String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                .getString("selectedUnitType", "");// Default dose value
-        doseValue.setText(unitType);
-        doseValue2.setText(unitType);
-        doseValue3.setText(unitType);
+        doseValue.setOnClickListener(v -> showDosePicker(doseValue, 1));
+        doseValue2.setOnClickListener(v -> showDosePicker(doseValue2, 2));
+        doseValue3.setOnClickListener(v -> showDosePicker(doseValue3, 3));
+        if (isUpdate){
+            String newUnitType = getIntent().getStringExtra("newUnitType");
+            doseValue.setText(newUnitType);
+            doseValue2.setText(newUnitType);
+            doseValue3.setText(newUnitType);
+        }else{
+            String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                    .getString("selectedUnitType", "");// Default dose value
+            doseValue.setText(unitType);
+            doseValue2.setText(unitType);
+            doseValue3.setText(unitType);
+        }
+
         Register.setOnClickListener(v->{
             String time1 = timeValue.getText().toString();
             String time2 = timeValue2.getText().toString();
@@ -60,6 +79,15 @@ public class thricedaily extends AppCompatActivity {
             String dose2 = doseValue2.getText().toString();
             String dose3 = doseValue3.getText().toString();
             String thriceDaily = "Thrice Daily";
+
+            if(time1.isEmpty() && dose1.isEmpty() && time2.isEmpty() && dose2.isEmpty()
+                    && time3.isEmpty() && dose3.isEmpty()
+                    || time1.isEmpty() || dose1.isEmpty() || time2.isEmpty() || dose2.isEmpty()
+                    || time3.isEmpty() || dose3.isEmpty()){
+                Toast.makeText(this, "Time and Dose is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (isUpdate){
                 Intent intent = new Intent(thricedaily.this, UpdateReminder.class);
                 intent.putExtra("time1", time1);
@@ -68,6 +96,7 @@ public class thricedaily extends AppCompatActivity {
                 intent.putExtra("dose1", dose1);
                 intent.putExtra("dose2", dose2);
                 intent.putExtra("dose3", dose3);
+                intent.putExtra("updating", true);
                 intent.putExtra("thriceDaily", thriceDaily);
                 startActivity(intent);
                 finish();
@@ -115,42 +144,72 @@ public class thricedaily extends AppCompatActivity {
             timeTextView.setText(formattedTime);
         });
     }
-    private void showDosePicker(TextView doseTextView) {
+    private void showDosePicker(TextView doseTextView, int doseNumber) {
         Dialog doseDialog = new Dialog(this);
         doseDialog.setContentView(R.layout.dialog_dose_picker);
 
         // Initialize dialog components
-        TextView doseNumber = doseDialog.findViewById(R.id.doseNumber);
+        TextView doseNumberView = doseDialog.findViewById(R.id.doseNumber);
         ImageView buttonMinus = doseDialog.findViewById(R.id.buttonMinus);
         ImageView buttonPlus = doseDialog.findViewById(R.id.buttonPlus);
         Button buttonSetDose = doseDialog.findViewById(R.id.buttonSetDose);
 
-        // Set the initial dose value
-        doseNumber.setText(String.valueOf(currentDose));
+        // Set the initial dose number based on doseNumber
+        if (doseNumber == 1) {
+            doseNumberView.setText(String.valueOf(currentDose1));
+        } else if (doseNumber == 2) {
+            doseNumberView.setText(String.valueOf(currentDose2));
+        } else {
+            doseNumberView.setText(String.valueOf(currentDose3));
+        }
 
         // Increment the dose
         buttonPlus.setOnClickListener(v -> {
-            currentDose++;
-            doseNumber.setText(String.valueOf(currentDose));
+            if (doseNumber == 1) {
+                currentDose1++;
+                doseNumberView.setText(String.valueOf(currentDose1));
+            } else if (doseNumber == 2) {
+                currentDose2++;
+                doseNumberView.setText(String.valueOf(currentDose2));
+            } else {
+                currentDose3++;
+                doseNumberView.setText(String.valueOf(currentDose3));
+            }
         });
 
         // Decrement the dose, but ensure it doesn't go below 1
         buttonMinus.setOnClickListener(v -> {
-            if (currentDose > 1) {
-                currentDose--;
-                doseNumber.setText(String.valueOf(currentDose));
+            if (doseNumber == 1 && currentDose1 > 1) {
+                currentDose1--;
+                doseNumberView.setText(String.valueOf(currentDose1));
+            } else if (doseNumber == 2 && currentDose2 > 1) {
+                currentDose2--;
+                doseNumberView.setText(String.valueOf(currentDose2));
+            } else if (doseNumber == 3 && currentDose3 > 1) {
+                currentDose3--;
+                doseNumberView.setText(String.valueOf(currentDose3));
             }
         });
 
         // Set the selected dose when "Set Dose" is clicked
         buttonSetDose.setOnClickListener(v -> {
-            String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                    .getString("selectedUnitType", "");// Default dose value
+            boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
+            String unitType = isUpdate ? getIntent().getStringExtra("newUnitType") :
+                    getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("selectedUnitType", "");
 
-            doseTextView.setText(String.valueOf(currentDose) + " " + unitType);  // Update the doseValue TextView
-            doseDialog.dismiss();  // Close the dialog
+            if (doseNumber == 1) {
+                doseTextView.setText(currentDose1 + " " + unitType);
+            } else if (doseNumber == 2) {
+                doseTextView.setText(currentDose2 + " " + unitType);
+            } else {
+                doseTextView.setText(currentDose3 + " " + unitType);
+            }
+
+            // Close the dialog
+            doseDialog.dismiss();
         });
 
         doseDialog.show();  // Display the dialog
     }
-    }
+
+}

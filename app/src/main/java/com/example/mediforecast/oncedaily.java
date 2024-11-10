@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,22 +39,34 @@ public class oncedaily extends AppCompatActivity {
         medicinearrow = findViewById(R.id.medicinearrow);
 
         boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
-
-        String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                .getString("selectedUnitType", "");// Default dose value
-        Log.e("This is the unityType", unitType);
-        if(unitType.isEmpty()){
-            doseValue.setText("Unit");
+        if (isUpdate){
+            String newUnitType = getIntent().getStringExtra("newUnitType");
+            doseValue.setText(newUnitType);
         }else{
-            doseValue.setText(unitType);
+            String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                    .getString("selectedUnitType", "");// Default dose value
+            Log.e("This is the unityType", unitType);
+            if(unitType.isEmpty()){
+                doseValue.setText("Unit");
+            }else{
+                doseValue.setText(unitType);
+            }
         }
-
 
         // Handle the back arrow click
         medicinearrow.setOnClickListener(v -> {
-            Intent intent = new Intent(oncedaily.this, medicineschedule.class);
-            startActivity(intent);
-            finish();
+            // I Change this with update 1:23 AM nov 10
+            if (isUpdate){
+                Intent intent = new Intent(oncedaily.this, medicineschedule.class);
+                intent.putExtra("isUpdating", true);
+                startActivity(intent);
+                finish();
+            }else{
+                Intent intent = new Intent(oncedaily.this, medicineschedule.class);
+                startActivity(intent);
+                finish();
+            }
+
         });
 
         // Handle time picker
@@ -62,14 +75,26 @@ public class oncedaily extends AppCompatActivity {
         // Handle dose value click to show modal
         doseValue.setOnClickListener(v -> showDosePicker());
         Register.setOnClickListener(v -> {
+            String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                    .getString("selectedUnitType", "");
             String time1 = timeValue.getText().toString();
             String dose1 = doseValue.getText().toString();
             String onceDaily = "Once Daily";
+
+            if(dose1.equals(unitType)){
+                Toast.makeText(this, "Dose is required", Toast.LENGTH_SHORT).show();
+            }
+            if(time1.isEmpty() && dose1.isEmpty() || time1.isEmpty() || dose1.isEmpty()){
+                Toast.makeText(this, "Time and Dose is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if(isUpdate){
                 Intent intent = new Intent(oncedaily.this, UpdateReminder.class);
                 intent.putExtra("time1", time1);
                 intent.putExtra("dose1", dose1);
                 intent.putExtra("onceDaily", onceDaily);
+                intent.putExtra("updating", true);
                 startActivity(intent);
                 finish();
             }else {
@@ -142,10 +167,18 @@ public class oncedaily extends AppCompatActivity {
 
         // Set the selected dose when "Set Dose" is clicked
         buttonSetDose.setOnClickListener(v -> {
-            String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                    .getString("selectedUnitType", "");// Default dose value
+            boolean isUpdate = getIntent().getBooleanExtra("isUpdate", false);
 
-            doseValue.setText(String.valueOf(currentDose) + " " + unitType);  // Update the doseValue TextView
+            if(isUpdate){
+                String newUnitType = getIntent().getStringExtra("newUnitType");
+                doseValue.setText(String.valueOf(currentDose) + " " + newUnitType);
+            }else{
+                String unitType = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                        .getString("selectedUnitType", "");// Default dose value
+
+                doseValue.setText(String.valueOf(currentDose) + " " + unitType);  // Update the doseValue TextView
+            }
+
             doseDialog.dismiss();  // Close the dialog
         });
 

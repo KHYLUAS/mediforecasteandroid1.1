@@ -109,18 +109,18 @@
           app:use_controller="true"
           app:resize_mode="fit">
 
-          <ImageView
-              android:id="@+id/exo_fullscreen_icon"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentEnd="true"
-              android:layout_marginEnd="16dp"
-              android:layout_gravity="end"
-              android:src="@drawable/ic_fullscreen"
-              android:contentDescription="Fullscreen" />
+
 
       </androidx.media3.ui.PlayerView>
-
+        <!--          <ImageView-->
+        <!--              android:id="@+id/exo_fullscreen_icon"-->
+        <!--              android:layout_width="wrap_content"-->
+        <!--              android:layout_height="wrap_content"-->
+        <!--              android:layout_alignParentEnd="true"-->
+        <!--              android:layout_marginEnd="16dp"-->
+        <!--              android:layout_gravity="end"-->
+        <!--              android:src="@drawable/ic_fullscreen"-->
+        <!--              android:contentDescription="Fullscreen" />-->
 
         <TextView
             android:id="@+id/textView6"

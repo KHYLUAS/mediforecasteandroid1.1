@@ -44,12 +44,12 @@
             android:background="@drawable/circle"
             android:layout_centerInParent="true" />
 
-        <ImageView
-            android:id="@+id/not"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/bell"
-            android:layout_centerInParent="true" />
+<!--        <ImageView-->
+<!--            android:id="@+id/not"-->
+<!--            android:layout_width="35dp"-->
+<!--            android:layout_height="35dp"-->
+<!--            android:background="@drawable/bell"-->
+<!--            android:layout_centerInParent="true" />-->
     </RelativeLayout>
 
 

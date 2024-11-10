@@ -48,7 +48,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.button.MaterialButton
-
                 android:layout_width="match_parent"
                 android:layout_height="61dp"
                 android:backgroundTint="@color/otherprimary"
