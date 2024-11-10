@@ -135,112 +135,112 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Handler().postDelayed(() -> stopSoundAndVibration(), 180000); // Stop after 3 minutes
     }
 
-//    @SuppressLint("ScheduleExactAlarm")
-//    private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
-//        Calendar nextDay = Calendar.getInstance();
-//        nextDay.add(Calendar.DAY_OF_YEAR, 1);
-//        nextDay.set(Calendar.HOUR_OF_DAY, hour);
-//        nextDay.set(Calendar.MINUTE, minute);
-//        nextDay.set(Calendar.SECOND, 0);
+    @SuppressLint("ScheduleExactAlarm")
+    private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
+        Calendar nextDay = Calendar.getInstance();
+        nextDay.add(Calendar.DAY_OF_YEAR, 1);
+        nextDay.set(Calendar.HOUR_OF_DAY, hour);
+        nextDay.set(Calendar.MINUTE, minute);
+        nextDay.set(Calendar.SECOND, 0);
+
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("medicine_name", medicineName);
+        intent.putExtra("start_date", startDate);
+        intent.putExtra("end_date", endDate);
+        intent.putExtra("selected_days", selectedDays);
+
+        int requestCode = (medicineName + hour + minute).hashCode();
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    nextDay.getTimeInMillis(),
+                    pendingIntent
+            );
+        }
+    }
+//@SuppressLint("ScheduleExactAlarm")
+//private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
+//    try {
+//        // Parse start and end dates
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+//        Date startDateObj = dateFormat.parse(startDate);
+//        Date endDateObj = dateFormat.parse(endDate);
 //
-//        Intent intent = new Intent(context, AlarmReceiver.class);
-//        intent.putExtra("medicine_name", medicineName);
-//        intent.putExtra("start_date", startDate);
-//        intent.putExtra("end_date", endDate);
-//        intent.putExtra("selected_days", selectedDays);
+//        // Get the current date
+//        Calendar currentDate = Calendar.getInstance();
+//        Date currentDateObj = currentDate.getTime();
 //
-//        int requestCode = (medicineName + hour + minute).hashCode();
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-//                context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-//
-//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        if (alarmManager != null) {
-//            alarmManager.setExactAndAllowWhileIdle(
-//                    AlarmManager.RTC_WAKEUP,
-//                    nextDay.getTimeInMillis(),
-//                    pendingIntent
-//            );
+//        // If the current date is after the end date, don't reschedule
+//        if (currentDateObj.compareTo(endDateObj) > 0) {
+//            return;
 //        }
+//
+//        // Get the list of selected days
+//        List<String> dayList = Arrays.asList(selectedDays.split(", "));
+//
+//        // Find the next occurrence of one of the selected days
+//        Calendar nextAlarm = findNextAlarmDay(currentDate, dayList, hour, minute);
+//        if (nextAlarm != null && !nextAlarm.getTime().after(endDateObj)) {
+//            Intent intent = new Intent(context, AlarmReceiver.class);
+//            intent.putExtra("medicine_name", medicineName);
+//            intent.putExtra("start_date", startDate);
+//            intent.putExtra("end_date", endDate);
+//            intent.putExtra("selected_days", selectedDays);
+//
+//            int requestCode = (medicineName + nextAlarm.get(Calendar.HOUR_OF_DAY) + nextAlarm.get(Calendar.MINUTE)).hashCode();
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                    context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//
+//            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//            if (alarmManager != null) {
+//                alarmManager.setExactAndAllowWhileIdle(
+//                        AlarmManager.RTC_WAKEUP,
+//                        nextAlarm.getTimeInMillis(),
+//                        pendingIntent
+//                );
+//            }
+//        }
+//    } catch (Exception e) {
+//        e.printStackTrace();
 //    }
-@SuppressLint("ScheduleExactAlarm")
-private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
-    try {
-        // Parse start and end dates
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
-        Date startDateObj = dateFormat.parse(startDate);
-        Date endDateObj = dateFormat.parse(endDate);
-
-        // Get the current date
-        Calendar currentDate = Calendar.getInstance();
-        Date currentDateObj = currentDate.getTime();
-
-        // If the current date is after the end date, don't reschedule
-        if (currentDateObj.compareTo(endDateObj) > 0) {
-            return;
-        }
-
-        // Get the list of selected days
-        List<String> dayList = Arrays.asList(selectedDays.split(", "));
-
-        // Find the next occurrence of one of the selected days
-        Calendar nextAlarm = findNextAlarmDay(currentDate, dayList, hour, minute);
-        if (nextAlarm != null && !nextAlarm.getTime().after(endDateObj)) {
-            Intent intent = new Intent(context, AlarmReceiver.class);
-            intent.putExtra("medicine_name", medicineName);
-            intent.putExtra("start_date", startDate);
-            intent.putExtra("end_date", endDate);
-            intent.putExtra("selected_days", selectedDays);
-
-            int requestCode = (medicineName + nextAlarm.get(Calendar.HOUR_OF_DAY) + nextAlarm.get(Calendar.MINUTE)).hashCode();
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            if (alarmManager != null) {
-                alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        nextAlarm.getTimeInMillis(),
-                        pendingIntent
-                );
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
-    /**
-     * Find the next occurrence of one of the selected days, starting from the current date.
-     */
-    private Calendar findNextAlarmDay(Calendar currentDate, List<String> dayList, int hour, int minute) {
-        Calendar nextAlarm = (Calendar) currentDate.clone();
-        String currentDay = new SimpleDateFormat("EEEE", Locale.getDefault()).format(currentDate.getTime());
-
-        // If today is the selected day, set the alarm for today at the specified hour and minute
-        if (dayList.contains(currentDay)) {
-            nextAlarm.set(Calendar.HOUR_OF_DAY, hour);
-            nextAlarm.set(Calendar.MINUTE, minute);
-            nextAlarm.set(Calendar.SECOND, 0);
-
-            // If the time for today has already passed, set it for the next occurrence
-            if (nextAlarm.before(currentDate)) {
-                nextAlarm.add(Calendar.DAY_OF_YEAR, 1);
-            }
-        } else {
-            // Find the next available day
-            for (int i = 1; i <= 7; i++) { // Check up to the next 7 days
-                nextAlarm.add(Calendar.DAY_OF_YEAR, 1);
-                String nextDay = new SimpleDateFormat("EEEE", Locale.getDefault()).format(nextAlarm.getTime());
-                if (dayList.contains(nextDay)) {
-                    nextAlarm.set(Calendar.HOUR_OF_DAY, hour);
-                    nextAlarm.set(Calendar.MINUTE, minute);
-                    nextAlarm.set(Calendar.SECOND, 0);
-                    break;
-                }
-            }
-        }
-        return nextAlarm;
-    }
+//}
+//
+//    /**
+//     * Find the next occurrence of one of the selected days, starting from the current date.
+//     */
+//    private Calendar findNextAlarmDay(Calendar currentDate, List<String> dayList, int hour, int minute) {
+//        Calendar nextAlarm = (Calendar) currentDate.clone();
+//        String currentDay = new SimpleDateFormat("EEEE", Locale.getDefault()).format(currentDate.getTime());
+//
+//        // If today is the selected day, set the alarm for today at the specified hour and minute
+//        if (dayList.contains(currentDay)) {
+//            nextAlarm.set(Calendar.HOUR_OF_DAY, hour);
+//            nextAlarm.set(Calendar.MINUTE, minute);
+//            nextAlarm.set(Calendar.SECOND, 0);
+//
+//            // If the time for today has already passed, set it for the next occurrence
+//            if (nextAlarm.before(currentDate)) {
+//                nextAlarm.add(Calendar.DAY_OF_YEAR, 1);
+//            }
+//        } else {
+//            // Find the next available day
+//            for (int i = 1; i <= 7; i++) { // Check up to the next 7 days
+//                nextAlarm.add(Calendar.DAY_OF_YEAR, 1);
+//                String nextDay = new SimpleDateFormat("EEEE", Locale.getDefault()).format(nextAlarm.getTime());
+//                if (dayList.contains(nextDay)) {
+//                    nextAlarm.set(Calendar.HOUR_OF_DAY, hour);
+//                    nextAlarm.set(Calendar.MINUTE, minute);
+//                    nextAlarm.set(Calendar.SECOND, 0);
+//                    break;
+//                }
+//            }
+//        }
+//        return nextAlarm;
+//    }
 
 
     public static void stopSoundAndVibration() {
