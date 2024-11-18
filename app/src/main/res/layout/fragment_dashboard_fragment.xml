@@ -37,19 +37,19 @@
         android:layout_marginTop="18dp"
         android:layout_alignParentEnd="true"> <!-- Aligning to the right -->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/notify"-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:background="@drawable/circle"-->
-<!--            android:layout_centerInParent="true" />-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/notify"-->
+        <!--            android:layout_width="40dp"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:background="@drawable/circle"-->
+        <!--            android:layout_centerInParent="true" />-->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/not"-->
-<!--            android:layout_width="35dp"-->
-<!--            android:layout_height="35dp"-->
-<!--            android:background="@drawable/bell"-->
-<!--            android:layout_centerInParent="true" />-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/not"-->
+        <!--            android:layout_width="35dp"-->
+        <!--            android:layout_height="35dp"-->
+        <!--            android:background="@drawable/bell"-->
+        <!--            android:layout_centerInParent="true" />-->
     </RelativeLayout>
 
 
@@ -127,12 +127,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_below="@id/community"
-                    android:layout_centerHorizontal="true"
-                    android:text="Community"
+                        android:layout_centerHorizontal="true"
+                        android:text="Community"
                         android:textColor="@color/black"
 
-                    android:textSize="16sp"
-                    android:layout_marginTop="5dp" />
+                        android:textSize="16sp"
+                        android:layout_marginTop="5dp" />
 
                 </RelativeLayout>
 
@@ -214,35 +214,32 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
 
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp">
+                >
+
+                <ImageView
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/doc2333" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Checker History"
-                    android:textColor="@color/black"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
                     android:layout_weight="1"
-                android:layout_marginEnd="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="See All"
+                    android:text="Do you take your medicine at the right time?"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="22dp"
                     android:textColor="@color/primaryColor"
-                    android:textSize="19sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:background="@drawable/border_hover"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                    android:paddingRight="10dp"/>
+
             </LinearLayout>
         </LinearLayout>
+
+
+
+
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

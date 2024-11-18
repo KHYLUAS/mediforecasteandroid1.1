@@ -727,7 +727,7 @@ private void checkEmailExists(String email) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 signin.this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Format the date and display it in the TextView
+                    // Format the selected date as "dd/MM/yyyy"
                     String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
                     txtview7.setText(selectedDate);
                 },

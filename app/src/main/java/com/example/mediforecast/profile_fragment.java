@@ -243,7 +243,7 @@ public class profile_fragment extends Fragment {
     private void birthdayFormatDate(String profileBirthday){
         String birthdayDate = profileBirthday;
 
-        SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/M   M/yyyy", Locale.getDefault());
         try {
             Date date = inputFormat.parse(birthdayDate);
 

@@ -786,24 +786,9 @@ public class medicine_signin extends AppCompatActivity {
 
         }
     }
+
     @SuppressLint("ScheduleExactAlarm")
     private void scheduleRepeatingAlarm(String medicineName, int intervalHours, String startDate, String endDate, String selectedDays) {
-        if (intervalHours <= 0) {
-            Log.e("MedicineReminder", "Invalid intervalHours: Must be a positive integer.");
-            return;
-        }
-
-        long intervalMillis = intervalHours * 60 * 60 * 1000L; // Convert hours to milliseconds
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        // Move to the next multiple of intervalHours to start the alarm
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int hoursUntilNextInterval = intervalHours - (currentHour % intervalHours);
-        calendar.add(Calendar.HOUR_OF_DAY, hoursUntilNextInterval);
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -815,33 +800,91 @@ public class medicine_signin extends AppCompatActivity {
             endCal.set(Calendar.MINUTE, 59);
             endCal.set(Calendar.SECOND, 59);
         } catch (ParseException e) {
-            Log.e("MedicineReminder", "Unparseable date format. Expected format is d/M/yyyy.");
+            Log.e("MedicineReminder", "Unparseable date format. Expected format is d/M/yyyy.", e);
             return;
         }
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("medicine_name", medicineName);
+        intent.putExtra("interval_hours", intervalHours);
         intent.putExtra("start_date", startDate);
         intent.putExtra("end_date", endDate);
-        intent.putExtra("selected_days", selectedDays);
 
         int requestCode = (medicineName + "_repeat").hashCode();
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        if (calendar.compareTo(startCal) >= 0 && calendar.compareTo(endCal) <= 0 && alarmManager != null) {
-            alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    intervalMillis,
-                    pendingIntent
-            );
-            Log.d("MedicineReminder", "Repeating alarm set for every " + intervalHours + " hours.");
-        } else {
-            Log.d("MedicineReminder", "Current date is outside the specified range; alarm not set.");
+        if (alarmManager != null) {
+            Calendar currentCal = Calendar.getInstance();
+            Calendar nextTrigger = (Calendar) startCal.clone();
+            nextTrigger.set(Calendar.HOUR_OF_DAY, currentCal.get(Calendar.HOUR_OF_DAY));
+            nextTrigger.set(Calendar.MINUTE, currentCal.get(Calendar.MINUTE));
+            nextTrigger.set(Calendar.SECOND, 0);
+
+            if (nextTrigger.before(currentCal)) {
+                nextTrigger.add(Calendar.HOUR_OF_DAY, intervalHours); // Skip past current time if start time has passed
+            }
+
+            // Loop to set alarms from startDate until endDate
+            while (nextTrigger.before(endCal)) {
+                long triggerTime = nextTrigger.getTimeInMillis();
+
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+                Log.d("MedicineReminder", "Repeating alarm set for " + nextTrigger.getTime() + " (every " + intervalHours + " hours)");
+
+                nextTrigger.add(Calendar.HOUR_OF_DAY, intervalHours); // Move to the next interval
+            }
         }
     }
+
+//@SuppressLint("ScheduleExactAlarm")
+//private void scheduleRepeatingAlarm(String medicineName, int intervalHours, String startDate, String endDate, String selectedDays) {
+//    SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+//    Calendar startCal = Calendar.getInstance();
+//    Calendar endCal = Calendar.getInstance();
+//
+//    try {
+//        startCal.setTime(dateFormat.parse(startDate));
+//        endCal.setTime(dateFormat.parse(endDate));
+//        endCal.set(Calendar.HOUR_OF_DAY, 23);
+//        endCal.set(Calendar.MINUTE, 59);
+//        endCal.set(Calendar.SECOND, 59);
+//    } catch (ParseException e) {
+//        Log.e("MedicineReminder", "Unparseable date format. Expected format is d/M/yyyy.");
+//        return;
+//    }
+//
+//    Intent intent = new Intent(this, AlarmReceiver.class);
+//    intent.putExtra("medicine_name", medicineName);
+//    intent.putExtra("interval_hours", intervalHours);
+//    intent.putExtra("start_date", startDate);
+//    intent.putExtra("end_date", endDate);
+//
+//    int requestCode = (medicineName + "_repeat").hashCode();
+//    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//
+//    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//
+//    if (alarmManager != null) {
+//        Calendar nextTrigger = (Calendar) startCal.clone(); // Start with the start time
+//
+//        // Ensure the start date has the correct time components (hour, minute, second)
+//        nextTrigger.set(Calendar.HOUR_OF_DAY, 0); // Set to midnight of the start day to avoid issues
+//        nextTrigger.set(Calendar.MINUTE, 0);
+//        nextTrigger.set(Calendar.SECOND, 0);
+//
+//        // Loop to set alarms from startDate until endDate
+//        while (nextTrigger.before(endCal)) {
+//            long triggerTime = nextTrigger.getTimeInMillis();
+//
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+//            Log.d("MedicineReminder", "Repeating alarm set for " + nextTrigger.getTime() + " (every " + intervalHours + " hours)");
+//
+//            nextTrigger.add(Calendar.HOUR_OF_DAY, intervalHours); // Move to the next interval
+//        }
+//    }
+//}
 
 
 }

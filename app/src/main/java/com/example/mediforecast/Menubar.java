@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mediforecast.databinding.ActivityMenubarBinding;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class Menubar extends AppCompatActivity {
     private ActivityMenubarBinding binding;
@@ -19,6 +20,7 @@ public class Menubar extends AppCompatActivity {
         binding = ActivityMenubarBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.buttonNav.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
         Intent intent = getIntent();
         String fragmentToDisplay = intent.getStringExtra("EXTRA_FRAGMENT");
 

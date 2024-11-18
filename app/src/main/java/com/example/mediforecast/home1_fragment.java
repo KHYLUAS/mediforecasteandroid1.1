@@ -63,48 +63,49 @@ public class home1_fragment extends Fragment {
     }
 
     private void fetch_communityPost() {
-        // Set up real-time listener for the "CommunityPost" collection
+        // Set up real-time listener for the "CommunityPost" collection with ordering
         CollectionReference communityPostRef = db.collection("CommunityPost");
-        communityPostRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error fetching posts: " + e.getMessage());
-                    Toast.makeText(getContext(), "Failed to fetch community posts: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (snapshot != null) {
-                    homeList.clear();
-                    for (QueryDocumentSnapshot document : snapshot) {
-                        Log.d(TAG, "Community post: " + document.getId() + " => " + document.getData());
-                        String rhu = document.getString("rhu");
-                        String createdBy = document.getString("created_by");
-                        String postImg = document.getString("postImg");
-                        String postMessage = document.getString("postMessage");
-                        String fileType = document.getString("fileType");
+        communityPostRef.orderBy("created_by", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Error fetching posts: " + e.getMessage());
+                            Toast.makeText(getContext(), "Failed to fetch community posts: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        if (snapshot != null) {
+                            homeList.clear();
+                            for (QueryDocumentSnapshot document : snapshot) {
+                                Log.d(TAG, "Community post: " + document.getId() + " => " + document.getData());
+                                String rhu = document.getString("rhu");
+                                String createdBy = document.getString("created_by");
+                                String postImg = document.getString("postImg");
+                                String postMessage = document.getString("postMessage");
+                                String fileType = document.getString("fileType");
 
-                        if (rhu != null && createdBy != null && postMessage != null && postImg != null && fileType != null) {
-                            Home home = new Home(rhu, createdBy, postMessage, postImg, fileType);
-                            homeList.add(home);
+                                if (rhu != null && createdBy != null && postMessage != null && postImg != null && fileType != null) {
+                                    Home home = new Home(rhu, createdBy, postMessage, postImg, fileType);
+                                    homeList.add(home);
+                                } else {
+                                    Log.w(TAG, "Missing fields in document: " + document.getId());
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                            if (homeList.isEmpty()) {
+                                noDataImage.setVisibility(View.VISIBLE);
+                                taskRecycler.setVisibility(View.GONE);
+                            } else {
+                                noDataImage.setVisibility(View.GONE);
+                                taskRecycler.setVisibility(View.VISIBLE);
+                            }
                         } else {
-                            Log.w(TAG, "Missing fields in document: " + document.getId());
+                            Log.d(TAG, "No community posts found.");
                         }
                     }
-                    adapter.notifyDataSetChanged();
-                    if (homeList.isEmpty()) {
-                        noDataImage.setVisibility(View.VISIBLE);
-                        taskRecycler.setVisibility(View.GONE);
-                    } else {
-                        noDataImage.setVisibility(View.GONE);
-                        taskRecycler.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    Log.d(TAG, "No community posts found.");
-                }
-            }
-        });
-
+                });
     }
+
 
 }
 

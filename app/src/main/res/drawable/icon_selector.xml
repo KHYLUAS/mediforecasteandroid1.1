@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-        <item android:state_pressed="true" android:color="@color/primary1" /> <!-- When pressed -->
-        <item android:state_focused="true" android:color="@color/primary1" /> <!-- When focused -->
+        <item android:state_pressed="true" android:color="@color/white" /> <!-- When pressed -->
+        <item android:state_focused="true" android:color="@color/white" /> <!-- When focused -->
         <item android:state_selected="true" android:color="@color/primary1" /> <!-- When selected -->
-        <item android:color="@color/white" /> <!-- Default color -->
+        <item android:color="@color/primary1" /> <!-- Default color -->
 
 
 </selector>

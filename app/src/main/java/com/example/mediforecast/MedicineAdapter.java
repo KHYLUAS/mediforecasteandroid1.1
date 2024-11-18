@@ -112,33 +112,41 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
 
     private void updateMedicineDisplay(MedicineViewHolder holder, Medicine medicine) {
         String time1Single = medicine.getTime1();
+
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         String currentTimeNow = sdf.format(calendar.getTime());
 
-        // Handle single digit time calculation
+        int timeToAdd = 0;
+        // Handle time update based on the selected hours
         if (time1Single.length() == 1 && Character.isDigit(time1Single.charAt(0))) {
+
             try {
+                timeToAdd = Integer.parseInt(time1Single); // e.g., 2 hours (time1Single should be numeric)
+            } catch (NumberFormatException e) {
+                Log.e("MedicineAdapter", "Error parsing time interval: " + time1Single, e);
+                return; // Return early if parsing fails
+            }
+
+            try {
+                // Parse the current time string into a Date object
                 Date currentDate = sdf.parse(currentTimeNow);
-                if (currentDate != null) {
-                    calendar.setTime(currentDate);
-                    int timeToAdd = Integer.parseInt(time1Single);
-                    calendar.add(Calendar.HOUR, timeToAdd);
-
-                    String nextDoseTime = sdf.format(calendar.getTime());
-
-                    // Check if current time matches next dose time
-                    if (currentTimeNow.equals(nextDoseTime.toString())) {
-                        // Only update nextDoseTime when currentTime matches
-                        calendar.add(Calendar.HOUR, timeToAdd);
-                        nextDoseTime = sdf.format(calendar.getTime());
-
-                        // Update the UI with new dose time
-
-                    }
-                    holder.time.setText(nextDoseTime);
-                    holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+                if (currentDate == null) {
+                    throw new ParseException("Error parsing the current time string", 0);
                 }
+
+                calendar.setTime(currentDate); // Set the calendar to the parsed time
+
+                // Add the interval (timeToAdd) hours to the current time
+                calendar.add(Calendar.HOUR, timeToAdd); // Add timeToAdd hours to the current time
+
+                // Get the new time after adding the interval
+                String nextDoseTime = sdf.format(calendar.getTime()); // Format the new time as "hh:mm a"
+
+                // Update the UI with the calculated next dose time
+                holder.time.setText(nextDoseTime); // Display the updated time
+                holder.dosage.setText("Take " + medicine.getDose1() + " (" + medicine.getMedicineType() + ")");
+
             } catch (ParseException e) {
                 Log.e("TimeCheck", "Error parsing time: " + currentTimeNow, e);
             }

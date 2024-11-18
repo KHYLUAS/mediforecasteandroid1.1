@@ -17,8 +17,12 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
+import androidx.annotation.OptIn;
 import androidx.core.app.NotificationCompat;
+import androidx.media3.common.util.Log;
+import androidx.media3.common.util.UnstableApi;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,9 +31,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    //To do: every hour
-    //intent click notification
-    //remind to check if everyday repeat alarm
     private static final String CHANNEL_ID = "MedicineReminderChannel";
     private static Ringtone ringtone;
     private static Vibrator vibrator;
@@ -47,6 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String startDateString = intent.getStringExtra("start_date");
         String endDateString = intent.getStringExtra("end_date");
         String selectedDays = intent.getStringExtra("selected_days");
+        int intervalHours = intent.getIntExtra("interval_hours", 24);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
@@ -67,7 +69,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     // Reschedule for the next day if within the range
                     Calendar alarmTime = Calendar.getInstance();
                     alarmTime.setTime(currentDate);
-                    rescheduleAlarm(context, medicineName, startDateString, endDateString, selectedDays, alarmTime.get(Calendar.HOUR_OF_DAY), alarmTime.get(Calendar.MINUTE));
+//                    rescheduleAlarm(context, medicineName, startDateString, endDateString, selectedDays, alarmTime.get(Calendar.HOUR_OF_DAY), alarmTime.get(Calendar.MINUTE));
+                    rescheduleAlarm(context, medicineName, startDateString, endDateString, selectedDays);
+                }
+                if (intervalHours > 0) {
+                    rescheduleAlarmWithInterval(context, medicineName, startDateString, endDateString, selectedDays, intervalHours);
                 }
             }
         } catch (Exception e) {
@@ -135,33 +141,153 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Handler().postDelayed(() -> stopSoundAndVibration(), 180000); // Stop after 3 minutes
     }
 
-    @SuppressLint("ScheduleExactAlarm")
-    private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
-        Calendar nextDay = Calendar.getInstance();
-        nextDay.add(Calendar.DAY_OF_YEAR, 1);
-        nextDay.set(Calendar.HOUR_OF_DAY, hour);
-        nextDay.set(Calendar.MINUTE, minute);
-        nextDay.set(Calendar.SECOND, 0);
+//    @SuppressLint("ScheduleExactAlarm")
+//    private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
+//        Calendar nextDay = Calendar.getInstance();
+//        nextDay.add(Calendar.DAY_OF_YEAR, 1);
+//        nextDay.set(Calendar.HOUR_OF_DAY, hour);
+//        nextDay.set(Calendar.MINUTE, minute);
+//        nextDay.set(Calendar.SECOND, 0);
+//
+//        Intent intent = new Intent(context, AlarmReceiver.class);
+//        intent.putExtra("medicine_name", medicineName);
+//        intent.putExtra("start_date", startDate);
+//        intent.putExtra("end_date", endDate);
+//        intent.putExtra("selected_days", selectedDays);
+//
+//        int requestCode = (medicineName + hour + minute).hashCode();
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//
+//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//        if (alarmManager != null) {
+//            alarmManager.setExactAndAllowWhileIdle(
+//                    AlarmManager.RTC_WAKEUP,
+//                    nextDay.getTimeInMillis(),
+//                    pendingIntent
+//            );
+//        }
+//    }
+@SuppressLint("ScheduleExactAlarm")
+private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays) {
+    // Create a calendar instance for the next alarm time
+    Calendar nextAlarm = Calendar.getInstance();
+    nextAlarm.setTimeInMillis(System.currentTimeMillis());
 
+    // Get the current day of the week and the list of selected days
+    SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+    String currentDay = dayFormat.format(nextAlarm.getTime());
+    List<String> dayList = Arrays.asList(selectedDays.split(", "));
+
+    if (dayList.contains(currentDay)) {
+        nextAlarm.add(Calendar.DAY_OF_YEAR, 1); // Move to the next day if it's in the list
+    }
+
+    // Set up the intent with extra data
+    Intent intent = new Intent(context, AlarmReceiver.class);
+    intent.putExtra("medicine_name", medicineName);
+    intent.putExtra("start_date", startDate);
+    intent.putExtra("end_date", endDate);
+    intent.putExtra("selected_days", selectedDays);
+
+    // Generate a unique request code
+    int requestCode = (medicineName + nextAlarm.get(Calendar.HOUR_OF_DAY) + nextAlarm.get(Calendar.MINUTE)).hashCode();
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+    // Set the alarm using AlarmManager
+    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    if (alarmManager != null) {
+        alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                nextAlarm.getTimeInMillis(),
+                pendingIntent
+        );
+    }
+}
+
+    public static void stopSoundAndVibration() {
+        if (ringtone != null && ringtone.isPlaying()) {
+            ringtone.stop();
+        }
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
+    }
+//    working but nnot consistent time
+    @SuppressLint("ScheduleExactAlarm")
+    private void rescheduleAlarmWithInterval(Context context, String medicineName, String startDate, String endDate, String selectedDays, int intervalHours) {
+        // Set up the next alarm time after adding the interval
+        Calendar nextAlarm = Calendar.getInstance();
+        nextAlarm.setTimeInMillis(System.currentTimeMillis());
+        nextAlarm.add(Calendar.HOUR_OF_DAY, intervalHours); // Reschedule after the interval
+
+        // Create the intent for the AlarmReceiver
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra("medicine_name", medicineName);
         intent.putExtra("start_date", startDate);
         intent.putExtra("end_date", endDate);
         intent.putExtra("selected_days", selectedDays);
+        intent.putExtra("interval_hours", intervalHours); // Pass interval_hours in the intent
 
-        int requestCode = (medicineName + hour + minute).hashCode();
+        // Generate a unique request code using the medicine name and next alarm time
+        int requestCode = (medicineName + nextAlarm.get(Calendar.HOUR_OF_DAY) + nextAlarm.get(Calendar.MINUTE)).hashCode();
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
+        // Set up the alarm using AlarmManager
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    nextDay.getTimeInMillis(),
+                    nextAlarm.getTimeInMillis(),
                     pendingIntent
             );
         }
     }
+//@OptIn(markerClass = UnstableApi.class)
+//@SuppressLint("ScheduleExactAlarm")
+//    private void rescheduleAlarmWithInterval(Context context, String medicineName, String startDate, String endDate, String selectedDays, int intervalHours) {
+//        // Set up the next alarm time after adding the interval
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+//        Calendar nextAlarm = Calendar.getInstance();
+//
+//        try {
+//            nextAlarm.setTime(dateFormat.parse(startDate));
+//            nextAlarm.set(Calendar.HOUR_OF_DAY, 0); // Start at midnight of the start day
+//            nextAlarm.set(Calendar.MINUTE, 0);
+//            nextAlarm.set(Calendar.SECOND, 0);
+//        } catch (ParseException e) {
+//            Log.e("MedicineReminder", "Unparseable date format. Expected format is d/M/yyyy.");
+//            return;
+//        }
+//
+//        nextAlarm.add(Calendar.HOUR_OF_DAY, intervalHours); // Add the interval to the start date
+//
+//        // Create the intent for the AlarmReceiver
+//        Intent intent = new Intent(context, AlarmReceiver.class);
+//        intent.putExtra("medicine_name", medicineName);
+//        intent.putExtra("start_date", startDate);
+//        intent.putExtra("end_date", endDate);
+//        intent.putExtra("selected_days", selectedDays);
+//        intent.putExtra("interval_hours", intervalHours);
+//
+//        // Generate a unique request code using the medicine name and next alarm time
+//        int requestCode = (medicineName + nextAlarm.get(Calendar.HOUR_OF_DAY) + nextAlarm.get(Calendar.MINUTE)).hashCode();
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+//
+//        // Set up the alarm using AlarmManager
+//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//        if (alarmManager != null) {
+//            alarmManager.setExactAndAllowWhileIdle(
+//                    AlarmManager.RTC_WAKEUP,
+//                    nextAlarm.getTimeInMillis(),
+//                    pendingIntent
+//            );
+//        }
+//    }
+
 //@SuppressLint("ScheduleExactAlarm")
 //private void rescheduleAlarm(Context context, String medicineName, String startDate, String endDate, String selectedDays, int hour, int minute) {
 //    try {
@@ -243,12 +369,5 @@ public class AlarmReceiver extends BroadcastReceiver {
 //    }
 
 
-    public static void stopSoundAndVibration() {
-        if (ringtone != null && ringtone.isPlaying()) {
-            ringtone.stop();
-        }
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-    }
+
 }
