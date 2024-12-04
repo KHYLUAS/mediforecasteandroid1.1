@@ -39,10 +39,10 @@ public class Menubar extends AppCompatActivity {
                 replaceFragment(new home1_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.home);
             }
-//            else if("SELFCHECKERDB".equals(fragmentToDisplay)){
-//                replaceFragment(new checker_fragment());
-//                binding.buttonNav.setSelectedItemId(R.id.patientchecker);
-//            }
+            else if("SELFCHECKERDB".equals(fragmentToDisplay)){
+                replaceFragment(new checker_fragment());
+                binding.buttonNav.setSelectedItemId(R.id.patientchecker);
+            }
             else{
                 replaceFragment(new dashboard_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.Dashboard);
@@ -57,9 +57,9 @@ public class Menubar extends AppCompatActivity {
            } else if (itemId == R.id.home) {
                 replaceFragment(new home1_fragment());
             }
-//           else if (itemId == R.id.patientchecker) {
-//                replaceFragment(new checker_fragment());
-//            }
+           else if (itemId == R.id.patientchecker) {
+                replaceFragment(new checker_fragment());
+            }
            else if (itemId == R.id.reminder) {
                 replaceFragment(new reminder_fragment());
             } else if (itemId == R.id.profile) {

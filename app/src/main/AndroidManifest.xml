@@ -30,6 +30,9 @@
         android:theme="@style/Theme.MEDIFORECAST"
         tools:targetApi="31">
         <activity
+            android:name=".SymptomActivity"
+            android:exported="false" />
+        <activity
             android:name=".question10"
             android:exported="false" />
         <activity
@@ -65,7 +68,6 @@
         <activity
             android:name=".view_medicine_reminder"
             android:exported="false" />
-
         <activity
             android:name=".oncedaily"
             android:exported="false" />
@@ -78,18 +80,15 @@
         <activity
             android:name=".splashscreenaddalarm"
             android:exported="false" />
-
         <activity
             android:name=".medicine_signin"
             android:exported="false" />
         <activity
             android:name=".alarm_alert"
             android:exported="false" />
-
         <activity
             android:name=".updatesplashscreen"
             android:exported="false" />
-
         <activity
             android:name=".update_password"
             android:exported="false" />
@@ -102,11 +101,9 @@
         <activity
             android:name=".forget_password"
             android:exported="false" />
-
         <activity
             android:name=".SplashScreen"
             android:exported="false" />
-
         <activity
             android:name=".OTPVerification"
             android:exported="false" />
@@ -136,7 +133,7 @@
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".MainActivity2" -->
         <!-- android:exported="false" /> -->
-              <!-- android:name=".sign3" -->
+        <!-- android:name=".sign3" -->
         <!-- android:exported="false" /> -->
         <!-- <activity -->
         <!-- android:name=".signin2" -->
@@ -156,6 +153,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".AlarmReceiver" />
         <receiver android:name=".StopAlarmReceiver" />
     </application>

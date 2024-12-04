@@ -27,7 +27,7 @@ public class checker_fragment extends Fragment {
         started = view.findViewById(R.id.started);
 
         started.setOnClickListener(v->{
-            Intent intent = new Intent(getContext(), question1.class);
+            Intent intent = new Intent(getContext(), SymptomActivity.class);
             startActivity(intent);
         });
         return view;

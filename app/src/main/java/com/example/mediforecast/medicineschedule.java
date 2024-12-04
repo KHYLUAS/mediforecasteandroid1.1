@@ -21,7 +21,7 @@ public class medicineschedule extends AppCompatActivity {
         once = findViewById(R.id.once);
         twice = findViewById(R.id.twice);
         thrice = findViewById(R.id.thrice);
-        custom = findViewById(R.id.everyHours);
+//        custom = findViewById(R.id.everyHours);
         medicinearrow = findViewById(R.id.medicinearrow);
 
         Intent updateIntent = getIntent();
@@ -66,12 +66,12 @@ public class medicineschedule extends AppCompatActivity {
             }
 
         });
-        custom.setOnClickListener(v->{
-            Intent intent = new Intent(medicineschedule.this, everyhour.class);
-            intent.putExtra("isUpdate", isUpdate);
-            intent.putExtra("newUnitType", newUnitType);
-            startActivity(intent);
-            finish();
-        });
+//        custom.setOnClickListener(v->{
+//            Intent intent = new Intent(medicineschedule.this, everyhour.class);
+//            intent.putExtra("isUpdate", isUpdate);
+//            intent.putExtra("newUnitType", newUnitType);
+//            startActivity(intent);
+//            finish();
+//        });
     }
 }
