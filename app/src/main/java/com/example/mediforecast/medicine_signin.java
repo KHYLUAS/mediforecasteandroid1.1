@@ -7,8 +7,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -25,7 +28,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.Manifest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,8 +52,8 @@ public class medicine_signin extends AppCompatActivity {
     private EditText medicinenameET;
     private TextView medicinestartdate, medicineenddate, validationMedName, validationUnType, validationMedType, validationSched, validationStart, validationEnd, validationDays;
     private MultiAutoCompleteTextView showSchedule;
-
-
+    private static final int REQUEST_CODE_NOTIFICATION_PERMISSION = 1;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
     String[] unitType = {"IU", "ampoule(s)","application(s)", "capsule(s)","drop(s)","gram(s)",
             "injection(s)", "milligram(s)", "milliliter(s)", "mm", "packet(s)", "packet(s)", "patch(es)",
             "pessary(ies)", "piece(s)","pill(s)", "portion(s)", "puff(s)", "spray(s)","suppository(ies)",
@@ -195,6 +202,37 @@ public class medicine_signin extends AppCompatActivity {
         // Initialize ArrayAdapter for medicine types
         medicineTypeAdapter = new ArrayAdapter<>(this, R.layout.list_item, medicineType);
         reminderMedicineType.setAdapter(medicineTypeAdapter);
+
+        // Check and request permission for scheduling alarms on Android 12 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            // Check if the app has permission to schedule exact alarms
+            if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
+                // If permission is not granted, request it
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivityForResult(intent, REQUEST_CODE_PERMISSION);
+            }
+//            else {
+//                // Permission already granted
+//                Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+//            }
+        }
+        // Check notification permission for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                // Request the permission
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_CODE_NOTIFICATION_PERMISSION);
+            }
+//            else {
+//                // Permission already granted
+//                Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show();
+//            }
+        } else {
+            // On lower versions, permission is not required, you can send notifications directly
+            Toast.makeText(this, "Notification permission not required", Toast.LENGTH_SHORT).show();
+        }
+
         // Set OnClickListener to show dropdown on click
         reminderMedicineType.setOnClickListener(v -> {
             reminderMedicineType.requestFocus();
@@ -391,6 +429,45 @@ public class medicine_signin extends AppCompatActivity {
 
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (resultCode == RESULT_OK) {
+                // Recheck permission status
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                    // Check if we can schedule exact alarms
+                    if (alarmManager != null && alarmManager.canScheduleExactAlarms()) {
+                        // Permission granted
+                        Toast.makeText(this, "Permission granted to schedule alarms", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Permission still denied
+                        Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                // Handle case when the user does not grant the permission
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CODE_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private boolean isValidDate(String date) {

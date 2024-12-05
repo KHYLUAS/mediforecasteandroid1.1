@@ -237,8 +237,27 @@
                 android:background="@drawable/border_hover"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_marginEnd="20dp"
+                android:orientation="vertical">
+
+                <!-- Add a ScrollView inside -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- Add a container for the symptom records -->
+                    <LinearLayout
+                        android:id="@+id/symptomHistoryLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
+
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

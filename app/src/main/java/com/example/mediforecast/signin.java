@@ -749,8 +749,6 @@ private void checkEmailExists(String email) {
         String location = signupLocation.getText().toString().trim();
         String birthday = txtview7.getText().toString().trim();
 
-
-
         // Create an intent and put the email as an extra
         Intent intent = new Intent(signin.this, OTPVerification.class);
         intent.putExtra("email", email);

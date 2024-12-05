@@ -315,9 +315,6 @@ public class profile_fragment extends Fragment {
         }
     }
 
-
-
-
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

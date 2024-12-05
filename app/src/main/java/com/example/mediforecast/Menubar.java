@@ -39,7 +39,7 @@ public class Menubar extends AppCompatActivity {
                 replaceFragment(new home1_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.home);
             }
-            else if("SELFCHECKERDB".equals(fragmentToDisplay)){
+            else if("ANALYZER".equals(fragmentToDisplay)){
                 replaceFragment(new checker_fragment());
                 binding.buttonNav.setSelectedItemId(R.id.patientchecker);
             }

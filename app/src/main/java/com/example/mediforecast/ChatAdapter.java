@@ -76,6 +76,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return chatMessages.size();
     }
 
+    // Method to update the chat messages
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages; // Update the adapter's data
+        notifyDataSetChanged();           // Notify the RecyclerView of the change
+    }
+
     // ViewHolder for user message
     public static class UserMessageViewHolder extends RecyclerView.ViewHolder {
         TextView userMessageText;

@@ -77,7 +77,7 @@ public class home1_fragment extends Fragment {
                         if (snapshot != null) {
                             homeList.clear();
                             for (QueryDocumentSnapshot document : snapshot) {
-                                Log.d(TAG, "Community post: " + document.getId() + " => " + document.getData());
+//                                Log.d(TAG, "Community post: " + document.getId() + " => " + document.getData());
                                 String rhu = document.getString("rhu");
                                 String createdBy = document.getString("created_by");
                                 String postImg = document.getString("postImg");

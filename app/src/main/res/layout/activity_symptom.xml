@@ -5,12 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+<!--    <ImageView-->
+<!--        android:id="@+id/medicinearrow"-->
+<!--        android:layout_width="36dp"-->
+<!--        android:layout_height="35dp"-->
+<!--        android:padding="5dp"-->
+<!--        android:src="@drawable/arrow1" />-->
     <!-- ScrollView to make sure the layout is scrollable when content is long -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        >
 
         <!-- RecyclerView for chat messages -->
         <androidx.recyclerview.widget.RecyclerView
@@ -21,8 +27,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/interactionLayout"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            android:paddingBottom="140dp"/>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/medicinearrow"
+        android:layout_width="36dp"
+        android:layout_height="35dp"
+        android:padding="5dp"
+        android:src="@drawable/arrow1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true" />
 
     <!-- Interaction Layout for checkboxes and submit button -->
     <LinearLayout
@@ -139,6 +158,7 @@
 
         <!-- Question Text -->
         <TextView
+            android:id="@+id/chooseAnswerTexts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose your answer here."
@@ -169,6 +189,83 @@
                 android:backgroundTint="#06402b"
                 android:layout_marginStart="16dp"
                 app:cornerRadius="40dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--    Saving or discarding -->
+    <LinearLayout
+        android:id="@+id/saveOrDiscardLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone">
+
+        <!-- Question Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do you want to save or discard this record?"
+            android:textSize="16sp"
+            android:paddingBottom="16dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/black" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#06402b"
+                android:text="Save" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/discardButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Discard"
+                android:backgroundTint="#06402b"
+                android:layout_marginStart="16dp"
+                app:cornerRadius="40dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/tryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:backgroundTint="#06402b"
+                android:text="Try Again"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                app:cornerRadius="40dp"
+                android:id="@+id/tryButton"
+                android:layout_marginHorizontal="100dp"/>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

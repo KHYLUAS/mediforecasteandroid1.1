@@ -152,7 +152,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
             }
         }
         else {
-            Log.d("TimeCheck", "Not a single digit time: " + time1Single);
+//
             long currentTime = System.currentTimeMillis();
 
             long time1End = getTimeEnd(medicine.getTime1());

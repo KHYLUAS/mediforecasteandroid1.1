@@ -112,7 +112,8 @@
             android:textStyle="bold"
             android:singleLine="true"
             android:textSize="18sp"
-            tools:ignore="MissingPrefix" />
+            tools:ignore="MissingPrefix"
+            />
 
 <!--        <TextView-->
 <!--            android:id="@+id/everyHours"-->
