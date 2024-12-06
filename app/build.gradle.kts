@@ -48,7 +48,7 @@ dependencies {
     implementation("io.github.chaosleung:pinview:1.4.4")
     implementation ("com.google.firebase:firebase-auth:22.0.0")
     implementation ("com.google.firebase:firebase-firestore:24.0.0")
-    implementation ("com.google.android.gms:play-services-auth:20.5.0 ")
+    implementation ("com.google.android.gms:play-services-auth:20.5.0")
     implementation ("com.airbnb.android:lottie:6.1.0")
     implementation ("com.google.firebase:firebase-storage:20.0.1") //to use firebase storage
     implementation ("com.github.bumptech.glide:glide:4.16.0") // glide api to display image using URL

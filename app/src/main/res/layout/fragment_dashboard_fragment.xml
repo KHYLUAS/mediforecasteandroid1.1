@@ -6,6 +6,8 @@
     android:background="#F0EEEE"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".dashboard_fragment">
+
+    <!-- ConstraintLayout for the header section -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -24,63 +26,54 @@
             android:textStyle="bold" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ImageView for logs -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/logs" />
 
+    <!-- RelativeLayout for additional UI components -->
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="18dp"
-        android:layout_alignParentEnd="true"> <!-- Aligning to the right -->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/notify"-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:background="@drawable/circle"-->
-<!--            android:layout_centerInParent="true" />-->
-
-
+        android:layout_alignParentEnd="true">
     </RelativeLayout>
 
-
-
+    <!-- CardView at the bottom -->
     <androidx.cardview.widget.CardView
-
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="420dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-28dp"
+        android:layout_marginBottom="-15dp"
         app:cardCornerRadius="28dp"
         android:background="#FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="487dp"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!-- Our Service TextView -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
                 android:text="Our Service"
                 android:textColor="@color/black"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="25dp"/>
+                android:textStyle="bold" />
 
-
-
+            <!-- Validation error TextView -->
             <TextView
                 android:id="@+id/validationboth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:alpha=".8"
                 android:text="Invalid Email or Password"
                 android:textAlignment="center"
@@ -89,174 +82,182 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-
+            <!-- LinearLayout for icons and text -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:orientation="horizontal">
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp">
 
+                <!-- First service icon and text -->
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="140dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginStart="40dp"> <!-- Margin between items -->
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/community"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/circle"
-                        android:layout_centerInParent="true"/>
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/circle" />
 
                     <ImageView
                         android:id="@+id/communitypost"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:background="@drawable/event"
+                        android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginTop="5dp"
-                        android:backgroundTint="@color/primaryColor"/>
+                        android:layout_marginTop="13dp"
+                        android:background="@drawable/event"
+                        android:backgroundTint="@color/primaryColor" />
 
                     <TextView
                         android:id="@+id/com"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/community"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
                         android:text="Community\nPost"
                         android:textColor="@color/black"
-                        android:gravity="center"
-                        android:textSize="16sp"
-                        android:layout_marginTop="5dp" />
-
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
-
+                <!-- Second service icon and text -->
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="140dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginStart="0dp"> <!-- Margin between items -->
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/self"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/circle"
-                        android:layout_centerInParent="true"/>
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/circle" />
 
                     <ImageView
                         android:id="@+id/selfchecker"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:background="@drawable/patientchecker"
-                        android:backgroundTint="@color/primaryColor"
+                        android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginTop="5dp" />
+                        android:layout_marginTop="13dp"
+
+                        android:background="@drawable/patientchecker"
+                        android:backgroundTint="@color/primaryColor" />
 
                     <TextView
                         android:id="@+id/selfs"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/self"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:lines="2"
                         android:text="Symptom\nAnalyzer"
                         android:textColor="@color/black"
-                        android:lines="2"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:layout_marginTop="5dp" />
-
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
+                <!-- Third service icon and text -->
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="140dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="0dp"> <!-- Margin between items -->
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/reminder"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/circle"
-                        android:layout_centerInParent="true"/>
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/circle" />
 
                     <ImageView
                         android:id="@+id/medicinereminder"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:background="@drawable/asd"
+                        android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginTop="5dp"
-                        android:backgroundTint="@color/primaryColor"/>
+                        android:layout_marginTop="13dp"
+                        android:background="@drawable/asd"
+                        android:backgroundTint="@color/primaryColor" />
 
                     <TextView
                         android:id="@+id/med"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/reminder"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:lines="2"
                         android:text="Medicine\nReminder"
                         android:textColor="@color/black"
-                        android:lines="2"
-                        android:gravity="center"
-                        android:textSize="16sp"
-                        android:layout_marginTop="5dp" />
-
+                        android:textSize="14sp" />
                 </RelativeLayout>
             </LinearLayout>
+
+            <!-- Section for Checker History -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp">
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
                     android:text="Checker History"
                     android:textColor="@color/black"
                     android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"/>
+                    android:textStyle="bold" />
+
                 <TextView
+                    android:id="@+id/seeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="See All"
                     android:textColor="@color/primaryColor"
                     android:textSize="19sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
+
+            <!-- Section for History -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:background="@drawable/border_hover"
+                android:layout_height="185dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/border_hover"
                 android:orientation="vertical">
 
-                <!-- Add a ScrollView inside -->
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <!-- Add a container for the symptom records -->
                     <LinearLayout
                         android:id="@+id/symptomHistoryLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="10dp">
-
-                    </LinearLayout>
+                        android:padding="10dp"/>
                 </ScrollView>
             </LinearLayout>
-
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

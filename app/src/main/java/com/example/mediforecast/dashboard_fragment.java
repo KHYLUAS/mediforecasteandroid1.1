@@ -3,6 +3,7 @@ package com.example.mediforecast;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,6 +31,7 @@ public class dashboard_fragment extends Fragment {
     private ImageView communitypostIV, medicinereminderIV, selfchecker;
     private LinearLayout symptomHistoryLayout;
     private FirebaseFirestore firestore;
+    private TextView seeAll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,10 +44,17 @@ public class dashboard_fragment extends Fragment {
         medicinereminderIV = view.findViewById(R.id.medicinereminder);
         selfchecker = view.findViewById(R.id.selfchecker);
         symptomHistoryLayout = view.findViewById(R.id.symptomHistoryLayout);
-
+        seeAll = view.findViewById(R.id.seeAll);
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
 
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SeeAllHistory.class);
+                startActivity(intent);
+            }
+        });
         // Set onClickListeners for the ImageViews
         communitypostIV.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), Menubar.class);
@@ -137,6 +146,10 @@ public class dashboard_fragment extends Fragment {
         painLocationHeader.setLayoutParams(new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1)); // Weight 1
 
+        painLocationHeader.setTypeface(null, Typeface.BOLD);
+        painLocationHeader.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+
         // Add to the header layout
         headerLayout.addView(dateHeader);
         headerLayout.addView(painLocationHeader);
@@ -172,10 +185,22 @@ public class dashboard_fragment extends Fragment {
         painLocationView.setLayoutParams(new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)); // Assign slightly less weight to pain location
 
+        painLocationView.setTypeface(null, Typeface.BOLD);
+
+        painLocationView.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
         // Add TextViews to the row
         rowLayout.addView(dateView);
         rowLayout.addView(painLocationView);
-
+    // Set margin at the bottom of each row
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rowLayout.getLayoutParams();
+            if (params == null) {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        params.setMargins(0, 0, 0, 7);  // Set bottom margin of 10dp
+        rowLayout.setLayoutParams(params);
         // Add the row to the parent layout
         rowLayout.setOnClickListener(v -> {
             // Handle row click (e.g., open a detailed view or perform other actions)

@@ -379,16 +379,20 @@ public class medicine_signin extends AppCompatActivity {
 
             Toast.makeText(this, "Medicine added successfully!", Toast.LENGTH_SHORT).show();
             setMedicineReminder(medicineName, time1, time2, time3, startDate, endDate, SelectedDays, everyHoursVal); // Pass value to schedule reminder
-            finish(); // Finish and go back to the previous activity
-            // Optional: clear form fields
-            clearForm();
+
             SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.apply();
 
+            clearForm();
+
+            showSchedule.setText("");
+            showSchedule.setVisibility(View.GONE);
+
             Intent intent = new Intent(medicine_signin.this, splashscreenaddalarm.class);
             startActivity(intent);
+            finish();
         });
         schedule.setOnClickListener(v-> {
 
@@ -649,10 +653,10 @@ public class medicine_signin extends AppCompatActivity {
         }
 
         // Set the schedule text if there is data to display
-        if (scheduleDetails.length() > 0) {
-            showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
-            showSchedule.setVisibility(View.VISIBLE);
-        }
+//        if (scheduleDetails.length() > 0) {
+//            showSchedule.setText(Html.fromHtml(scheduleDetails.toString(), Html.FROM_HTML_MODE_COMPACT));
+//            showSchedule.setVisibility(View.VISIBLE);
+//        }
     }
     // Method to handle day selection click listeners
     private void setupDayClickListeners() {

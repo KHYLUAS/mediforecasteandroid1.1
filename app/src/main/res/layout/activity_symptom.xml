@@ -28,7 +28,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/interactionLayout"
             android:scrollbars="vertical"
-            android:paddingBottom="140dp"/>
+            android:paddingBottom="140dp"
+            android:layout_marginTop="30dp"/>
     </ScrollView>
 
     <ImageView
@@ -134,7 +135,7 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="61dp"
-            android:backgroundTint="#06402b"
+            android:backgroundTint="@color/otherprimary"
             android:text="Next"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -178,7 +179,7 @@
                 android:id="@+id/yesButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#06402b"
+                android:backgroundTint="@color/otherprimary"
                 android:text="Yes" />
 
             <com.google.android.material.button.MaterialButton
@@ -186,7 +187,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No"
-                android:backgroundTint="#06402b"
+                android:backgroundTint="@color/otherprimary"
                 android:layout_marginStart="16dp"
                 app:cornerRadius="40dp"/>
         </LinearLayout>
@@ -209,8 +210,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Do you want to save or discard this record?"
-            android:textSize="16sp"
-            android:paddingBottom="16dp"
+            android:textSize="14sp"
+            android:paddingBottom="18dp"
             android:layout_gravity="center_horizontal"
             android:textColor="@android:color/black" />
 
@@ -225,7 +226,7 @@
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#06402b"
+                android:backgroundTint="@color/otherprimary"
                 android:text="Save" />
 
             <com.google.android.material.button.MaterialButton
@@ -233,7 +234,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Discard"
-                android:backgroundTint="#06402b"
+                android:backgroundTint="@color/otherprimary"
                 android:layout_marginStart="16dp"
                 app:cornerRadius="40dp"/>
         </LinearLayout>
@@ -256,9 +257,9 @@
             android:gravity="center">
 
             <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
-                android:backgroundTint="#06402b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/otherprimary"
                 android:text="Try Again"
                 android:textSize="18dp"
                 android:textStyle="bold"
