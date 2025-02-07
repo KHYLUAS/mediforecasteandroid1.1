@@ -1,0 +1,94 @@
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ViewDetails">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/arrow"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <!-- CardView with ImageSlider -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:cardBackgroundColor="@color/teal_700"
+        android:layout_marginTop="55dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        app:cardElevation="20dp"
+        app:cardCornerRadius="20dp">
+
+        <com.denzcoskun.imageslider.ImageSlider
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/imageSlider"
+            app:iss_period="1000"
+            app:iss_auto_cycle="true"
+            app:iss_delay="1000"
+            app:iss_corner_radius="20" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Centered TextView under the slider -->
+    <TextView
+        android:id="@+id/symptomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/cardView"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="Symptom Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:background="@drawable/textview_background"
+        android:gravity="center" />
+
+    <!-- Description Title TextView -->
+    <TextView
+        android:id="@+id/descriptionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/symptomName"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="Description"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Description TextView -->
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descriptionTitle"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="This is a very long description of the symptom that should wrap appropriately."
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:lineSpacingExtra="5dp"
+        android:padding="10dp"
+        android:background="@drawable/description_background"
+        android:maxLines="10"
+        android:scrollHorizontally="false"
+        android:breakStrategy="simple"
+        android:hyphenationFrequency="full" />
+</RelativeLayout>

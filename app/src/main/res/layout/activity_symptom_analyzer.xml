@@ -1,0 +1,147 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:id="@+id/medicinearrow"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:src="@drawable/arrow1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingRight="25dp"
+            android:text="Symptoms"
+            android:textSize="24sp"
+            android:textColor="#29A398"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+
+        <!-- Search Bar with Icon -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/searchSymptomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Search Symptoms"
+                android:paddingStart="12dp"
+                android:paddingEnd="48dp"
+                android:background="@drawable/search_bg"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/search_ic"
+                android:contentDescription="Search icon" />
+        </RelativeLayout>
+
+        <!-- Symptoms Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Symptoms"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:padding="8dp">
+            <LinearLayout
+                android:id="@+id/symptomLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <!-- Selected Symptoms Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selected Symptoms"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:padding="5dp"
+            android:background="@drawable/border_hover"
+            >
+
+
+
+            <LinearLayout
+                android:id="@+id/selectedSymptomsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical" />
+
+
+
+        </ScrollView>
+
+        <!-- Question Section -->
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Questions"-->
+        <!--            android:textSize="18sp"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:paddingBottom="8dp" />-->
+
+        <LinearLayout
+            android:id="@+id/questionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <!-- Diagnosis Section -->
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Diagnosis"-->
+        <!--            android:textSize="18sp"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:paddingBottom="8dp" />-->
+
+        <LinearLayout
+            android:id="@+id/diagnosisLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</LinearLayout>

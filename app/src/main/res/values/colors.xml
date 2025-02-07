@@ -13,4 +13,6 @@
     <color name="colorGreen">#388E3C</color>
     <color name="otherprimary">#00897B</color>
     <color name="onemore">#02AC9B</color>
+    <color name="teal_700">#009688</color>
+    <color name="teal_dark">#066B61</color>
 </resources>

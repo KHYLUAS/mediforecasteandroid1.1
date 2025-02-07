@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -32,7 +35,7 @@ public class dashboard_fragment extends Fragment {
     private LinearLayout symptomHistoryLayout;
     private FirebaseFirestore firestore;
     private TextView seeAll;
-
+    private SharedPreferences sharedPreferences;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +50,12 @@ public class dashboard_fragment extends Fragment {
         seeAll = view.findViewById(R.id.seeAll);
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
+
+        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
+        // If main tutorial is finished, check if the dashboard tutorial is not finished
+        if (sharedPreferences.getBoolean("finishTabBarTutorial", false) && !isDashboardTutorialFinished()) {
+            showDashboardTutorial();
+        }
 
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +88,41 @@ public class dashboard_fragment extends Fragment {
         fetchSymptomHistory(); // Fetch and display records
         return view;
     }
+    private boolean isDashboardTutorialFinished() {
+        // Check if the dashboard tutorial is finished
+        return sharedPreferences.getBoolean("finishDashboardTutorial", false);
+    }
+
+    private void showDashboardTutorial() {
+
+        if (getActivity() == null || seeAll == null) return;
+
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(seeAll,
+                                "See All Button",
+                                "Tap to view all symptom history")
+                        .outerCircleColor(R.color.colorAccent) // Outer circle color
+                        .targetCircleColor(android.R.color.white) // Target circle color
+                        .titleTextSize(20) // Title text size
+                        .descriptionTextSize(16) // Description text size
+                        .outerCircleAlpha(0.96f) // Outer circle alpha
+                        .transparentTarget(false) // Show the target fully
+                        .cancelable(true) // Allow user to cancel
+                        .drawShadow(true) // Show shadow
+                        .tintTarget(true) // Tint the target
+                        .dimColor(android.R.color.black), // Dim the background
+                new TapTargetView.Listener() {
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        // Mark the dashboard tutorial as finished after it is clicked
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("finishDashboardTutorial", true);
+                        editor.apply();
+                    }
+                });
+    }
+
 
     private void fetchSymptomHistory() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyInfo", Context.MODE_PRIVATE);

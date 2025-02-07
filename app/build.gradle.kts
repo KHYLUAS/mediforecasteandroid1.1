@@ -62,7 +62,9 @@ dependencies {
     implementation ("androidx.media3:media3-ui:1.1.0")//media player for video in community post
     implementation ("androidx.activity:activity-ktx:1.2.3")//imagepicker api
     implementation ("androidx.fragment:fragment-ktx:1.3.3")//imagepicker api
-
+    implementation ("com.github.denzcoskun:ImageSlideshow:0.1.2")
+    implementation ("com.getkeepsafe.taptargetview:taptargetview:1.13.3")
+    implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("androidx.room:room-runtime:2.5.2")//room database
     implementation ("androidx.room:room-ktx:2.5.2")//""
     annotationProcessor ("androidx.room:room-compiler:2.5.2")// ""

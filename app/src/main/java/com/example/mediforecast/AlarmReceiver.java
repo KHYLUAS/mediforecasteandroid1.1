@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         PowerManager.WakeLock wakeLock = null;
         if (powerManager != null) {
             wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MedicineReminder::WakeLock");
-            wakeLock.acquire(3000); // Keep CPU awake for 3 seconds
+            wakeLock.acquire(3000);
         }
 
         String medicineName = intent.getStringExtra("medicine_name");

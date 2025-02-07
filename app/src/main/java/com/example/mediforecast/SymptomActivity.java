@@ -313,7 +313,6 @@ public class SymptomActivity extends AppCompatActivity {
             yesButton.setVisibility(View.VISIBLE);
             noButton.setVisibility(View.VISIBLE);
         }
-        // Logic for individual symptoms
         else if (selectedSymptom.equals("Head")) {
             questions = new String[]{
                     "Do you have a headache?",
@@ -470,18 +469,18 @@ public class SymptomActivity extends AppCompatActivity {
         else if (painLocation.equals("Body")) {
             // Severe flu-like symptoms (fatigue, muscle aches, chills, fever)
             if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[4].equals("Yes") && answers[5].equals("Yes")) {
-                diagnosis = "You may be experiencing severe flu-like symptoms.";
-                advice = "Rest, hydrate, and monitor your symptoms. If fever or severe fatigue develops, consult a doctor.";
+                diagnosis = "You may have an underlying systemic condition causing these symptoms.";
+                advice = "Seek immediate medical attention for proper diagnosis and treatment.";
             }
             // Weight loss, muscle pain, and fatigue (possible systemic issue)
             else if (answers[5].equals("Yes") && answers[6].equals("Yes")) {
-                diagnosis = "You may have a systemic condition, such as an infection or other underlying issue.";
-                advice = "Consult a doctor for further evaluation as these symptoms can indicate a serious problem.";
+                diagnosis = "You may have an underlying systemic condition, such as a chronic infection or other serious issue.";
+                advice = "Consult a doctor immediately for further evaluation, including blood tests and imaging if necessary.";
             }
             // Muscle strain or mild body pain
             else if (answers[0].equals("Yes") && answers[1].equals("No") && answers[2].equals("Yes")) {
-                diagnosis = "You may have mild muscle strain.";
-                advice = "Gentle stretching, ice packs, and rest should help. Avoid overexertion.";
+                diagnosis = "You may have a condition like a viral illness or joint inflammation.";
+                advice = " If symptoms persist or worsen, consult a doctor to rule out underlying causes such as arthritis or viral infections.";
             }
             else {
                 diagnosis = "You may have mild body pain or strain.";
@@ -493,23 +492,23 @@ public class SymptomActivity extends AppCompatActivity {
         else if (painLocation.equals("Stomach")) {
             // Severe gastritis or food poisoning (pain, vomiting, diarrhea)
             if (answers[0].equals("Yes") && answers[2].equals("Yes") && answers[5].equals("Yes")) {
-                diagnosis = "You may have severe gastritis or food poisoning.";
-                advice = "Stay hydrated and rest. If symptoms persist or worsen, seek medical attention.";
+                diagnosis = "You may have gastroenteritis, severe gastritis, or food poisoning.";
+                advice = "Drink plenty of fluids to prevent dehydration. If vomiting persists, you notice blood in your stool or vomit, or you develop severe weakness, consult a doctor immediately";
             }
             // Pain after eating (possible ulcer)
             else if (answers[6].equals("Yes")) {
-                diagnosis = "You may have an ulcer or acid reflux.";
-                advice = "Avoid spicy or acidic foods. Consult a doctor for an appropriate treatment plan.";
+                diagnosis = "You may have gastritis, an ulcer, or acid reflux.";
+                advice = "Avoid acidic, spicy, or heavy foods. If vomiting persists or you experience severe stomach pain or blood in vomit, consult a doctor promptly.";
             }
             // Heartburn or acid reflux
             else if (answers[4].equals("Yes")) {
                 diagnosis = "You might be experiencing heartburn or acid reflux.";
-                advice = "Avoid heavy meals and spicy foods. Over-the-counter antacids may help.";
+                advice = "Avoid heavy meals, spicy foods, caffeine, and alcohol. Do not lie down immediately after eating. Over-the-counter antacids can provide relief. If symptoms persist, consult a doctor.";
             }
             // Mild gastritis or stomach flu
             else if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[2].equals("Yes")) {
-                diagnosis = "You may have mild gastritis or stomach flu.";
-                advice = "Avoid spicy foods, take it easy on your stomach, and stay hydrated. Consider using antacids if necessary.";
+                diagnosis = "You may have mild gastritis, stomach flu, or an intolerance to certain foods.";
+                advice = "Stay hydrated and avoid spicy, greasy, or dairy-based foods. If symptoms persist for more than 2–3 days or worsen, consult a doctor.";
             }
             else {
                 diagnosis = "You may have mild indigestion.";
@@ -521,18 +520,18 @@ public class SymptomActivity extends AppCompatActivity {
         else if (painLocation.equals("Chest")) {
             // Severe chest pain (possible heart-related)
             if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[5].equals("Yes")) {
-                diagnosis = "You may have a serious heart-related condition.";
-                advice = "Seek immediate medical attention. This could be a sign of a heart attack or other severe issue.";
+                diagnosis = "You may have a serious heart or lung-related condition, such as a heart attack or pulmonary embolism.";
+                advice = "Seek immediate medical attention. Call emergency services if needed, as this may be life-threatening.";
             }
             // Respiratory infection or flu-like symptoms (fever, cough, shortness of breath)
             else if (answers[0].equals("Yes") && answers[2].equals("Yes") && answers[3].equals("Yes")) {
-                diagnosis = "You may have a respiratory infection, such as a cold or flu.";
-                advice = "Rest, hydrate, and monitor your symptoms. Seek medical help if breathing difficulties or high fever occur.";
+                diagnosis = "You may have a respiratory infection, such as a cold, flu, or bronchitis.";
+                advice = "Rest, hydrate, and monitor your symptoms. If breathing becomes difficult, chest pain worsens, or you develop a high fever, consult a doctor immediately.";
             }
             // Mild chest discomfort (Costochondritis)
             else if (answers[0].equals("Yes") && answers[4].equals("Yes")) {
-                diagnosis = "You might have costochondritis, which is a mild inflammation of the chest cartilage.";
-                advice = "It’s usually harmless, but apply heat or ice to the chest area and take over-the-counter pain relievers.";
+                diagnosis = "You may have a heart-related condition or stress-induced palpitations.";
+                advice = "Consult a doctor to rule out arrhythmias or other heart conditions. If symptoms worsen or you feel faint, seek immediate medical attention.";
             }
             // Mild chest discomfort
             else {
@@ -543,17 +542,17 @@ public class SymptomActivity extends AppCompatActivity {
         // Back-related symptoms (Muscle Strain, Sciatica, Herniated Disc, etc.)
         else if (painLocation.equals("Back")) {
             if (answers[0].equals("Yes") && answers[1].equals("Yes")) {
-                diagnosis = "You might have a small muscle strain or bad posture.";
-                advice = "Take it easy and try using heat or cold to relieve the pain. If the pain doesn't get better, see a doctor.";
+                diagnosis = "You may have a mild muscle strain or poor posture.";
+                advice = "Take it easy and use heat or cold packs to relieve discomfort. Practice good posture and gentle stretching. If the pain persists or worsens, consult a doctor";
             } else if (answers[2].equals("Yes")) {
-                diagnosis = "You might be dealing with sciatica, which is pain caused by a pinched nerve in your back.";
-                advice = "Try not to sit for long periods. Rest and apply heat or ice. If the pain continues, talk to a doctor.";
+                diagnosis = "You may have sciatica caused by a pinched nerve in your back.";
+                advice = "Avoid prolonged sitting and try light stretching or walking. Apply heat or ice to relieve pain. If symptoms persist or worsen, consult a doctor for imaging or physical therapy.";
             } else if (answers[3].equals("Yes")) {
-                diagnosis = "You might have a slipped disc or pulled muscle in your back.";
-                advice = "Rest, apply ice to the painful area, and avoid heavy lifting or sudden movements. If the pain doesn't improve, see a doctor.";
+                diagnosis = "You may have a slipped disc or muscle strain.";
+                advice = "Rest and apply ice to the painful area. Avoid heavy lifting or sudden movements. If pain persists, or you experience leg numbness or weakness, seek medical attention promptly.";
             } else if (answers[4].equals("Yes")) {
-                diagnosis = "You might have hurt your back recently.";
-                advice = "Rest and apply ice to your back. If the pain is severe or if you feel numbness or weakness in your legs, get medical help right away.";
+                diagnosis = "You may have sustained a back injury due to recent trauma.";
+                advice = ":  Rest and apply ice to the affected area. If you experience severe pain, numbness, leg weakness, or difficulty walking, seek immediate medical attention.";
             }else {
                 diagnosis = "If none of the symptoms are present, it could be a temporary discomfort without a serious underlying issue.";
                 advice ="Continue to monitor symptoms. Rest, stay active, and see a healthcare provider if symptoms persist or worsen.";
@@ -563,14 +562,14 @@ public class SymptomActivity extends AppCompatActivity {
         // Lower Body symptoms
         else if (painLocation.equals("Lower Body")) {
             if (answers[0].equals("Yes") && answers[1].equals("Yes")) {
-                diagnosis = "You may have a pulled muscle or poor blood flow.";
-                advice = "Rest and elevate your legs, and apply ice. If the pain doesn't get better, see a doctor.";
+                diagnosis = "You may have a pulled muscle or mild inflammation in your knee.";
+                advice = "Rest and elevate your legs. Apply ice to reduce swelling and take over-the-counter pain relief if needed. If pain persists or worsens, consult a doctor.";
             } else if (answers[2].equals("Yes")) {
-                diagnosis = "You might have deep vein thrombosis (DVT), which is a serious condition that needs immediate medical attention.";
-                advice = "See a doctor right away. DVT can be dangerous and lead to serious complications like blood clots in the lungs.";
+                diagnosis = "You might have deep vein thrombosis (DVT), a serious condition that requires immediate medical attention.";
+                advice = "Seek medical care right away. Watch for signs like redness, warmth, or pain in the affected area, as DVT can lead to dangerous complications like blood clots in the lungs.";
             } else if (answers[3].equals("Yes")) {
-                diagnosis = "Your legs may be swollen due to fluid buildup or mild inflammation.";
-                advice = "Try elevating your legs and using compression stockings. If the swelling doesn't improve, or gets worse, see a doctor.";
+                diagnosis = "Your ankle pain may be due to fluid buildup, mild inflammation, or an overuse injury.";
+                advice = "Elevate your legs and apply ice to the affected area. Using compression stockings may help reduce swelling. If symptoms persist or worsen, consult a doctor";
             }else {
                 diagnosis = "If none of the symptoms are present, it could be a temporary discomfort without a serious underlying issue.";
                 advice ="Continue to monitor symptoms. Rest, stay active, and see a healthcare provider if symptoms persist or worsen.";
@@ -580,17 +579,17 @@ public class SymptomActivity extends AppCompatActivity {
 
         else if(painLocation.equals("Head, Chest") || painLocation.equals("Chest, Head")){
             if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[2].equals("Yes") && answers[3].equals("Yes")) {
-                diagnosis = "You may be experiencing stress or mild anxiety.";
-                advice = "Practice relaxation techniques, such as deep breathing or meditation. Ensure you are getting enough rest and avoiding overexertion. Seek help if the symptoms worsen or interfere with daily activities.";
+                diagnosis = "You may be experiencing stress, mild anxiety, or fatigue-related symptoms.";
+                advice = "Practice relaxation techniques, such as deep breathing or meditation. Ensure adequate rest, hydrate well, and avoid overexertion. If symptoms worsen, particularly chest discomfort, seek medical attention to rule out underlying issues.";
             } else if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[3].equals("Yes")) {
-                diagnosis = "You might be mildly dehydrated.";
-                advice = "Drink plenty of water, avoid caffeine and alcohol, and rest. If symptoms persist, consult a healthcare provider.";
+                diagnosis = "You might be mildly dehydrated or experiencing low energy levels due to inadequate nutrition.";
+                advice = "Drink plenty of water, avoid caffeine and alcohol, and rest. Consider eating a light snack to address possible low blood sugar. If symptoms persist or worsen, consult a healthcare provider.";
             } else if (answers[2].equals("Yes") && answers[3].equals("Yes") && answers[4].equals("Yes")) {
-                diagnosis = "You could have a mild respiratory infection.";
-                advice = "Rest, stay hydrated, and monitor symptoms. Use over-the-counter remedies if necessary. Seek medical help if symptoms worsen or breathing becomes difficult.";
+                diagnosis = "You could have a mild respiratory infection or early symptoms of a viral illness.";
+                advice = "Rest, stay hydrated, and monitor symptoms. Over-the-counter remedies may help alleviate discomfort. Seek medical help if symptoms worsen, breathing becomes difficult, or you develop a fever.";
             } else if(answers[0].equals("Yes") && answers[2].equals("Yes") && answers[3].equals("Yes")){
-                diagnosis = "You might be experiencing mild Gastroesophageal Reflux Disease (GERD) or indigestion.";
-                advice = "Avoid heavy meals, caffeine, and lying down immediately after eating. Over-the-counter antacids might help. If symptoms persist, consult a doctor.";
+                diagnosis = "ou might be experiencing mild GERD, indigestion, or fatigue-related chest discomfort.";
+                advice = "Avoid heavy meals, caffeine, and lying down immediately after eating. Over-the-counter antacids may help. If symptoms persist, or if the chest discomfort worsens, consult a doctor.";
             }else {
                 diagnosis = "Your symptoms suggest a non-specific mild condition.";
                 advice = "Rest, stay hydrated, and monitor your symptoms. If they persist or worsen, seek medical advice.";
@@ -599,22 +598,22 @@ public class SymptomActivity extends AppCompatActivity {
 
         else if(painLocation.equals("Head, Stomach") || painLocation.equals("Stomach, Head")){
             if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[3].equals("Yes")){
-                diagnosis=" This could be a mild migraine or tension headache that also causes digestive upset.";
-                advice= "Rest in a dark, quiet room. Drink water to stay hydrated and try to avoid strong smells. Over-the-counter pain relievers like ibuprofen may help.";
+                diagnosis="This could be a mild migraine or tension headache associated with digestive upset.";
+                advice= "Rest in a dark, quiet room. Drink water to stay hydrated, and avoid strong smells. Over-the-counter pain relievers like ibuprofen or acetaminophen may help. If symptoms persist or worsen, consult a doctor.";
             } else  if(answers[1].equals("Yes") && answers[2].equals("Yes") && answers[4].equals("Yes")){
-                diagnosis="Stress or anxiety might be triggering both a headache and digestive symptoms.";
-                advice ="Practice relaxation techniques such as deep breathing, meditation, or yoga. Consider reducing caffeine intake, which can worsen both headaches and nausea.";
+                diagnosis="Stress or anxiety, or functional dyspepsia, could be triggering both a headache and digestive symptoms.";
+                advice ="Practice relaxation techniques like deep breathing, meditation, or yoga. Reduce caffeine intake, which can worsen symptoms. Avoid carbonated drinks and eat smaller, more frequent meals. If symptoms persist, consult a doctor.";
             } else if(answers[1].equals("Yes") && answers[3].equals("Yes") && answers[4].equals("Yes")){
-                diagnosis="Mild food poisoning or a stomach bug could cause nausea, mild stomach pain, and fatigue.";
-                advice="Stay hydrated with water or electrolyte drinks. Avoid solid food until nausea improves; try a bland diet when ready (like crackers, toast, or bananas).";
+                diagnosis="You may have mild food poisoning or a stomach virus.";
+                advice="Stay hydrated with water or electrolyte drinks. Avoid solid food until nausea improves, then try bland foods like crackers, toast, or bananas. Monitor for dehydration or worsening symptoms, and seek medical attention if these occur.";
             } else if(answers[0].equals("Yes") && answers[2].equals("Yes") && answers[5].equals("Yes")){
-                diagnosis="Mild acid reflux or GERD can cause both digestive discomfort and headaches.";
-                advice="Avoid lying down after eating. Limit foods and drinks that may trigger reflux, like spicy foods, caffeine, and alcohol. Over-the-counter antacids may help relieve symptoms.";
+                diagnosis="Mild acid reflux or GERD might cause both digestive discomfort and headaches.";
+                advice="Avoid lying down after eating, and limit foods that may trigger reflux, such as spicy dishes, caffeine, and alcohol. Over-the-counter antacids can help relieve symptoms. Sleeping with your head slightly elevated may prevent nighttime reflux.";
             } else if(answers[0].equals("Yes") && answers[2].equals("Yes") && answers[4].equals("Yes")){
-                diagnosis="Overexertion, lack of sleep, or poor sleep quality may result in both a mild headache and stomach discomfort.";
-                advice="Prioritize rest and aim for 7-9 hours of quality sleep. Avoid excessive physical activity until symptoms improve, and hydrate properly.";
+                diagnosis="Overexertion, poor sleep quality, or stress may be causing both a mild headache and stomach discomfort.";
+                advice="Rest and aim for 7-9 hours of quality sleep. Avoid excessive physical activity until symptoms improve, and stay hydrated. Consider eating lighter meals to reduce bloating.";
             } else if(answers[0].equals("Yes") && answers[3].equals("Yes") && answers[4].equals("Yes")){
-                diagnosis="A mild viral infection, such as a cold or flu, could cause both a headache and stomach issues.";
+                diagnosis="You may have a mild viral infection, such as a cold or flu.";
                 advice="Rest and stay hydrated. Use over-the-counter medications to relieve symptoms (e.g., acetaminophen for the headache, anti-nausea meds). Seek medical help if symptoms worsen or persist for several days.";
             }else {
                 diagnosis = "If none of the symptoms are present, it could be a temporary discomfort without a serious underlying issue.";
@@ -624,19 +623,19 @@ public class SymptomActivity extends AppCompatActivity {
 
         else if(painLocation.equals("Chest, Stomach") || painLocation.equals("Stomach, Chest")){
             if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[3].equals("Yes")){
-                diagnosis = "Mild indigestion or acid reflux can cause chest discomfort and stomach issues.";
-                advice="Avoid spicy, fatty, or acidic foods. Try an over-the-counter antacid for relief. Eat smaller, more frequent meals and avoid lying down immediately after eating.";
+                diagnosis = "Mild indigestion or acid reflux may cause chest discomfort, stomach pain, and heartburn.";
+                advice="Avoid spicy, fatty, or acidic foods. Eat smaller, more frequent meals, and avoid overeating. Over-the-counter antacids can provide relief. Avoid lying down for at least 2-3 hours after eating. If symptoms persist, consult a doctor.";
             }else if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[2].equals("Yes")){
-                diagnosis = "Mild gastritis can lead to both chest discomfort and stomach bloating.";
-                advice="Avoid alcohol, caffeine, and irritant foods. Consider using over-the-counter antacids or proton pump inhibitors (PPIs). Rest and hydrate.";
+                diagnosis = "Mild gastritis may cause chest discomfort, stomach pain, and bloating.";
+                advice="Avoid alcohol, caffeine, and irritant foods like spicy or acidic dishes. Over-the-counter antacids or proton pump inhibitors (PPIs) can help reduce symptoms. Rest and hydrate well. Seek medical attention if you experience black stools, vomiting, or worsening pain.";
             }
             else if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[4].equals("Yes")){
-                diagnosis ="Stress can cause both chest discomfort and mild stomach pain, sometimes leading to heartburn.";
-                advice="Practice relaxation techniques like deep breathing or meditation. Ensure proper rest and try to reduce stressors. Avoid caffeine or alcohol if stress levels are high.";
+                diagnosis ="Stress can cause both chest discomfort and mild stomach pain, potentially leading to heartburn.";
+                advice="Practice relaxation techniques like deep breathing, meditation, or yoga. Ensure adequate rest, aim for 7-9 hours of sleep, and address stressors in your life. Avoid stimulants like caffeine and alcohol. If symptoms persist, consult a doctor.";
             }
             else if(answers[0].equals("Yes") && answers[3].equals("Yes") && answers[5].equals("Yes")){
-                diagnosis ="Mild gastric reflux could cause discomfort in the chest and mild stomach pain.";
-                advice="Avoid trigger foods (spicy, acidic, fatty foods). Sleep with your head elevated to reduce reflux. Take over-the-counter antacids for symptom relief.";
+                diagnosis ="Mild gastric reflux (GERD) could cause chest discomfort and heartburn that improve with rest.";
+                advice="Avoid trigger foods (spicy, fatty, or acidic dishes). Eat smaller meals and avoid lying down for 2-3 hours after eating. Sleep with your head slightly elevated to reduce reflux. Wear loose-fitting clothing and maintain a healthy weight. Over-the-counter antacids can relieve symptoms. Consult a doctor if symptoms persist or worsen";
             }else {
                 diagnosis = "If none of the symptoms are present, it could be a temporary discomfort without a serious underlying issue.";
                 advice ="Continue to monitor symptoms. Rest, stay active, and see a healthcare provider if symptoms persist or worsen.";
@@ -645,20 +644,20 @@ public class SymptomActivity extends AppCompatActivity {
 
         else if(painLocation.equals("Back, Lower Body") || painLocation.equals("Lower Body, Back")){
             if(answers[0].equals("Yes") && answers[3].equals("Yes")){
-                diagnosis ="Mild muscle strain can cause both lower back pain and cramps in the lower body.";
-                advice="Rest, apply heat or ice, and gently stretch. Avoid heavy lifting or strenuous activity. Take over-the-counter pain relievers if necessary.";
+                diagnosis ="Mild muscle strain can cause lower back pain and cramps in the lower body.";
+                advice="Rest, apply heat or ice to the affected area, and gently stretch. Stay hydrated to prevent muscle cramps. Avoid heavy lifting or strenuous activities. Over-the-counter pain relievers like ibuprofen or acetaminophen may help reduce pain and inflammation.";
             }else if(answers[1].equals("Yes") && answers[2].equals("Yes")){
-                diagnosis ="Sciatica can cause pain in the lower back that radiates to the legs.";
-                advice="Apply heat or ice to the affected area. Try gentle stretches and avoid sitting for long periods. If symptoms persist, consider seeing a healthcare provider for physical therapy.";
+                diagnosis ="Sciatica, caused by compression of the sciatic nerve, can result in back stiffness and leg pain.";
+                advice="Apply heat or ice to the lower back. Practice gentle stretches like knee-to-chest or piriformis stretches. Avoid prolonged sitting or standing. If symptoms worsen, or if you experience tingling, numbness, or weakness in the legs, consult a healthcare provider for evaluation and potential physical therapy.";
             }else if(answers[0].equals("Yes") && answers[5].equals("Yes")){
-                diagnosis ="Poor posture during daily activities can lead to mild back pain and stiffness.";
+                diagnosis ="Poor posture during daily activities or muscle fatigue can cause mild back pain worsened by physical activity.";
                 advice="Practice good posture and avoid slouching. Try ergonomic adjustments for your workstation. Take breaks to stretch and move regularly.";
             }else if(answers[1].equals("Yes") && answers[4].equals("Yes")){
                 diagnosis ="A mild herniated disc in the lower back can cause stiffness and discomfort that improves with rest.";
-                advice="Rest and avoid heavy lifting. Use heat or ice for pain relief.";
+                advice="Maintain good posture by keeping your back straight and shoulders relaxed. Use ergonomic furniture and adjust your workstation to promote proper alignment. Take frequent breaks to stretch and move around. Incorporate core-strengthening exercises like planks to support your lower back.";
             } else if(answers[4].equals("Yes") && answers[5].equals("Yes")){
-                diagnosis ="Fatigue or overexertion can lead to mild pain and stiffness in the back and lower body.";
-                advice="Rest and allow your muscles to recover. Stay hydrated and avoid overexertion. Perform light stretching to relieve tension.";
+                diagnosis ="A mild herniated disc or general muscle strain can cause back stiffness that improves with rest.";
+                advice="Rest and avoid heavy lifting or twisting movements. Use heat or ice for pain relief. Incorporate light activities, like walking, to maintain mobility. Seek medical attention if symptoms include numbness, tingling, or radiating pain to the legs.";
             }else {
                 diagnosis = "If none of the symptoms are present, it could be a temporary discomfort without a serious underlying issue.";
                 advice ="Continue to monitor symptoms. Rest, stay active, and see a healthcare provider if symptoms persist or worsen.";
@@ -666,17 +665,17 @@ public class SymptomActivity extends AppCompatActivity {
         }
         else if(painLocation.equals("Body, Stomach") || painLocation.equals("Stomach, Body")){
             if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[5].equals("Yes")){
-                diagnosis ="Mild muscle pain and fatigue may be caused by muscle strain, improving with rest.";
-                advice="Take rest, apply heat or cold compress, and avoid strenuous activities.";
+                diagnosis ="Mild muscle pain and fatigue are likely caused by muscle strain or overexertion, which improves with rest.";
+                advice="Take rest and avoid strenuous activities. Apply heat or cold compress to the affected area for pain relief. Stay hydrated and incorporate gentle stretching or light movements to help reduce stiffness.";
             }else if(answers[0].equals("Yes") && answers[2].equals("Yes") && answers[3].equals("Yes")){
-                diagnosis ="Mild stomach pain and bloating could indicate indigestion or mild gastrointestinal issues.";
-                advice="Avoid heavy meals, drink water, and consider over-the-counter antacids if necessary.";
+                diagnosis ="Mild stomach pain and bloating could indicate indigestion, gas, or mild gastrointestinal issues such as constipation or bloating.";
+                advice="Avoid heavy, greasy meals and foods that may cause bloating (such as beans, cabbage, or carbonated drinks). Drink plenty of water, and consider over-the-counter antacids or digestive aids if needed. If symptoms persist, consult a healthcare provider for further evaluation.";
             }else if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[4].equals("Yes")){
-                diagnosis ="Mild chills, fatigue, and muscle pain may be signs of a mild viral infection like the flu.";
-                advice="Rest, stay hydrated, and use fever reducers (like acetaminophen) if needed.";
+                diagnosis ="Fatigue, muscle pain, and chills may be early signs of a mild viral infection like the flu, or even a cold.";
+                advice="Rest and stay hydrated. Use fever reducers like acetaminophen if necessary to manage symptoms. Keep warm and monitor for any worsening symptoms, such as increased fever or respiratory issues. If symptoms persist beyond a few days, seek medical advice.";
             }else if(answers[0].equals("Yes") && answers[1].equals("Yes") && answers[2].equals("Yes")){
-                diagnosis ="Stress can lead to fatigue, muscle pain, and mild stomach discomfort.";
-                advice="Practice relaxation techniques, stay hydrated, and consider light physical activities.";
+                diagnosis ="Stress can cause fatigue, muscle pain, and mild stomach discomfort. These symptoms may improve with stress management.";
+                advice="Practice relaxation techniques such as deep breathing, meditation, or yoga. Ensure you are staying hydrated and eating balanced meals. Consider light physical activities like walking to reduce stress. If symptoms persist or worsen, consider speaking to a healthcare provider about stress management.";
             }else {
                 diagnosis = "If none of the symptoms are present, it could be a temporary discomfort without a serious underlying issue.";
                 advice ="Continue to monitor symptoms. Rest, stay active, and see a healthcare provider if symptoms persist or worsen.";
@@ -684,17 +683,17 @@ public class SymptomActivity extends AppCompatActivity {
         }
         else if(painLocation.equals("Head, Back") || painLocation.equals("Back, Head")){
             if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[2].equals("Yes") && answers[4].equals("Yes")) {
-                diagnosis ="Stiffness in the neck or back, along with mild headache and fatigue, may be due to muscle tension or strain, improving with rest.";
-                advice="Take rest, apply heat or cold compress, and avoid strenuous activity.";
+                diagnosis ="Mild headache, neck or back stiffness, and fatigue may be due to muscle tension, stress, or poor posture. Rest typically improves these symptoms.";
+                advice="Take rest and avoid strenuous activity. Apply heat or cold compresses to the neck or back. Focus on improving posture and incorporate gentle stretching exercises. Stay hydrated and practice stress-relieving techniques.";
             }else if (answers[0].equals("Yes") && answers[2].equals("Yes") && answers[3].equals("Yes") && answers[5].equals("Yes")) {
-                diagnosis ="A mild headache with lightheadedness and fatigue, worsened by physical activity, may indicate a migraine or tension headache.";
-                advice="Rest in a quiet, dark room, and consider over-the-counter pain relief.";
+                diagnosis ="A mild headache, lightheadedness, and fatigue worsened by physical activity may suggest a tension headache, migraine, or dehydration.";
+                advice="Rest in a quiet, dark room and consider over-the-counter pain relief (e.g., ibuprofen or acetaminophen). Stay hydrated and avoid triggers such as bright lights or loud sounds. If symptoms persist, consider seeing a healthcare provider.";
             }else if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[2].equals("Yes") && answers[5].equals("Yes")) {
-                diagnosis ="Stress may cause mild headaches, neck or back stiffness, fatigue, and pain worsened by physical activity.";
-                advice="Practice relaxation techniques, stay hydrated, and take breaks to rest.";
+                diagnosis ="Stress, combined with physical exertion, can cause mild headaches, neck or back stiffness, and fatigue.";
+                advice="Practice relaxation techniques like deep breathing, meditation, or yoga. Stay hydrated and take regular breaks to rest. Make ergonomic adjustments to your workspace to alleviate strain.";
             }else if (answers[0].equals("Yes") && answers[1].equals("Yes") && answers[5].equals("Yes")) {
-                diagnosis ="Stiffness in the neck or back and mild headache, aggravated by physical activity, can result from poor posture or sitting habits.";
-                advice="Improve posture, take breaks from sitting, and consider stretching exercises.";
+                diagnosis ="Stiffness in the neck or back and mild headaches, aggravated by physical activity, can result from poor posture, sitting habits, or prolonged screen time.";
+                advice="Improve posture by sitting upright with proper lumbar support. Take frequent breaks from sitting, stretch regularly, and avoid slouching. Consider using ergonomic tools for your workspace.";
             } else if (answers[0].equals("Yes") && answers[2].equals("Yes") && answers[3].equals("Yes") && answers[4].equals("Yes")) {
                 diagnosis ="Mild headache, lightheadedness, and fatigue that improve with rest can be signs of dehydration.";
                 advice="Drink more water and stay hydrated.";

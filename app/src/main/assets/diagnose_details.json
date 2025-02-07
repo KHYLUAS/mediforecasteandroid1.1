@@ -1,0 +1,72 @@
+{
+  "diagnosis": [
+    {
+      "id": 1,
+      "name": "Flu",
+      "link": "https://my.clevelandclinic.org/health/diseases/4335-influenza-flu",
+      "description": "The flu is a common respiratory illness you get from the influenza virus. Symptoms often include fever, head and body aches, coughing and a stuffy or runny nose. You’re at risk for serious complications if you have an underlying health condition or are pregnant. Getting vaccinated every year is the best way to avoid getting sick with the flu.",
+      "title1": "What is the flu (influenza)?",
+      "text1": "The flu is an illness you get from the influenza virus. It causes symptoms like head and body aches, sore throat, fever and respiratory symptoms, which can be severe. Flu is most common in winter months, when many people can get sick at once (an epidemic).",
+      "title2": "What is the difference between the flu and the common cold?",
+      "text2": "The flu and the common cold can have similar symptoms, like runny nose and cough. But cold symptoms are usually mild and flu symptoms can be severe and lead to serious complications. Different viruses cause colds and the flu.",
+      "title3" : "What are the symptoms of the flu?",
+      "text3": "Symptoms of the flu usually come on quickly, and can include: Fever, Chills, Body/Muscle aches, Cough, Headache, Sore throat, Runny or stuffy nose (congestion), Tiredness or feeling run down, Diarrhea or vomiting (usually only in kids).",
+      "title4" : "What causes the flu?",
+      "text4": "The influenza virus causes flu. Influenza A, B and C are the most common types that infect people. Influenza A and B are seasonal (most people get them in the winter) and have more severe symptoms. Influenza C doesn’t cause severe symptoms and it’s not seasonal — the number of cases stays about the same throughout the year.\n\nH1N1 (“swine flu”) and bird flu are both subtypes of influenza A.",
+      "image1": "file:///android_asset/symptoms/fever1.jpg",
+      "image2": "",
+      "image3": ""
+    },
+    {
+      "id": 2,
+      "name": "Cold",
+      "link":"https://my.clevelandclinic.org/health/diseases/12342-common-cold",
+      "description": "The common cold is an infection of your nose, sinuses, throat and windpipe. Colds spread easily, especially within homes, classrooms and workplaces. More than 200 different viruses can cause colds. There’s no cure for a common cold, but it usually goes away within a week to 10 days. If you don’t feel better in 10 days, see a healthcare provider.",
+      "title1": "What is the common cold?",
+      "text1": "A cold is a contagious upper respiratory infection that affects your nose, throat, sinuses and windpipe (trachea). You may have heard that the common cold is a coronavirus. In fact, more than 200 different types of viruses can cause a cold. The most common cold virus is the rhinovirus.\n\nWe call colds “common” because as their name implies, they’re widespread. You’ll probably have more colds in your lifetime than any other illness. Adults catch two to three colds a year, while young children come down with a cold four or more times a year.",
+      "title2": "Who is at risk for the common cold?",
+      "text2": "Everyone is at risk for the common cold. People are most likely to have colds during fall and winter, starting in late August or early September until March or April. The increased incidence of colds during the cold season may be attributed to the fact that more people are indoors and close to each other. In addition, in cold, dry weather, the nasal passages become drier and more vulnerable to infection.",
+      "title3": "What are the symptoms of the common cold?",
+      "text3": "Most often, common cold symptoms start 1 to 3 days after someone is exposed to a cold virus. Symptoms vary. They can include: Runny or stuffy nose, Sore or scratchy throat, Cough, Sneezing, Generally feeling unwell, Slight body aches or a mild headache, Low-grade fever",
+      "title4" : "What causes the common cold?",
+      "text4": "Rhinoviruses cause up to 50% of common colds. There are more than 100 different rhinoviruses. But other types of viruses, such as coronaviruses, can also cause colds. More than 200 different viruses can cause a cold.",
+      "image1": "",
+      "image2": "",
+      "image3": ""
+    },
+    {
+      "id": 3,
+      "name": "Migraine",
+      "link":"https://my.clevelandclinic.org/health/diseases/5005-migraine-headaches",
+      "description": "A migraine is much more than a bad headache. It can cause debilitating, throbbing, one-sided head pain that can leave you in bed for days. Movement, lights, sounds and other triggers may cause symptoms like fatigue, nausea, vision changes, irritability and more. A healthcare provider can help you manage symptoms so migraines don’t take over your life.",
+      "title1": "What is a migraine?",
+      "text1": "A migraine is a severe headache that causes throbbing, pulsing head pain on one side of your head. The headache phase of a migraine usually lasts at least four hours, but it can also last for days.",
+      "title2": "What are the types of migraines?",
+      "text2": "There are several types of migraines. The most common migraine categories are: Migraine with aura (classic migraine), Migraine without aura (common migraine).",
+      "title3": "",
+      "text3": "",
+      "title4" : "",
+      "text4": "",
+      "image1": "",
+      "image2": "",
+      "image3": ""
+    },
+    {
+      "id": 0,
+      "name": "",
+      "link":"",
+      "description": "",
+      "title1": "",
+      "text1": "",
+      "title2": "",
+      "text2": "",
+      "title3": "",
+      "text3": "",
+      "title4" : "",
+      "text4": "",
+      "image1": "",
+      "image2": "",
+      "image3": ""
+    }
+  ]
+}

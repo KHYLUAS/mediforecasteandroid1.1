@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -48,6 +50,7 @@ public class reminder_fragment extends Fragment {
     private TextView  noDataText;
     private MedicineAdapter medicineAdapter;
     private List<Medicine> medicines;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,13 @@ public class reminder_fragment extends Fragment {
         adapter = new MedicineAdapter(getContext(), null, medicineRepository);
         recyclerView.setAdapter(adapter);
 
+//        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
+//        boolean isMainTutorialFinished = sharedPreferences.getBoolean("finishTabBarTutorial", false);
+//
+//        if(isMainTutorialFinished && !isReminderTutorialFinished()){
+//            showReminderTutorial();
+//        }
+
         // Set up Add button
         addButton = view.findViewById(R.id.Addimage);
         addButton.setOnClickListener(v -> {
@@ -94,6 +104,37 @@ public class reminder_fragment extends Fragment {
         });
         return view;
     }
+//    private boolean isReminderTutorialFinished() {
+//        // Check if the dashboard tutorial is finished
+//        return sharedPreferences.getBoolean("finishReminderTutorial", false);
+//    }
+//
+//    private void showReminderTutorial() {
+//        TapTargetView.showFor(getActivity(),
+//                TapTarget.forView(getView().findViewById(R.id.Addimage),
+//                                "Medicine Reminder",
+//                                "To add a Medicine Reminder, simply tap this ‘+ Add Medicine Reminder’ button. This allows you to set up notifications for your medications, ensuring you never miss a dose. Customize the time, frequency, and dosage to fit your schedule. Stay on track with your health effortlessly!")
+//                        .outerCircleColor(R.color.colorAccent) // Outer circle color
+//                        .targetCircleColor(android.R.color.white) // Target circle color
+//                        .titleTextSize(20) // Title text size
+//                        .descriptionTextSize(16) // Description text size
+//                        .outerCircleAlpha(0.96f) // Outer circle alpha
+//                        .transparentTarget(false) // Show the target fully
+//                        .cancelable(true) // Allow user to cancel
+//                        .drawShadow(true) // Show shadow
+//                        .tintTarget(true) // Tint the target
+//                        .dimColor(android.R.color.black), // Dim the background
+//                new TapTargetView.Listener() {
+//                    @Override
+//                    public void onTargetClick(TapTargetView view) {
+//                        super.onTargetClick(view);
+//                        // Mark the dashboard tutorial as finished after it is clicked
+//                        SharedPreferences.Editor editor = sharedPreferences.edit();
+//                        editor.putBoolean("finisReminderTutorial", true);
+//                        editor.apply();
+//                    }
+//                });
+//    }
     private void updateEmptyState() {
         if (medicines == null || medicines.isEmpty()) {
             recyclerView.setVisibility(View.GONE);

@@ -1,0 +1,667 @@
+{
+  "symptoms": [
+    {
+      "id": 1,
+      "name": "Fever",
+      "description": "A fever is when your body temperature is higher than your normal average temp. Most providers say a fever is either 100.0 F (37.8 C) or 100.4 F (38 C). When you have a fever, it’s your body’s normal response to fighting an infection or illness. Fevers usually aren’t a serious concern. They typically go away when the infection passes.",
+      "questions": []
+    },
+    {
+      "id": 2,
+      "name": "Cough",
+      "description":"A cough is a reflex reaction designed to keep your airways clear. You may be coughing because of another condition, like asthma or a respiratory infection, or because you have swallowing difficulties. Your healthcare provider can help you figure out what’s going on.",
+      "questions": [],
+      "diagnosis": "A mild cough may indicate a common cold or irritation. Drink warm fluids and avoid irritants like smoke. If persistent, see a doctor."
+    },
+    {
+      "id": 3,
+      "name": "Headache",
+      "description": "Headaches are a very common condition that most people will experience many times during their lives. The main symptom of a headache is pain in your head or face. There are several types of headaches, and tension headaches are the most common. While most headaches aren’t dangerous, certain types can be a sign of a serious underlying condition.",
+      "questions": [],
+      "diagnosis": "A mild headache could be due to stress or dehydration. Drink water, rest, and avoid stressors. Seek help if the headache worsens."
+    },
+    {
+      "id": 4,
+      "name": "Sore Throat",
+      "description": "A sore throat (pharyngitis) is a scratchy or burning feeling in the back of your throat. It may hurt to swallow or talk. Most sore throats happen because of a viral infection, like the common cold or flu. In addition to the soreness, you may have symptoms like a cough or runny nose. Most sore throat symptoms go away within three to 10 days.",
+      "questions": [],
+      "diagnosis": "A sore throat is often a symptom of a viral infection. Gargle with warm salt water, drink warm fluids, and rest."
+    },
+    {
+      "id": 5,
+      "name": "Runny Nose",
+      "description": "Rhinorrhea (runny nose) is a very common symptom. It most often happens due to allergies and viral infections (like a cold or the flu). But several other conditions can make your nose drip. A runny nose typically goes away on its own, but certain treatments can improve it.",
+      "questions": [],
+      "diagnosis": "A runny nose is typically due to a cold or mild allergy. Stay hydrated and use a saline spray if needed."
+    },
+    {
+      "id": 6,
+      "name": "Body Aches",
+      "description": "Body aches occur with many health conditions, including arthritis and the flu. If the pain lasts more than a few days, is severe, or occurs with other symptoms, you may need medical attention.",
+      "questions": [],
+      "diagnosis": "Body aches can be caused by viral infections or overexertion. Rest and take a mild pain reliever if necessary."
+    },
+    {
+      "id": 7,
+      "name": "Nausea",
+      "description": "Nausea and vomiting are symptoms of many different health conditions, including early pregnancy, concussions and the stomach flu. Happening in both adults and children, there are many ways to relieve nausea. Drinking ice-cold beverages and eating light, bland foods can help.",
+      "questions": [],
+      "diagnosis": "Nausea is often a result of mild stomach upset or dehydration. Stay hydrated and eat bland foods like crackers or rice."
+    },
+    {
+      "id": 8,
+      "name": "Diarrhea",
+      "description": "Diarrhea means having a loose, watery stool during a bowel movement. It’s common in both children and adults and usually goes away on its own within a few days. If it doesn’t improve or if you’re experiencing other symptoms like a fever or bloody stool, reach out to a provider to get the treatment (and relief) you need.",
+      "questions": [],
+      "diagnosis": "Mild diarrhea could be due to a viral infection or food intolerance. Drink plenty of fluids with electrolytes."
+    },
+    {
+      "id": 9,
+      "name": "Fatigue",
+      "description": "The definition of fatigue is extreme tiredness. Severe fatigue makes it difficult for you to get up in the morning and make it through your day. Many conditions and lifestyle factors can cause fatigue. You may be able to relieve it by changing your habits. If an underlying condition causes it, a healthcare provider can usually help you manage it.",
+      "questions": [],
+      "diagnosis": "Fatigue may result from overexertion or mild illness. Ensure adequate sleep, hydration, and nutrition."
+    },
+    {
+      "id": 10,
+      "name": "Stomach Pain",
+      "description": "Abdominal pain has many causes, some more serious than others. What feels like a stomachache may be coming from another organ in your abdomen, or from outside of your digestive system. Always seek medical care if your abdominal pain is unexplained, persistent or severe.",
+      "questions": [],
+      "diagnosis": "Stomach pain is often caused by indigestion or mild infection. Rest and consume light, bland foods. Seek help if severe."
+    },
+    {
+      "id": 11,
+      "name": "Sneezing",
+      "description": "Sneezing is an involuntary burst of air forced from your lungs through your nose and mouth. It usually happens when things like dust, pollen or viruses irritate the mucus membranes that line your nose and throat. Sneezing can be alarming. But it usually doesn’t indicate a serious health condition.",
+      "questions": []
+    },
+    {
+      "id": 12,
+      "name": "Light Sensitivity",
+      "description": "Photophobia means that your eyes are sensitive to light. The light may be painful. Photophobia is associated with many eye conditions and other medical issues.",
+      "questions": []
+    },
+    {
+      "id": 13,
+      "name": "Shortness of Breath",
+      "description": "Dyspnea, or shortness of breath, is the feeling that you can’t get enough air into your lungs. It might feel like your chest is tight, you’re gasping for air or you’re working harder to breathe. Heart and lung conditions are common causes of dyspnea.",
+      "questions": []
+    },
+    {
+      "id": 14,
+      "name": "Itchy Eyes",
+      "description": "Itchy eyes, which doctors may call ocular pruritis, affect many people and are a common reason for visiting the ophthalmologist. A variety of conditions, including allergies and infection, can cause itchy eyes.",
+      "questions": []
+    },
+    {
+      "id": 15,
+      "name": "Weight Gain/Loss",
+      "description": "You may gain weight unintentionally as a result of certain things you consume, such as sugary foods and beverages. But sometimes weight gain can occur due to an underlying health condition. Unexplained weight loss is a noticeable drop in your body weight without trying. And it’s not just a little weight — it’s a loss of 10 pounds or 5% of your body weight in six to 12 months. It can be a symptom of a serious illness, like cancer or diabetes. Treatment involves identifying and treating the condition that’s causing it.",
+      "questions": []
+    },
+    {
+      "id": 16,
+      "name": "Abdominal Pain",
+      "description": "Abdominal pain has many causes, some more serious than others. What feels like a stomachache may be coming from another organ in your abdomen, or from outside of your digestive system. Always seek medical care if your abdominal pain is unexplained, persistent or severe.",
+      "questions": []
+    },
+    {
+      "id": 17,
+      "name": "Vomiting",
+      "description": "Vomiting is the forceful ejection of the contents of your stomach and upper digestive system through your mouth. It’s also known as throwing up or being sick.\n\nVomiting is a reflex that helps your body get rid of substances that may be harmful. Most people will experience vomiting at some point.",
+      "questions": []
+    },
+    {
+      "id": 18,
+      "name": "Chest Pain",
+      "description": "Chest pain has many causes, like issues in your heart, lungs or digestive system. Some causes are life-threatening while others aren’t. A healthcare provider can find the cause of your chest pain and put your mind at ease. Chest pain treatments may include medicines or operations.",
+      "questions": []
+    },
+    {
+      "id": 19,
+      "name": "Wheezing",
+      "description": "Wheezing is the shrill whistle or coarse rattle you hear when your airway is partially blocked. It might be blocked because of an allergic reaction, a cold, bronchitis or allergies. Wheezing is also a symptom of asthma, pneumonia, heart failure and more. It could go away on its own, or it could be a sign of a serious condition.",
+      "questions": []
+    },
+    {
+      "id": 20,
+      "name": "Nasal Congestion",
+      "description": "Nasal congestion happens when something irritates tissues lining the inside of your nose. The irritation sets off a chain reaction of inflammation, swelling and mucus production, making it hard to take in air through your nose. Left untreated, nasal congestion may cause sinusitis, nasal polyps or middle ear infections.",
+      "questions": []
+    },
+    {
+      "id": 21,
+      "name": "Swollen Tonsils",
+      "description": "Tonsillitis is a common condition that happens when your tonsils get infected. Symptoms typically include sore throat, fever and swollen lymph nodes. Treatment depends on whether the infection is viral or bacterial, and recovery usually takes about one week.",
+      "questions": []
+    },
+    {
+      "id": 22,
+      "name": "Night Sweats",
+      "description": "Drenching night sweats are common during menopause. Night sweats that occur alongside other symptoms may be a sign of an infection, diabetes, or cancer. Night sweats may be a side effect of a medicine you’re taking. Talk to your healthcare provider. Once they diagnose what’s causing your symptoms, they can recommend treatments to manage your night sweats.",
+      "questions": []
+    },
+    {
+      "id": 23,
+      "name": "Weight Loss",
+      "description": "Unexplained weight loss is a noticeable drop in your body weight without trying. And it’s not just a little weight — it’s a loss of 10 pounds or 5% of your body weight in six to 12 months. It can be a symptom of a serious illness, like cancer or diabetes. Treatment involves identifying and treating the condition that’s causing it.",
+      "questions": []
+    },
+    {
+      "id": 24,
+      "name": "Frequent Urination",
+      "description": "Frequent urination is the need to pee more often than average (seven to eight times) throughout the day. It can happen to anyone, but it’s more common in people over the age of 70, pregnant people and people with an enlarged prostate. The most common cause is urinary tract infections. Treatment depends on the underlying cause.",
+      "questions": []
+    },
+    {
+      "id": 25,
+      "name": "Extreme Thirst",
+      "description": "Polydipsia is a medical term that means excessive thirst. It's normal to be thirsty sometimes. You may have worked up a sweat, and your body is telling you it’s time to rehydrate. But if you feel thirsty all the time, even after drinking a lot of fluids, you may have a more serious health condition such as diabetes mellitus or diabetes insipidus.",
+      "questions": []
+    },
+    {
+      "id": 26,
+      "name": "Blurred Vision",
+      "description": "Blurred vision can happen because of being tired, or it can be a symptom of another condition. Treatment depends on the cause. If blurred vision comes on suddenly, seek medical help immediately.",
+      "questions": []
+    },
+    {
+      "id": 27,
+      "name": "Dizziness",
+      "description": "Dizziness is a common issue. If you have dizziness, you may feel woozy and disoriented. You may feel as if you’re about to lose your balance. Many things may make you dizzy, such as anxiety or a reaction to medication. But dizziness may be a symptom of an underlying medical issue. Talk to your healthcare provider if you’re having frequent or serious dizzy spells.",
+      "questions": []
+    },
+    {
+      "id": 28,
+      "name": "Swelling",
+      "description": "Swelling is the enlargement of organs, skin, or other body parts. It is caused by a buildup of fluid in the tissues. The extra fluid can lead to a rapid increase in weight over a short period of time (days to weeks).\n\nSwelling can occur all over the body (generalized) or only in one part of the body (localized).",
+      "questions": []
+    },
+    {
+      "id": 29,
+      "name": "Painful Urination",
+      "description": "Dysuria means you feel pain or a burning sensation when you pee (urinate). Men and women of any age can experience dysuria, but it's more common in women. Urinary tract infections are commonly associated with dysuria. Treatment depends on the cause and ranges from antibiotics, to avoiding irritants to treating the underlying medical problem.",
+      "questions": []
+    },
+    {
+      "id": 30,
+      "name": "Back Pain",
+      "description": "Back pain is a symptom of a strain, sprain, spine disorder or condition affecting organs in your pelvis or belly. Pain can range from mild to severe, and it may spread to your legs or elsewhere. A healthcare provider can identify the cause of your back pain and recommend treatment to help you find relief.",
+      "questions": []
+    },
+    {
+      "id": 31,
+      "name": "Indigestion",
+      "description": "Occasional indigestion is common and not serious. If you get a stomachache after a large meal, you can usually relieve it with an antacid. But if you have indigestion often, there might be more going on. Sometimes it means you have a treatable condition, like acid reflux or peptic ulcer disease. Sometimes it’s more complex.",
+      "questions": []
+    },
+    {
+      "id": 32,
+      "name": "Joint Pain",
+      "description": "Joint pain can be felt in the joints throughout your body. It may be a symptom of many different health conditions. Arthritis is the most common cause of joint pain. There are more than 100 kinds of arthritis. Joint pain may range from mild to severe. Treatments vary from simple at-home care to surgery, depending on your condition.",
+      "questions": []
+    },
+    {
+      "id": 33,
+      "name": "Stiffness",
+      "description": "Muscle stiffness is the sensation of pain or tightness in your muscles. Many people experience muscle stiffness after intense exercise or periods of inactivity. Usually, you can relieve muscle stiffness with home remedies like stretching or icing the affected area. Rarely, muscle stiffness can be a symptom of a serious infection or chronic condition.",
+      "questions": []
+    },
+    {
+      "id": 34,
+      "name": "Redness",
+      "description": "Skin redness or red patches on the skin can have many different causes, including burns, allergic reactions, infections, and conditions such as seborrheic dermatitis. On darker complexions, these conditions may cause the skin to become darker.",
+      "questions": []
+    },
+    {
+      "id": 35,
+      "name": "Itchy Rash",
+      "description": "Skin rashes can be red, inflamed, bumpy as well as dry, itchy or painful. The main cause is dermatitis, which is when your skin reacts to allergens or irritants. Bacteria, viruses, allergens and conditions including eczema, hives, and psoriasis can be the source of skin rashes. A variety of treatments can relieve your symptoms and get rid of the rash.",
+      "questions": []
+    },
+    {
+      "id": 36,
+      "name": "High Fever",
+      "description": "A fever is when your body temperature is higher than your normal average temp. Most providers say a fever is either 100.0 F (37.8 C) or 100.4 F (38 C). When you have a fever, it’s your body’s normal response to fighting an infection or illness. Fevers usually aren’t a serious concern. They typically go away when the infection passes.",
+      "questions": []
+    },
+    {
+      "id": 37,
+      "name": "Severe Headache",
+      "description": "Headaches are a very common condition that most people will experience many times during their lives. The main symptom of a headache is pain in your head or face. There are several types of headaches, and tension headaches are the most common. While most headaches aren’t dangerous, certain types can be a sign of a serious underlying condition.",
+      "questions": []
+    },
+    {
+      "id": 38,
+      "name": "Pain Behind the Eyes",
+      "description": "Pain behind the eye can result from eyestrain, migraine, dental problems, glaucoma, giant cell arteritis, and other causes. Treatment will depend on the cause, but applying cool or warm compresses may help.",
+      "questions": []
+    },
+    {
+      "id": 39,
+      "name": "Joint and Muscle Pain",
+      "description": "Muscle and joint pain may overlap, but they can have different causes and treatment approaches. Muscle and joint pain can accompany swelling, stiffness, reduced mobility, and other symptoms.",
+      "questions": []
+    },
+    {
+      "id": 40,
+      "name": "Red Eyes",
+      "description": "Your eye can become red because of irritation or injury. You can treat some cases of eye redness with home remedies, but others require medical help. If you have pain, fever, blurred vision, discharge or other symptoms along with your red eye, an eye care provider can treat you.",
+      "questions": []
+    },
+    {
+      "id": 41,
+      "name": "Itching",
+      "description": "Pruritus is the medical term for itchiness. The condition causes you to feel the need to scratch your skin to get relief. There are several possible causes for pruritus that include an underlying medical condition, contact with an irritant or a reaction to a medication. Treatment varies based on what caused your skin to itch.",
+      "questions": []
+    },
+    {
+      "id": 42,
+      "name": "Tears",
+      "description": "Watery eyes means you have too many tears in and draining from the eyes. Tears help keep the surface of the eye moist. They wash away particles and foreign objects in the eye. Your eyes always contain tears made by the tear (lacrimal) glands just above the eyes. These tears leave the eye through a small hole in the corner of the eye called the tear duct (nasolacrimal duct).",
+      "questions": []
+    },
+    {
+      "id": 43,
+      "name": "Swollen Eyelids",
+      "description": "Blepharitis, the medical term for irritated, swollen eyelids, is a common eye condition. It’s a chronic condition, but it’s not contagious. If you have oily skin or certain skin conditions, you may be more likely to develop blepharitis.",
+      "questions": []
+    },
+    {
+      "id": 44,
+      "name": "Jaundice",
+      "description": "Jaundice is a condition where your skin, the whites of your eyes and mucous membranes (like the inside of your nose and mouth) turn yellow. Many medical conditions can cause jaundice, like hepatitis, gallstones and tumors. Jaundice usually clears up once your healthcare provider treats your main medical condition.",
+      "questions": []
+    },
+    {
+      "id": 45,
+      "name": "Bloating",
+      "description": "A bloated stomach feels tight, full and often painful. You might feel bloated even if you don’t have a distended abdomen. Bloating is usually a digestive issue, though hormones and stress also play a part. Sometimes there is an underlying medical condition.",
+      "questions": []
+    },
+    {
+      "id": 46,
+      "name": "Sudden Numbness",
+      "description": "Numbness is a complete or partial loss of feeling or sensation in any area of your body. Most cases of numbness aren’t serious, but severe cases can lead to complications such as not being able to feel pain. If you’re experiencing any numbness that doesn’t have an obvious cause, see your healthcare provider.",
+      "questions": []
+    },
+    {
+      "id": 47,
+      "name": "Confusion",
+      "description": "Confusion is a symptom that happens because of brain activity disruptions. Many conditions, events and circumstances can cause it. Some are minor and reversible, while others are permanent and severe. Recognizing this condition is important, and loved ones can play a vital role in early diagnosis and treatment of this symptom.",
+      "questions": []
+    },
+    {
+      "id": 48,
+      "name": "Difficulty Speaking",
+      "description": "Dysarthria (Difficulty Speaking) is a motor speech disorder where damage to your nervous system causes the muscles that produce speech to become paralyzed or weakened. The damage may make it difficult to control your tongue or voice box, causing you to slur words. Speech therapy can help you communicate more effectively.",
+      "questions": []
+    },
+    {
+      "id": 49,
+      "name": "Rapid Heart Rate",
+      "description": "Tachycardia is a heart rate that’s faster than normal, or more than 100 beats per minute at rest. It can start in your upper or lower chambers of your heart and can range from mild to life-threatening. Treatments include medicines, an ablation procedure and implantable cardioverter defibrillator (ICD) placement.",
+      "questions": []
+    },
+    {
+      "id": 50,
+      "name": "Low Blood Pressure",
+      "description": "Low blood pressure is a reading below 90/60 mm Hg. Many issues can cause low blood pressure. Treatment varies depending on what’s causing it. Symptoms of low blood pressure include dizziness and fainting, but many people don’t have symptoms. The cause also affects your prognosis.",
+      "questions": []
+    },
+    {
+      "id": 51,
+      "name": "Chest Tightness",
+      "description": "Chest pain has many causes, like issues in your heart, lungs or digestive system. Some causes are life-threatening while others aren’t. A healthcare provider can find the cause of your chest pain and put your mind at ease. Chest pain treatments may include medicines or operations.",
+      "questions": []
+    },
+    {
+      "id": 52,
+      "name": "Extreme Fatigue",
+      "description": "The definition of fatigue is extreme tiredness. Severe fatigue makes it difficult for you to get up in the morning and make it through your day. Many conditions and lifestyle factors can cause fatigue. You may be able to relieve it by changing your habits. If an underlying condition causes it, a healthcare provider can usually help you manage it.",
+      "questions": []
+    },
+    {
+      "id": 53,
+      "name": "Difficulty Swallowing",
+      "description": "Dysphagia or difficulty swallowing is a symptom of many different medical conditions. These conditions include nervous system and brain disorders, muscle disorders and physical blockages in your throat. Treatment for swallowing issues may include medications, changes to your eating habits and, sometimes, procedures.",
+      "questions": []
+    },
+    {
+      "id": 54,
+      "name": "Abdominal Pain",
+      "description": "Abdominal pain has many causes, some more serious than others. What feels like a stomachache may be coming from another organ in your abdomen, or from outside of your digestive system. Always seek medical care if your abdominal pain is unexplained, persistent or severe.",
+      "questions": []
+    },
+    {
+      "id": 55,
+      "name": "Pelvic Pain",
+      "description": "Pelvic pain can happen in all sexes and might stem from infections, abnormalities in internal organs or pain from your pelvic bones. Treatment depends on the cause.",
+      "questions": []
+    },
+    {
+      "id": 56,
+      "name": "Cloudy Urine",
+      "description": "Cloudy urine occurs when your pee looks milky or hazy. It should be clear, light yellow. The most common cause is high levels of alkaline. Treatment often includes drinking plenty of water and following healthy eating patterns. Cloudy urine is generally harmless. But frequent or repetitive cloudy urine could be a sign of a medical condition.",
+      "questions": []
+    },
+    {
+      "id": 57,
+      "name": "Seizure",
+      "description": "A seizure is abnormal electrical activity in your brain. It causes changes in awareness and muscle control. It also causes symptoms that affect your behavior and senses. Seizures can affect anyone at any age and there are a lot of possible causes, from an underlying medical condition to an injury or illness. Treatment options are available to help you manage the frequency and severity of seizure symptoms.",
+      "questions": []
+    },
+    {
+      "id": 58,
+      "name": "Unusual Sensations",
+      "description": "Abnormal sensation is when a person experiences tingling, prickling or numbness on any part of their body, it is usually caused by pressure on a nerve. Physiotherapy is beneficial for people with abnormal sensation resulting from a neurological problem.",
+      "questions": []
+    },
+    {
+      "id": 59,
+      "name": "Loss of Consciousness",
+      "description": "A loss of consciousness occurs when not enough blood reaches the brain and corresponds to a loss of awareness of oneself and one’s surroundings. In most cases it is due to a particular situation; upon receiving bad news, extreme pain, fear of needles, etc. If a patient with a heart or neurological disease, or who takes certain medicines, loses consciousness, call emergency services immediately.",
+      "questions": []
+    },
+    {
+      "id": 60,
+      "name": "Confusion",
+      "description": "Double need to erase",
+      "questions": []
+    },
+    {
+      "id": 61,
+      "name": "Reduced Range of Motion",
+      "description": "Limited range of motion is a term meaning that a joint or body part cannot move through its normal range of motion. When a joint does not move fully and easily in its normal manner it is considered to have a limited range of motion. Motion may be limited by a mechanical problem within joint, swelling of tissue around the joint, spasticity of the muscles, pain or disease.",
+      "questions": []
+    },
+    {
+      "id": 62,
+      "name": "Rapid Heartbeat",
+      "description": "Double need to erase",
+      "questions": []
+    },
+    {
+      "id": 63,
+      "name": "Sweating",
+      "description": "Hyperhidrosis is excessive sweating. It causes your body to sweat more than it needs to, sometimes for no apparent reason. This condition may make you feel uncomfortable or embarrassed, but it’s common. A healthcare provider can help you find treatment that manages your symptoms. It could include special antiperspirants, medications or therapies.",
+      "questions": []
+    },
+    {
+      "id": 64,
+      "name": "Painful Rash",
+      "description": "Skin rashes can be red, inflamed, bumpy as well as dry, itchy or painful. The main cause is dermatitis, which is when your skin reacts to allergens or irritants. Bacteria, viruses, allergens and conditions including eczema, hives, and psoriasis can be the source of skin rashes. A variety of treatments can relieve your symptoms and get rid of the rash.",
+      "questions": []
+    },
+    {
+      "id": 65,
+      "name": "Burning Sensation",
+      "description": "A burning sensation is a type of pain distinct from dull, stabbing, or aching pain. It can occur in any area of the body but most commonly affects the skin. A wide range of conditions, from herpes to nerve damage, may be responsible.",
+      "questions": []
+    },
+    {
+      "id": 66,
+      "name": "Red Blisters",
+      "description": "A blister is a painful skin condition where fluid fills a space between layers of skin. They form when something — like too-tight shoes — repeatedly rubs against your skin. These fluid-filled bubbles are a pain, but you can treat them easily at home.",
+      "questions": []
+    },
+    {
+      "id": 67,
+      "name": "Bulge or Lump",
+      "description": "An abdominal lump is a swelling or bulge in the abdomen. Most often caused by a hernia, it can be felt near the groin, near the navel, or around a surgical scar. It can be painful and can usually be resolved surgically.",
+      "questions": []
+    },
+    {
+      "id": 68,
+      "name": "Difficulty Lifting",
+      "description": "Muscular dystrophy is a group of diseases that cause progressive weakness and loss of muscle mass. In muscular dystrophy, abnormal genes (mutations) interfere with the production of proteins needed to form healthy muscle. There's no cure for muscular dystrophy. But medications and therapy can help manage symptoms and slow the course of the disease.",
+      "questions": []
+    },
+    {
+      "id": 69,
+      "name": "Abdominal Discomfort",
+      "description": "Abdominal pain has many causes, some more serious than others. What feels like a stomachache may be coming from another organ in your abdomen, or from outside of your digestive system. Always seek medical care if your abdominal pain is unexplained, persistent or severe.",
+      "questions": []
+    },
+    {
+      "id": 70,
+      "name": "Cold Sensitivity",
+      "description": "Cold intolerance isn’t an illness but is a symptom of an underlying condition. It may be connected to issues with thyroid regulation, the hypothalamus, or blood flow. Or it may be a symptom of conditions such as anemia, hypothyroidism, fibromyalgia, or anorexia.",
+      "questions": []
+    },
+    {
+      "id": 71,
+      "name": "Dry Skin",
+      "description": "Dry skin causes your skin to have a rough texture because it doesn’t have enough moisture. Dry skin is very common. The medical term for dry skin is xeroderma. You can treat dry skin at home by using moisturizers. Talk to a dermatologist if you have dry skin that doesn’t go away or keeps returning.",
+      "questions": []
+    },
+    {
+      "id": 72,
+      "name": "Mood Swings",
+      "description": "Mood swings are sudden changes in how you feel. They’re caused by changing levels of brain chemicals. They can be a regular part of life, like hunger. Or they can be a sign that something else is going on, like adolescence, the transition to menopause or a mood disorder.",
+      "questions": []
+    },
+    {
+      "id": 73,
+      "name": "Abdominal Cramps",
+      "description": "If you’ve ever had a sudden, uncontrolled, tight feeling in the muscles of your stomach, then you’ve probably had stomach cramps. They’re uncomfortable and sometimes hurt. Anyone can get them. Most of the time, stomach cramps aren’t serious and don’t need to be diagnosed. If they happen often, are severe, or last for more than a day, this could be a sign of a more harmful medical problem, and you should see a doctor.",
+      "questions": []
+    },
+    {
+      "id": 74,
+      "name": "Irritability",
+      "description": "Irritability may be caused by psychological and physical conditions, such as anxiety, hormonal changes, and blood sugar fluctuations. Coping strategies include exercise and deep breathing, among others.",
+      "questions": []
+    },
+    {
+      "id": 75,
+      "name": "Hot Flashes",
+      "description": "Hot flashes are a common symptom of menopause that feel like a sudden flare of heat, paired with sweating and flushed skin. Hot flashes typically start in your late 40s and can last for several months or several years. Treatment options can include prescription medications, hormone replacement therapy (HRT) and lifestyle changes.\n\n",
+      "questions": []
+    },
+    {
+      "id": 76,
+      "name": "Irregular Periods",
+      "description": "Menstrual periods typically last four to seven days and occur roughly every 28 days. Examples of irregular periods include periods that occur fewer than 21 days or more than 35 days apart, missing three or more periods in row, and menstrual flow that’s much heavier or lighter than usual.",
+      "questions": []
+    },
+    {
+      "id": 77,
+      "name": "Facial Pain",
+      "description": "Facial pain is pain felt in any part of the face, including the mouth and eyes. Although it’s normally due to an injury or a headache, facial pain may also be the result of a serious medical condition. Most causes of facial pain are harmless. However, if you have facial pain that seems to come without any known cause, call your doctor for an evaluation.",
+      "questions": []
+    },
+    {
+      "id": 78,
+      "name": "Post-nasal Drip",
+      "description": "When excess mucus builds up and drips down the back of your throat, it’s called postnasal drip. In addition to feeling like mucus is draining down your throat, symptoms of postnasal drip include cough, the urge to clear your throat and hoarseness. Postnasal drip has many causes, including allergies, infections, pregnancy, medications and GERD.",
+      "questions": []
+    },
+    {
+      "id": 79,
+      "name": "Swelling in the Abdomen",
+      "description": "A distended abdomen is abnormally swollen outward. You can see and measure the difference, and sometimes you can feel it. A distended abdomen can be due to bloating from gas, or it can be due to accumulated fluid, tissue, or digestive contents. It can be chronic or acute.",
+      "questions": []
+    },
+    {
+      "id": 80,
+      "name": "Constant Worry",
+      "description": "Generalized anxiety disorder (GAD) is a mental health condition that causes fear, a constant feeling of being overwhelmed and excessive worry about everyday things. It can affect children and adults, and is manageable with talk therapy and/or medications.",
+      "questions": []
+    },
+    {
+      "id": 81,
+      "name": "Restlessness",
+      "description": "While it’s common to experience restlessness every now and then, it can be a sign of an underlying condition when it’s recurrent, severe, or prolonged. Periods of nervousness, fidgeting, and irritability are caused by various health factors, including restless legs syndrome (RLS), mood disorders, the side effect of certain medications, and hyperthyroidism. When restlessness significantly impacts your life and disrupts sleep, you should call your healthcare provider.",
+      "questions": []
+    },
+    {
+      "id": 82,
+      "name": "Difficulty Concentration",
+      "description": "A number of medical conditions may contribute to or cause an inability to concentrate. It’s not always a medical emergency, but being unable to concentrate can mean you need medical attention.",
+      "questions": []
+    },
+    {
+      "id": 83,
+      "name": "Severe Pain in Joints",
+      "description": "Joint pain can be felt in the joints throughout your body. It may be a symptom of many different health conditions. Arthritis is the most common cause of joint pain. There are more than 100 kinds of arthritis. Joint pain may range from mild to severe. Treatments vary from simple at-home care to surgery, depending on your condition.",
+      "questions": []
+    },
+    {
+      "id": 84,
+      "name": "Warmth in Affected Area",
+      "description": "Heat-related illnesses include heat stroke, heat exhaustion, heat cramps and heat rash. Heat stroke and heat exhaustion involve an abnormally high body temperature (hyperthermia) and need immediate treatment. You can lower your risk of heat illness by staying hydrated and limiting physical activity in hot weather.",
+      "questions": []
+    },
+    {
+      "id": 85,
+      "name": "Lower Back Pain",
+      "description": "Lower back pain is very common. It often results from a strain (injury) to muscles or tendons in your back. Other causes include arthritis, structural problems and disk injuries. The pain often gets better with rest, physical therapy and/or medication.",
+      "questions": []
+    },
+    {
+      "id": 86,
+      "name": "Leg Pain",
+      "description": "Injury to the muscles, bones, and nerves can all cause a person’s leg to hurt. Leg pain may occur due to trauma, or an underlying condition. Treatment will vary depending on the cause of the leg pain.",
+      "questions": []
+    },
+    {
+      "id": 87,
+      "name": "Numbness",
+      "description": "Numbness describes a loss of feeling in a part of the body. It also is often used to describe other changes in sensation, such as burning or a pins-and-needles feeling. Numbness can occur along a single nerve on one side of the body. Or numbness may occur on both sides of the body. Weakness, which is usually caused by other conditions, is often mistaken for numbness.",
+      "questions": []
+    },
+    {
+      "id": 88,
+      "name": "Tingling Sensation",
+      "description": "Paresthesia is the feeling of tingling, numbness or “pins and needles.” Everyone experiences this feeling at some point in their lives. It’s most often a harmless sign that a limb is “asleep” and you need to shift position or move around. But when it won’t go away or happens often, it can be an important medical condition symptom.",
+      "questions": []
+    },
+    {
+      "id": 89,
+      "name": "Red Welts",
+      "description": "Hives, a skin rash that’s often very itchy, often results from an allergic reaction to food or something you’ve touched. Hives can go away quickly (acute hives) or last a long time (chronic hives). Treatments may include antihistamines or steroids.",
+      "questions": []
+    },
+    {
+      "id": 90,
+      "name": "Chills",
+      "description": "Chills are your body’s way of raising its core temperature. Cold temperatures, viruses, infections and other illnesses can bring on chills. When you shiver, your muscles relax and contract. This involuntary movement warms your body. Chills and fever often go together. But not everyone with a fever gets chills. And you can get chills with no fever.",
+      "questions": []
+    },
+    {
+      "id": 91,
+      "name": "Blood in Urine",
+      "description": "So many things can cause blood in your urine (pee), including infections, vigorous exercise and kidney disease. However, you shouldn’t ignore hematuria (blood in your urine). Healthcare providers can help you find the cause and the best treatment.",
+      "questions": []
+    },
+    {
+      "id": 92,
+      "name": "Swollen Salivary Glands",
+      "description": "Sialadenitis refers to a swollen salivary gland. It’s caused by infections, autoimmune diseases and salivary gland stones. When a salivary gland becomes inflamed, it can stop functioning. Sialadenitis usually goes away in about a week. But if you develop severe symptoms, such as difficulty breathing or swallowing, call 911.",
+      "questions": []
+    },
+    {
+      "id": 93,
+      "name": "Muscle Aches",
+      "description": "Myalgia is the medical term for muscle pain, which has many causes. Many of them are easy to treat at home. But myalgia can also be a symptom of disease, especially when it’s widespread and long-lasting. It’s important to take your pain seriously. If it’s not improving as it should be, you might need medical attention.",
+      "questions": []
+    },
+    {
+      "id": 94,
+      "name": "Skin Rash",
+      "description": "Skin rashes can be red, inflamed, bumpy as well as dry, itchy or painful. The main cause is dermatitis, which is when your skin reacts to allergens or irritants. Bacteria, viruses, allergens and conditions including eczema, hives, and psoriasis can be the source of skin rashes. A variety of treatments can relieve your symptoms and get rid of the rash.",
+      "questions": []
+    },
+    {
+      "id": 95,
+      "name": "Red, Ring-Shaped Skin",
+      "description": "Ringworm is an itchy, contagious fungal infection that causes a ring-shaped pattern on your skin. Over-the-counter and prescription treatments can stop the fungus from spreading to other parts of your body or to others.",
+      "questions": []
+    },
+    {
+      "id": 96,
+      "name": "Scaling",
+      "description": "Scaling skin, or scaly skin, occurs when the outer layer of your skin peels away in large pieces that resemble fish scales. It can happen due to allergies, infections, or skin conditions like psoriasis.",
+      "questions": []
+    },
+    {
+      "id": 97,
+      "name": "Crusting",
+      "description": "Impetigo is a common skin infection that most often affects young children. Bacteria including Staphylococcus aureus (S. aureus or “staph”) and Group A streptococcus (“strep”) cause the infection, which can lead to itchy sores and blisters. Treatment includes antibiotics. Within a few days of treatment, your child should start to feel better.",
+      "questions": []
+    },
+    {
+      "id": 98,
+      "name": "Inflammation",
+      "description": "Inflammation is a normal part of your body’s response to injuries and invaders (like germs). It promotes healing and helps you feel better. But inflammation that happens when there’s no injury or invader can harm healthy parts of your body and cause a range of chronic diseases.",
+      "questions": []
+    },
+    {
+      "id": 99,
+      "name": "Persistent Cough",
+      "description": "A persistent cough is a cough that lasts longer than 6 to 8 weeks. It is also known as a chronic cough. If you have a persistent cough, see your healthcare provider so they can help you find out what is causing it and what you can do about it.",
+      "questions": []
+    },
+    {
+      "id": 100,
+      "name": "Mucus Production",
+      "description": "Mucus is a clear, slippery, gel-like substance that’s part of your immune system. It lines your mucous membranes and helps trap and destroy or clear out germs and harmful particles. Mucus gets thick and sticky and might be white, yellow or green when you have an infection. It’s also called phlegm, snot or sputum.",
+      "questions": []
+    },
+    {
+      "id": 101,
+      "name": "Abnormal Bleeding",
+      "description": "Abnormal uterine bleeding (menometrorrhagia) is bleeding between monthly periods, prolonged bleeding or an extremely heavy period. Possible causes include fibroids, polyps, hormone changes and, in rare cases, cancer. Treatment could involve medication or surgery.",
+      "questions": []
+    },
+    {
+      "id": 102,
+      "name": "Pain During Intercourse",
+      "description": "Dyspareunia is genital pain during or after sexual intercourse. You may feel pain externally on your vulva or internally in your vagina, uterus or pelvis. Factors like underlying medical conditions or infections can cause painful sex. Treatment involves identifying the underlying cause of the pain.",
+      "questions": []
+    },
+    {
+      "id": 103,
+      "name": "Abnormal Discharge",
+      "description": "Vaginal discharge is a clear or whitish fluid that comes out of your vagina. Discharge is normal, but changes in the amount, consistency, color or smell could indicate an infection or other problem.",
+      "questions": []
+    },
+    {
+      "id": 104,
+      "name": "Regurgitation",
+      "description": "Regurgitation happens when a mixture of gastric juices and undigested food rises back up the esophagus and into the mouth. If you have acid reflux or gastroesophageal reflux disease (GERD), you might experience it.",
+      "questions": []
+    },
+    {
+      "id": 105,
+      "name": "Morning Stiffness",
+      "description": "Management strategies such as gentle stretching, taking a morning walk, and sleeping with a heated blanket may help people with psoriatic arthritis reduce early morning joint pain and stiffness.",
+      "questions": []
+    },
+    {
+      "id": 106,
+      "name": "Red, Scaly Patches",
+      "description": "Seborrheic dermatitis causes no serious harm to the body, including the hair. It appears as red, dry, flaky, itchy skin on the scalp and other parts of the body and is common but not contagious. Its presence doesn’t mean the skin is unclean or infected. Medications manage the symptoms.",
+      "questions": []
+    },
+    {
+      "id": 107,
+      "name": "Cracked Skin",
+      "description": "Cracked skin describes fissures, or cuts, that typically appear on dry or irritated skin. Treatment will depend on the cause, but it typically involves moisturizing the skin.",
+      "questions": []
+    },
+    {
+      "id": 108,
+      "name": "Stuffy/Runny Nose",
+      "description": "A stuffy or congested nose occurs when the tissues lining it become swollen. The swelling is due to inflamed blood vessels. The problem may also include nasal discharge or runny nose. If excess mucus runs down the back of your throat (postnasal drip), it may cause a cough or sore throat.",
+      "questions": []
+    },
+    {
+      "id": 109,
+      "name": "Weight Gain",
+      "description": "Unintentional weight gain is when you gain weight without trying to do so and you are not eating or drinking more. Bloating, or swelling due to a buildup of fluid in the tissues can cause weight gain. This may be due to menstruation, heart or kidney failure, preeclampsia, or medicines you take. A rapid weight gain may be a sign of dangerous fluid retention.",
+      "questions": []
+    }
+  ]
+}
