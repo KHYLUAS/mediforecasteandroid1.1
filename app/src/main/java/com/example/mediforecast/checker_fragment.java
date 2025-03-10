@@ -32,12 +32,12 @@ public class checker_fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_checker_fragment, container, false);
         started = view.findViewById(R.id.started);
 
-//        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
-//        boolean isMainTutorialFinished = sharedPreferences.getBoolean("finishTabBarTutorial", false);
-//
-//        if(isMainTutorialFinished && !isAnalyzerTutorialFinished()){
-//            showAnalyzerTutorial();
-//        }
+        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
+        boolean isAnalyzerTutorialFinished = sharedPreferences.getBoolean("finishAnalyzerTutorial", false);
+        // Show TapTarget tutorial only once
+        if (!isAnalyzerTutorialFinished) {
+            showAnalyzerTutorial();
+        }
 
         started.setOnClickListener(v->{
             Intent intent = new Intent(getContext(), SymptomAnalyzer.class);
@@ -45,35 +45,27 @@ public class checker_fragment extends Fragment {
         });
         return view;
     }
-//    private boolean isAnalyzerTutorialFinished() {
-//        // Check if the dashboard tutorial is finished
-//        return sharedPreferences.getBoolean("finishAnalyzerTutorial", false);
-//    }
-//
-//    private void showAnalyzerTutorial() {
-//        TapTargetView.showFor(getActivity(),
-//                TapTarget.forView(getView().findViewById(R.id.started),
-//                                "Symptom Analyzer",
-//                                "To analyze your symptoms, tap this ‘Get Started’ button. Simply enter your symptoms, and our system will provide insights to help you understand possible causes and next steps.")
-//                        .outerCircleColor(R.color.colorAccent) // Outer circle color
-//                        .targetCircleColor(android.R.color.white) // Target circle color
-//                        .titleTextSize(20) // Title text size
-//                        .descriptionTextSize(16) // Description text size
-//                        .outerCircleAlpha(0.96f) // Outer circle alpha
-//                        .transparentTarget(false) // Show the target fully
-//                        .cancelable(true) // Allow user to cancel
-//                        .drawShadow(true) // Show shadow
-//                        .tintTarget(true) // Tint the target
-//                        .dimColor(android.R.color.black), // Dim the background
-//                new TapTargetView.Listener() {
-//                    @Override
-//                    public void onTargetClick(TapTargetView view) {
-//                        super.onTargetClick(view);
-//                        // Mark the dashboard tutorial as finished after it is clicked
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        editor.putBoolean("finishAnalyzerTutorial", true);
-//                        editor.apply();
-//                    }
-//                });
-//    }
+    private void showAnalyzerTutorial() {
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(started, "Symptom Analyzer",
+                                "Tap ‘Get Started’ to analyze your symptoms and get insights.")
+                        .outerCircleColor(R.color.black)
+                        .targetCircleColor(android.R.color.white)
+                        .titleTextSize(20)
+                        .descriptionTextSize(16)
+                        .outerCircleAlpha(0.96f)
+                        .transparentTarget(true)
+                        .cancelable(true)
+                        .drawShadow(true)
+                        .tintTarget(false)
+                        .dimColor(R.color.black),
+                new TapTargetView.Listener() {
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        // Save the flag in SharedPreferences to prevent showing again
+                        sharedPreferences.edit().putBoolean("finishAnalyzerTutorial", true).apply();
+                    }
+                });
+    }
 }

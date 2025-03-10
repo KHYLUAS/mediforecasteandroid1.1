@@ -91,4 +91,36 @@
         android:scrollHorizontally="false"
         android:breakStrategy="simple"
         android:hyphenationFrequency="full" />
+    <TextView
+        android:id="@+id/remedyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descriptionText"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="Remedies"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Description TextView -->
+    <TextView
+        android:id="@+id/remedyText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/remedyTitle"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="This is a very long description of the symptom that should wrap appropriately."
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:lineSpacingExtra="5dp"
+        android:padding="10dp"
+        android:background="@drawable/description_background"
+        android:maxLines="10"
+        android:scrollHorizontally="false"
+        android:breakStrategy="simple"
+        android:hyphenationFrequency="full" />
 </RelativeLayout>

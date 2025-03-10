@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,6 +40,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 public class profile_fragment extends Fragment {
 
@@ -95,6 +101,55 @@ public class profile_fragment extends Fragment {
         cameraTextView = view.findViewById(R.id.imageView5);
         updateTextView = view.findViewById(R.id.updatepass);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        boolean isFirstTime = prefs.getBoolean("showTutorial", true);
+
+        if (isFirstTime) {
+            new TapTargetSequence(requireActivity())
+                    .targets(
+                            TapTarget.forView(profileImageView, "Change Profile Picture", "Tap here to select a new profile image.")
+                                    .outerCircleColor(R.color.primaryColor)
+                                    .targetCircleColor(android.R.color.white)
+                                    .titleTextSize(20)
+                                    .descriptionTextSize(15)
+                                    .cancelable(false),
+
+                            TapTarget.forView(editprofileTextView, "Edit Profile", "Tap here to update your profile details.")
+                                    .outerCircleColor(R.color.primaryColor)
+                                    .targetCircleColor(android.R.color.white)
+                                    .titleTextSize(20)
+                                    .descriptionTextSize(15)
+                                    .cancelable(false),
+
+                            TapTarget.forView(logoutTextView, "Logout", "Tap here to securely log out from your account.")
+                                    .outerCircleColor(R.color.primaryColor)
+                                    .targetCircleColor(android.R.color.white)
+                                    .titleTextSize(20)
+                                    .descriptionTextSize(15)
+                                    .cancelable(false)
+                    )
+                    .listener(new TapTargetSequence.Listener() {
+                        @Override
+                        public void onSequenceFinish() {
+                            Toast.makeText(getActivity(), "You are ready to go!", Toast.LENGTH_SHORT).show();
+                            // Save in SharedPreferences to prevent showing again
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("showTutorial", false);
+                            editor.apply();
+                        }
+
+                        @Override
+                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                            // Do something when a target is clicked
+                        }
+
+                        @Override
+                        public void onSequenceCanceled(TapTarget lastTarget) {
+                            Toast.makeText(getActivity(), "Tutorial skipped", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .start();
+        }
         // Load cached data from SharedPreferences
         loadCachedProfileData();
 

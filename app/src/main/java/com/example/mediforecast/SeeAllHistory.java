@@ -76,11 +76,11 @@ public class SeeAllHistory extends AppCompatActivity {
                             historyList.clear(); // Clear the list first
                             for (QueryDocumentSnapshot document : querySnapshot) {
                                 String documentId = document.getId();
-                                String painLocation = document.getString("painLocation");
+                                String symptoms = document.getString("symptoms");
                                 Timestamp timestamp = document.getTimestamp("dateAndTime");
                                 String formattedDate = formatDate(timestamp);
 
-                                History history = new History(formattedDate, painLocation, documentId);
+                                History history = new History(formattedDate, symptoms, documentId);
                                 historyList.add(history);
                             }
 
@@ -102,7 +102,6 @@ public class SeeAllHistory extends AppCompatActivity {
     }
 
     private void deleteSymptom(String documentId, int position) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Deleting");
         builder.setMessage("Are you sure you want to delete this record?");
@@ -133,7 +132,7 @@ public class SeeAllHistory extends AppCompatActivity {
         Toast.makeText(this, "Row clicked: " + history.getDate(), Toast.LENGTH_SHORT).show();
 
         // Example: Open a new activity with details
-        Intent intent = new Intent(this, SymptomActivity.class);
+        Intent intent = new Intent(this, DiagnosisResult.class);
         intent.putExtra("documentId", history.getDocumentId());
         intent.putExtra("isViewing", true);
         startActivity(intent);

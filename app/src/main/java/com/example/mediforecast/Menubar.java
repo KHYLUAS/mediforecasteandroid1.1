@@ -20,7 +20,8 @@ import com.google.android.material.navigation.NavigationBarView;
 public class Menubar extends AppCompatActivity {
     private ActivityMenubarBinding binding;
     private SharedPreferences sharedPreferences;
-
+    private long lastClickTime = 0;
+    private static final long CLICK_DELAY = 500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +29,12 @@ public class Menubar extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         sharedPreferences = getSharedPreferences("TapTargetsPrefs", MODE_PRIVATE);
+        // Check if tutorial has already been shown
+        boolean hasSeenTutorial = sharedPreferences.getBoolean("finishTabBarTutorial", false);
+
+        if (!hasSeenTutorial) {
+            showNavigationTutorial();
+        }
         binding.buttonNav.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
         Intent intent = getIntent();
         String fragmentToDisplay = intent.getStringExtra("EXTRA_FRAGMENT");
@@ -75,16 +82,32 @@ public class Menubar extends AppCompatActivity {
             }
             return true;
         });
-
-        //add the condition here
-        showNavigationTutorial();
     }
-
+//    private void replaceFragment(Fragment fragment) {
+//        if (System.currentTimeMillis() - lastClickTime < CLICK_DELAY) {
+//            return; // Ignore fast clicks
+//        }
+//        lastClickTime = System.currentTimeMillis();
+//
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment currentFragment = fragmentManager.findFragmentById(R.id.Framelayout);
+//
+//        if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
+//            return;
+//        }
+//
+//        fragmentManager.executePendingTransactions(); // Ensure previous transactions complete
+//
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.Framelayout, fragment);
+//        fragmentTransaction.commitAllowingStateLoss();
+//    }
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.Framelayout, fragment); // Ensure R.id.fragment_container matches your layout ID
-        fragmentTransaction.commit();
+//        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
     private void showNavigationTutorial(){
       new TapTargetSequence(this)
@@ -136,7 +159,6 @@ public class Menubar extends AppCompatActivity {
               .listener(new TapTargetSequence.Listener() {
                   @Override
                   public void onSequenceFinish() {
-                      Log.e("Tutorial", "Tutorial finished. Shared preference updated.");
                       SharedPreferences.Editor editor = sharedPreferences.edit();
                       editor.putBoolean("finishTabBarTutorial", true);
                       editor.apply();

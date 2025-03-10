@@ -24,7 +24,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +41,11 @@ public class DiagnosisResult extends AppCompatActivity {
     private boolean showAll = false;
     private ImageView arrow;
     private MaterialButton save, discard;
+    private FirebaseFirestore firestore;
+    private Button seeMoreButton;
+    private LinearLayout diagnosisLayout;
+    private SharedPreferences sharedPreferences;
+    private String savedEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +56,9 @@ public class DiagnosisResult extends AppCompatActivity {
         arrow = findViewById(R.id.arrow);
         allSymptoms = findViewById(R.id.all_symptoms);
         save = findViewById(R.id.save);
-
+        firestore = FirebaseFirestore.getInstance();
+         diagnosisLayout = findViewById(R.id.diagnosisLayout);
+        seeMoreButton = findViewById(R.id.seeMoreButton);
 
         AlertDialog.Builder ab = new AlertDialog.Builder(DiagnosisResult.this);
         ab.setIcon(R.drawable.error_icon).setTitle("Disclaimer").setMessage(R.string.note)
@@ -59,12 +68,68 @@ public class DiagnosisResult extends AppCompatActivity {
         AlertDialog dialog = ab.create();
         dialog.show();
 
+        sharedPreferences = getSharedPreferences("MyInfo", Context.MODE_PRIVATE);
+        savedEmail = sharedPreferences.getString("EMAIL", null);
+
+
+
         // Get the passed data
         ArrayList<String> topDiagnoses = getIntent().getStringArrayListExtra("topDiagnoses");
         ArrayList<Integer> topAccuracyRates = getIntent().getIntegerArrayListExtra("topAccuracyRates");
         ArrayList<String> otherDiagnoses = getIntent().getStringArrayListExtra("otherDiagnoses");
         ArrayList<Integer> otherAccuracyRates = getIntent().getIntegerArrayListExtra("otherAccuracyRates");
         ArrayList<String> selectedSymptoms = getIntent().getStringArrayListExtra("selectedSymptoms");
+
+        Intent viewContent = getIntent();
+        boolean isViewing = viewContent.getBooleanExtra("isViewing", false);
+        String documentId = viewContent.getStringExtra("documentId");
+
+        if (isViewing) {
+            save.setVisibility(View.GONE);
+            discard.setVisibility(View.GONE);
+
+            firestore.collection("SymptomAnalyzer")
+                    .whereEqualTo("email", savedEmail)
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        if (!querySnapshot.isEmpty()) {
+                            diagnosisLayout.removeAllViews(); // Clear old data
+
+                            for (QueryDocumentSnapshot document : querySnapshot) {
+                                String symptoms = document.getString("symptoms");
+                                List<Map<String, Object>> diagnosisResults =
+                                        (List<Map<String, Object>>) document.get("diagnosisResults");
+                                List<Map<String, Object>> otherDiagnosisResults =
+                                        (List<Map<String, Object>>) document.get("otherDiagnosisResults");
+
+                                allSymptoms.setText(symptoms);
+
+                                for (Map<String, Object> result : diagnosisResults) {
+                                    String diagnosis = (String) result.get("diagnosis");
+                                    Long accuracy = (Long) result.get("accuracyRate");
+                                    diagnosisLayout.addView(createDiagnosisView(diagnosis,
+                                            accuracy != null ? accuracy.intValue() : 0));
+                                }
+
+                                if (showAll && otherDiagnosisResults != null) {
+                                    for (Map<String, Object> result : otherDiagnosisResults) {
+                                        String diagnosis = (String) result.get("diagnosis");
+                                        Long accuracy = (Long) result.get("accuracyRate");
+                                        diagnosisLayout.addView(createDiagnosisView(diagnosis,
+                                                accuracy != null ? accuracy.intValue() : 0));
+                                    }
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this, "No diagnosis data found.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(DiagnosisResult.this, "Error fetching diagnosis", Toast.LENGTH_SHORT).show();
+                        Log.e("FirestoreError", "Error fetching data", e);
+                    });
+        }
+
 
         if (selectedSymptoms != null && !selectedSymptoms.isEmpty()) {
             String formattedSymptoms = String.join(", ", selectedSymptoms);
@@ -73,7 +138,13 @@ public class DiagnosisResult extends AppCompatActivity {
             allSymptoms.setText("No symptoms selected.");
         }
         arrow.setOnClickListener(v->{
-            Intent intents = new Intent(DiagnosisResult.this, SymptomAnalyzer.class);
+            Intent intents;
+            if(isViewing){
+                intents = new Intent(DiagnosisResult.this, SeeAllHistory.class);
+            }else{
+                intents = new Intent(DiagnosisResult.this, SymptomAnalyzer.class);
+            }
+
             startActivity(intents);
             finish();
         });
@@ -83,9 +154,7 @@ public class DiagnosisResult extends AppCompatActivity {
         Log.d("DiagnosisResult", "Other Diagnoses: " + otherDiagnoses);
         Log.d("DiagnosisResult", "Other Accuracy Rates: " + otherAccuracyRates);
 
-        // Reference to the layout and button
-        LinearLayout diagnosisLayout = findViewById(R.id.diagnosisLayout);
-        Button seeMoreButton = findViewById(R.id.seeMoreButton);
+
 
         // Method to display diagnoses
         if (topDiagnoses != null && topAccuracyRates != null) {
@@ -97,11 +166,57 @@ public class DiagnosisResult extends AppCompatActivity {
         // Toggle "See More" functionality
         seeMoreButton.setOnClickListener(v -> {
             showAll = !showAll;
-            if (topDiagnoses != null && topAccuracyRates != null) {
-                displayDiagnoses(diagnosisLayout, topDiagnoses, topAccuracyRates, otherDiagnoses, otherAccuracyRates);
+            diagnosisLayout.removeAllViews();
+
+            if (isViewing) {
+                // If the user is viewing saved records, re-fetch Firestore data
+                firestore.collection("SymptomAnalyzer")
+                        .whereEqualTo("email", savedEmail)
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (!querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    List<Map<String, Object>> diagnosisResults =
+                                            (List<Map<String, Object>>) document.get("diagnosisResults");
+                                    List<Map<String, Object>> otherDiagnosisResults =
+                                            (List<Map<String, Object>>) document.get("otherDiagnosisResults");
+
+                                    if (diagnosisResults != null) {
+                                        for (Map<String, Object> result : diagnosisResults) {
+                                            String diagnosis = (String) result.get("diagnosis");
+                                            Long accuracy = (Long) result.get("accuracyRate");
+                                            diagnosisLayout.addView(createDiagnosisView(diagnosis,
+                                                    accuracy != null ? accuracy.intValue() : 0));
+                                        }
+                                    }
+
+                                    if (showAll && otherDiagnosisResults != null) {
+                                        for (Map<String, Object> result : otherDiagnosisResults) {
+                                            String diagnosis = (String) result.get("diagnosis");
+                                            Long accuracy = (Long) result.get("accuracyRate");
+                                            diagnosisLayout.addView(createDiagnosisView(diagnosis,
+                                                    accuracy != null ? accuracy.intValue() : 0));
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(DiagnosisResult.this, "Error fetching diagnosis", Toast.LENGTH_SHORT).show();
+                            Log.e("FirestoreError", "Error fetching data", e);
+                        });
+            } else {
+                // If the user is not in viewing mode, use passed data
+                if (topDiagnoses != null && topAccuracyRates != null) {
+                    displayDiagnoses(diagnosisLayout, topDiagnoses, topAccuracyRates,
+                            showAll ? otherDiagnoses : null,
+                            showAll ? otherAccuracyRates : null);
+                }
             }
+
             seeMoreButton.setText(showAll ? "See Less" : "See More");
         });
+
         discard.setOnClickListener(v->{
             new AlertDialog.Builder(DiagnosisResult.this)
                     .setTitle("Discard")
@@ -128,7 +243,7 @@ public class DiagnosisResult extends AppCompatActivity {
                         String savedEmail = sharedPreferences.getString("EMAIL", null);
 
                         // Get current date and time
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy 'at' hh:mm a", Locale.getDefault());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                         String currentDateTime = dateFormat.format(new Date());
 
                         // Convert selected symptoms list to a string
@@ -144,19 +259,33 @@ public class DiagnosisResult extends AppCompatActivity {
                                 diagnosisResultsList.add(diagnosisEntry);
                             }
                         }
+                        // Prepare a list for other diagnoses with accuracy rates
+                        List<Map<String, Object>> otherDiagnosisResultsList = new ArrayList<>();
+                        if (otherDiagnoses != null && otherAccuracyRates != null) {
+                            for (int i = 0; i < otherDiagnoses.size(); i++) {
+                                Map<String, Object> diagnosisEntry = new HashMap<>();
+                                diagnosisEntry.put("diagnosis", otherDiagnoses.get(i));
+                                diagnosisEntry.put("accuracyRate", otherAccuracyRates.get(i));
+                                otherDiagnosisResultsList.add(diagnosisEntry);
+                            }
+                        }
 
                         // Create a data map for Firestore
                         HashMap<String, Object> diagnosisData = new HashMap<>();
                         diagnosisData.put("email", savedEmail);
-                        diagnosisData.put("dateTime", currentDateTime);
+                        diagnosisData.put("dateAndTime", Timestamp.now());
                         diagnosisData.put("symptoms", symptomsString);
-                        diagnosisData.put("diagnosisResults", diagnosisResultsList); // Store diagnoses with accuracy
+                        diagnosisData.put("diagnosisResults", diagnosisResultsList);
+                        diagnosisData.put("otherDiagnosisResults", otherDiagnosisResultsList);
 
                         // Save to Firestore
                         db.collection("SymptomAnalyzer")
                                 .add(diagnosisData)
                                 .addOnSuccessListener(documentReference -> {
                                     Toast.makeText(DiagnosisResult.this, "Diagnosis saved successfully", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(DiagnosisResult.this, SymptomAnalyzer.class);
+                                    startActivity(intent);
+                                    finish();
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(DiagnosisResult.this, "Error saving diagnosis", Toast.LENGTH_SHORT).show();
@@ -178,24 +307,15 @@ public class DiagnosisResult extends AppCompatActivity {
                                   ArrayList<Integer> otherAccuracyRates) {
         layout.removeAllViews(); // Clear existing views
 
-        try {
-            // Add top diagnoses
-            if (topDiagnoses != null && topAccuracyRates != null) {
-                for (int i = 0; i < topDiagnoses.size(); i++) {
-                    LinearLayout diagnosisItem = createDiagnosisView(topDiagnoses.get(i), topAccuracyRates.get(i));
-                    layout.addView(diagnosisItem);
-                }
-            }
+        for (int i = 0; i < topDiagnoses.size(); i++) {
+            layout.addView(createDiagnosisView(topDiagnoses.get(i), topAccuracyRates.get(i)));
+        }
 
-            // Show more diagnoses if toggled
-            if (showAll && otherDiagnoses != null && otherAccuracyRates != null) {
-                for (int i = 0; i < otherDiagnoses.size(); i++) {
-                    LinearLayout diagnosisItem = createDiagnosisView(otherDiagnoses.get(i), otherAccuracyRates.get(i));
-                    layout.addView(diagnosisItem);
-                }
+        // Show "other diagnoses" only if showAll is true
+        if (showAll && otherDiagnoses != null && otherAccuracyRates != null) {
+            for (int i = 0; i < otherDiagnoses.size(); i++) {
+                layout.addView(createDiagnosisView(otherDiagnoses.get(i), otherAccuracyRates.get(i)));
             }
-        } catch (Exception e) {
-            Log.e("DiagnosisResult", "Error while displaying diagnoses: ", e);
         }
     }
 

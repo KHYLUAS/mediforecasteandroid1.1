@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,8 @@ public class dashboard_fragment extends Fragment {
     private FirebaseFirestore firestore;
     private TextView seeAll;
     private SharedPreferences sharedPreferences;
+    private final Handler handler = new Handler();
+    private boolean isChecking = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,11 +54,12 @@ public class dashboard_fragment extends Fragment {
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
 
-        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
-        // If main tutorial is finished, check if the dashboard tutorial is not finished
-        if (sharedPreferences.getBoolean("finishTabBarTutorial", false) && !isDashboardTutorialFinished()) {
-            showDashboardTutorial();
-        }
+//
+//        // If main tutorial is finished, check if the dashboard tutorial is not finished
+//        if (sharedPreferences.getBoolean("finishTabBarTutorial", false) && !isDashboardTutorialFinished()) {
+//            showDashboardTutorial();
+//        }
+        checkTutorialCompletion();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +97,33 @@ public class dashboard_fragment extends Fragment {
         return sharedPreferences.getBoolean("finishDashboardTutorial", false);
     }
 
-    private void showDashboardTutorial() {
+    private void checkTutorialCompletion() {
+        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
 
+        boolean isTutorialShown = sharedPreferences.getBoolean("dashboardTutorialShown", false);
+        if (!isTutorialShown) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    boolean finishTabBarTutorial = sharedPreferences.getBoolean("finishTabBarTutorial", false);
+
+                    if (finishTabBarTutorial) {
+                        Log.d("TutorialCheck", "Tutorial finished detected in another page! Performing action...");
+                        performAction(); // Show tutorial only once after installation
+                        isChecking = false; // Stop checking
+                        return;
+                    }
+
+                    // Continue checking every second if not finished
+                    if (isChecking) {
+                        handler.postDelayed(this, 1000); // Repeat every second
+                    }
+                }
+            }, 1000); // Start after 1 second
+        }
+    }
+
+    private void showDashboardTutorial() {
         if (getActivity() == null || seeAll == null) return;
 
         TapTargetView.showFor(getActivity(),
@@ -115,15 +144,18 @@ public class dashboard_fragment extends Fragment {
                     @Override
                     public void onTargetClick(TapTargetView view) {
                         super.onTargetClick(view);
-                        // Mark the dashboard tutorial as finished after it is clicked
+                        // Mark the tutorial as finished permanently
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("finishDashboardTutorial", true);
+                        editor.putBoolean("dashboardTutorialShown", true);
                         editor.apply();
                     }
                 });
     }
 
+    private void performAction() {
+      showDashboardTutorial();
 
+    }
     private void fetchSymptomHistory() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyInfo", Context.MODE_PRIVATE);
         String savedEmail = sharedPreferences.getString("EMAIL", null);
@@ -143,10 +175,10 @@ public class dashboard_fragment extends Fragment {
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             for (QueryDocumentSnapshot document : querySnapshot) {
                                 String documentId = document.getId();
-                                String painLocation = document.getString("painLocation");
+                                String symptoms = document.getString("symptoms");
                                 Timestamp timestamp = document.getTimestamp("dateAndTime");
                                 String formattedDate = formatDate(timestamp);
-                                createSymptomRow(formattedDate, painLocation, documentId);
+                                createSymptomRow(formattedDate, symptoms, documentId);
                             }
                         } else {
                             Toast.makeText(getActivity(), "No symptom records found", Toast.LENGTH_SHORT).show();
@@ -184,7 +216,7 @@ public class dashboard_fragment extends Fragment {
 
         // Add TextView for Pain Location Header
         TextView painLocationHeader = new TextView(getActivity());
-        painLocationHeader.setText("Pain Location");
+        painLocationHeader.setText("Symptoms");
         painLocationHeader.setTextSize(18f);
         painLocationHeader.setTextColor(getResources().getColor(R.color.primaryColor));
         painLocationHeader.setLayoutParams(new LinearLayout.LayoutParams(
@@ -202,7 +234,7 @@ public class dashboard_fragment extends Fragment {
         symptomHistoryLayout.addView(headerLayout);
     }
 
-    private void createSymptomRow(String date, String painLocation, String documentId) {
+    private void createSymptomRow(String date, String symptoms, String documentId) {
         // Create a container for the row
         LinearLayout rowLayout = new LinearLayout(getActivity());
         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -221,7 +253,7 @@ public class dashboard_fragment extends Fragment {
 
         // Add a TextView for the pain location
         TextView painLocationView = new TextView(getActivity());
-        painLocationView.setText(painLocation);
+        painLocationView.setText(symptoms);
         painLocationView.setTextSize(16f);
         painLocationView.setSingleLine(true);
         painLocationView.setEllipsize(TextUtils.TruncateAt.END);
@@ -249,7 +281,7 @@ public class dashboard_fragment extends Fragment {
         rowLayout.setOnClickListener(v -> {
             // Handle row click (e.g., open a detailed view or perform other actions)
             Toast.makeText(getActivity(), "Clicked: " + documentId, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getActivity(), SymptomActivity.class);
+            Intent intent = new Intent(getActivity(), DiagnosisResult.class);
             intent.putExtra("documentId", documentId);
             intent.putExtra("isViewing", true);
             startActivity(intent);

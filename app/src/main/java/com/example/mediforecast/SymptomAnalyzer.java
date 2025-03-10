@@ -46,6 +46,7 @@ public class SymptomAnalyzer extends AppCompatActivity {
     private Set<Integer> selectedSymptomIds = new HashSet<>();
     private List<JSONObject> combinedQuestions = new ArrayList<>();
     private Map<String, List<String>> diagnosisSymptomsMap;
+    private ImageView medicinearrow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,14 @@ public class SymptomAnalyzer extends AppCompatActivity {
         diagnosisLayout = findViewById(R.id.diagnosisLayout);
         selectedSymptomsLayout = findViewById(R.id.selectedSymptomsLayout); // LinearLayout to display selected symptoms
         searchSymptomEditText = findViewById(R.id.searchSymptomEditText);
+        medicinearrow = findViewById(R.id.medicinearrow);
 
+        medicinearrow.setOnClickListener(v->{
+            Intent intent = new Intent(SymptomAnalyzer.this, Menubar.class);
+            intent.putExtra("EXTRA_FRAGMENT", "ANALYZER");
+            startActivity(intent);
+            finish();
+        });
         loadSymptomsFromJson();
 
         searchSymptomEditText.addTextChangedListener(new TextWatcher() {
@@ -159,6 +167,7 @@ public class SymptomAnalyzer extends AppCompatActivity {
                     try {
                         intent.putExtra("symptomId", symptom.getInt("id"));
                         intent.putExtra("description", symptom.getString("description"));
+                        intent.putExtra("remedies", symptom.getString("remedies"));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
@@ -270,6 +279,10 @@ public class SymptomAnalyzer extends AppCompatActivity {
         submitButton.setBackground(drawable);
 
         submitButton.setOnClickListener(v -> {
+            if(selectedSymptomIds.size() > 12){
+                Toast.makeText(this, "You can select up to 12 symptoms.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             // Collect selected symptoms
             Set<String> selectedSymptoms = new HashSet<>();
             for (int symptomId : selectedSymptomIds) {
@@ -339,35 +352,10 @@ public class SymptomAnalyzer extends AppCompatActivity {
 
 
 
-
-
-//    private void displayPossibleDiagnoses(Set<String> selectedSymptoms) {
-//        diagnosisLayout.removeAllViews();
-//        List<String> possibleDiagnoses = DiagnosisMapping.getDiagnosesWithAccuracy(selectedSymptoms);
-//
-//        if (possibleDiagnoses.isEmpty()) {
-//            TextView noDiagnosisText = new TextView(this);
-//            noDiagnosisText.setText("No diagnosis found for the selected symptoms.");
-//            diagnosisLayout.addView(noDiagnosisText);
-//        } else {
-//            TextView diagnosisTextView = new TextView(this);
-//            diagnosisTextView.setText("Possible Diagnoses:\n");
-//
-//            StringBuilder diagnosisBuilder = new StringBuilder();
-//            int count = 0;
-//            for (String diagnosis : possibleDiagnoses) {
-//                if (count == 5) break;
-//                diagnosisBuilder.append("- ").append(diagnosis).append("\n");
-//                count++;
-//            }
-//
-//            diagnosisTextView.append(diagnosisBuilder.toString());
-//            diagnosisLayout.addView(diagnosisTextView);
-//        }
-//    }
-
-
     private void addSelectedSymptom(int symptomId, String symptomName) {
+
+
+
         LinearLayout selectedItemLayout = new LinearLayout(this);
         selectedItemLayout.setOrientation(LinearLayout.HORIZONTAL);
         selectedItemLayout.setBackgroundResource(R.drawable.rounded_border_symptom);

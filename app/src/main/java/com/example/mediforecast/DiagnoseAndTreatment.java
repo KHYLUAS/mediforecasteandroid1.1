@@ -1,7 +1,9 @@
 package com.example.mediforecast;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,13 +20,14 @@ import com.google.android.material.tabs.TabLayout;
 public class DiagnoseAndTreatment extends AppCompatActivity {
     private TabLayout tablayout;
     private String diagnoseName;
+    private ImageView back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_diagnose_and_treatment);
         diagnoseName = getIntent().getStringExtra("diagnoseName");
-
+        back = findViewById(R.id.back);
         tablayout = findViewById(R.id.tablayout);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         fragmentImplement(new DiagnoseDetailFragment(), diagnoseName);
@@ -50,6 +53,12 @@ public class DiagnoseAndTreatment extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+        });
+        back.setOnClickListener(v->{
+            Intent intent = new Intent(DiagnoseAndTreatment.this, Menubar.class);
+            intent.putExtra("EXTRA_FRAGMENT", "");
+            startActivity(intent);
+            finish();
         });
     }
     private void fragmentImplement(Fragment fragment, String diagnoseName){

@@ -69,6 +69,7 @@ public class reminder_fragment extends Fragment {
 
         noDataImage = view.findViewById(R.id.noDataImage);
         noDataText = view.findViewById(R.id.noDataText);
+        addButton = view.findViewById(R.id.Addimage);
         // Set up RecyclerView
         recyclerView = view.findViewById(R.id.taskRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -77,20 +78,21 @@ public class reminder_fragment extends Fragment {
         adapter = new MedicineAdapter(getContext(), null, medicineRepository);
         recyclerView.setAdapter(adapter);
 
-//        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
-//        boolean isMainTutorialFinished = sharedPreferences.getBoolean("finishTabBarTutorial", false);
-//
-//        if(isMainTutorialFinished && !isReminderTutorialFinished()){
-//            showReminderTutorial();
-//        }
-
+        sharedPreferences = requireActivity().getSharedPreferences("TapTargetsPrefs", Context.MODE_PRIVATE);
+        boolean isReminderTutorialFinished = sharedPreferences.getBoolean("finishReminderTutorial", false);
         // Set up Add button
-        addButton = view.findViewById(R.id.Addimage);
         addButton.setOnClickListener(v -> {
             // Start activity to add a new medicine
             Intent intent = new Intent(getContext(), medicine_signin.class);
             startActivity(intent);
         });
+
+        // Show TapTarget tutorial only once
+        if (!isReminderTutorialFinished) {
+            showReminderTutorial();
+        }
+
+
 
         // Observe the LiveData and update the adapter when data changes
         medicineRepository.getAllMedicines().observe(getViewLifecycleOwner(), new Observer<List<Medicine>>() {
@@ -104,37 +106,34 @@ public class reminder_fragment extends Fragment {
         });
         return view;
     }
-//    private boolean isReminderTutorialFinished() {
-//        // Check if the dashboard tutorial is finished
-//        return sharedPreferences.getBoolean("finishReminderTutorial", false);
-//    }
-//
-//    private void showReminderTutorial() {
-//        TapTargetView.showFor(getActivity(),
-//                TapTarget.forView(getView().findViewById(R.id.Addimage),
-//                                "Medicine Reminder",
-//                                "To add a Medicine Reminder, simply tap this ‘+ Add Medicine Reminder’ button. This allows you to set up notifications for your medications, ensuring you never miss a dose. Customize the time, frequency, and dosage to fit your schedule. Stay on track with your health effortlessly!")
-//                        .outerCircleColor(R.color.colorAccent) // Outer circle color
-//                        .targetCircleColor(android.R.color.white) // Target circle color
-//                        .titleTextSize(20) // Title text size
-//                        .descriptionTextSize(16) // Description text size
-//                        .outerCircleAlpha(0.96f) // Outer circle alpha
-//                        .transparentTarget(false) // Show the target fully
-//                        .cancelable(true) // Allow user to cancel
-//                        .drawShadow(true) // Show shadow
-//                        .tintTarget(true) // Tint the target
-//                        .dimColor(android.R.color.black), // Dim the background
-//                new TapTargetView.Listener() {
-//                    @Override
-//                    public void onTargetClick(TapTargetView view) {
-//                        super.onTargetClick(view);
-//                        // Mark the dashboard tutorial as finished after it is clicked
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        editor.putBoolean("finisReminderTutorial", true);
-//                        editor.apply();
-//                    }
-//                });
-//    }
+    private void showReminderTutorial() {
+        if (addButton == null) {
+            Log.e("ReminderFragment", "addButton is still null, skipping tutorial.");
+            return;
+        }
+
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(addButton, "Medicine Reminder",
+                                "Tap the ‘+ Add Medicine Reminder’ button to set up notifications for your medications.")
+                        .outerCircleColor(R.color.black)
+                        .targetCircleColor(android.R.color.white)
+                        .titleTextSize(20)
+                        .descriptionTextSize(16)
+                        .outerCircleAlpha(0.96f)
+                        .transparentTarget(true)
+                        .cancelable(true)
+                        .drawShadow(true)
+                        .tintTarget(false)
+                        .dimColor(R.color.black),
+                new TapTargetView.Listener() {
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        sharedPreferences.edit().putBoolean("finishReminderTutorial", true).apply();
+                    }
+                });
+    }
+
     private void updateEmptyState() {
         if (medicines == null || medicines.isEmpty()) {
             recyclerView.setVisibility(View.GONE);

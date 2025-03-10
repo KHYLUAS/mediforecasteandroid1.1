@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Description"
+                android:text="Treatment Option"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="16sp"
@@ -33,7 +33,7 @@
 
             <!-- Description TextView -->
             <TextView
-                android:id="@+id/descriptionText"
+                android:id="@+id/trText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -51,18 +51,18 @@
                 android:hyphenationFrequency="full" />
 
             <TextView
-                android:id="@+id/overView"
+                android:id="@+id/prevention"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Overview"
+                android:text="Prevention"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal" />
             <TextView
-                android:id="@+id/text1"
+                android:id="@+id/preventText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
